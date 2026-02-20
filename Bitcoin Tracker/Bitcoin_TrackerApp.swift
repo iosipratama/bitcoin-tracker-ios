@@ -1,17 +1,16 @@
-//
-//  Bitcoin_TrackerApp.swift
-//  Bitcoin Tracker
-//
-//  Created by Iosi Pratama on 20/02/26.
-//
-
 import SwiftUI
+import SwiftData
 
 @main
 struct Bitcoin_TrackerApp: App {
+    @State private var viewModel = PortfolioViewModel()
+
     var body: some Scene {
         WindowGroup {
-            ContentView()
+            HomeView()
+                .environment(viewModel)
+                .preferredColorScheme(.dark)
         }
+        .modelContainer(for: [Wallet.self, BitcoinAddress.self])
     }
 }
