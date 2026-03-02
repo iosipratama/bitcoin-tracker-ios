@@ -20,24 +20,37 @@ struct WalletCard: View {
 
                     Text(viewModel.formattedBTC(wallet.totalBTC))
                         .font(.caption)
-                        .foregroundStyle(.secondary)
+                        .foregroundStyle(Color.textSecondary)
                 }
 
                 Spacer()
 
                 Text("\(wallet.addresses.count) address\(wallet.addresses.count == 1 ? "" : "es")")
                     .font(.caption)
-                    .foregroundStyle(.secondary)
+                    .foregroundStyle(Color.textSecondary)
             }
         }
         .padding()
         .background(
-            RoundedRectangle(cornerRadius: 16)
+            RoundedRectangle(cornerRadius: .cardRadius)
                 .fill(Color.white.opacity(0.05))
                 .overlay(
-                    RoundedRectangle(cornerRadius: 16)
+                    RoundedRectangle(cornerRadius: .cardRadius)
                         .stroke(Color.white.opacity(0.08), lineWidth: 1)
                 )
         )
     }
 }
+#Preview {
+    let wallet = Wallet(name: "Personal")
+    let address = BitcoinAddress(address: "bc1qxy2kgdygjrsqtzq2n0yrf2493p83kkfjhx0wlh")
+    address.balanceSatoshis = 75_000_000 // 0.75 BTC
+    wallet.addresses.append(address)
+    
+    let viewModel = PortfolioViewModel()
+    
+    return WalletCard(wallet: wallet, viewModel: viewModel)
+        .padding()
+        .background(Color(hex: 0x0A0A0A))
+}
+

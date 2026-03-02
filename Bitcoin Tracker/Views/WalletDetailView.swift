@@ -14,9 +14,11 @@ struct WalletDetailView: View {
                 walletHeader
                 addressList
             }
-            .padding()
+            .padding(.horizontal)
+            .padding(.top, 16)
+            .padding(.bottom, 8)
         }
-        .background(Color(hex: 0x0A0A0A))
+        .background(Color(hex: 0x0A0A0A).ignoresSafeArea())
         .navigationTitle(wallet.name)
         .navigationBarTitleDisplayMode(.inline)
         .toolbar {
@@ -39,12 +41,12 @@ struct WalletDetailView: View {
             AnimatingNumber(value: viewModel.fiatValue(btc: wallet.totalBTC)) { val in
                 viewModel.formattedFiat(val)
             }
-            .font(.system(size: 36, weight: .bold, design: .rounded))
+            .font(.system(size: 32, weight: .bold, design: .rounded))
             .foregroundStyle(.white)
 
             Text(viewModel.formattedBTC(wallet.totalBTC))
                 .font(.subheadline)
-                .foregroundStyle(.secondary)
+                .foregroundStyle(Color.textSecondary)
         }
         .frame(maxWidth: .infinity)
         .padding(.vertical, 16)
@@ -56,7 +58,7 @@ struct WalletDetailView: View {
             VStack(spacing: 12) {
                 Image(systemName: "key.horizontal")
                     .font(.system(size: 32))
-                    .foregroundStyle(.secondary)
+                    .foregroundStyle(Color.textSecondary)
 
                 Text("No Addresses")
                     .font(.headline)
@@ -64,7 +66,7 @@ struct WalletDetailView: View {
 
                 Text("Add a Bitcoin address to track its balance.")
                     .font(.subheadline)
-                    .foregroundStyle(.secondary)
+                    .foregroundStyle(Color.textSecondary)
             }
             .padding(.top, 40)
         } else {
@@ -111,17 +113,17 @@ struct AddressRow: View {
         HStack {
             VStack(alignment: .leading, spacing: 4) {
                 Text(address.shortAddress)
-                    .font(.subheadline.monospaced())
+                    .font(.subheadline.monospaced().monospacedDigit())
                     .foregroundStyle(.white)
 
                 if let error = address.fetchError {
                     Text(error)
                         .font(.caption2)
-                        .foregroundStyle(.red.opacity(0.8))
+                        .foregroundStyle(Color.errorText)
                 } else {
                     Text(viewModel.formattedBTC(address.balanceBTC))
                         .font(.caption)
-                        .foregroundStyle(.secondary)
+                        .foregroundStyle(Color.textSecondary)
                 }
             }
 
@@ -129,17 +131,79 @@ struct AddressRow: View {
 
             if address.fetchError == nil {
                 Text(viewModel.formattedFiat(viewModel.fiatValue(btc: address.balanceBTC)))
-                    .font(.subheadline.bold())
+                    .font(.subheadline.weight(.medium))
                     .foregroundStyle(.white)
             }
         }
-        .padding()
+        .padding(.vertical, 14)
+        .padding(.horizontal, 16)
         .background(
-            RoundedRectangle(cornerRadius: 12)
+            RoundedRectangle(cornerRadius: .rowRadius)
                 .fill(Color.white.opacity(0.04))
         )
         .onTapGesture {
             UIPasteboard.general.string = address.address
         }
+        .accessibilityHint("Double tap to copy address")
     }
 }
+#Preview("With Addresses") {
+    let config = ModelConfiguration(isStoredInMemoryOnly: true)
+    let container = try! ModelContainer(for: Wallet.self, BitcoinAddress.self, configurations: config)
+    
+    let wallet = Wallet(name: "Personal Wallet")
+    let address1 = BitcoinAddress(address: "bc1qxy2kgdygjrsqtzq2n0yrf2493p83kkfjhx0wlh")
+    address1.balanceSatoshis = 50_000_000
+    address1.lastUpdated = .now
+    
+    let address2 = BitcoinAddress(address: "1A1zP1eP5QGefi2DMPTfTL5SLmv7DivfNa")
+    address2.balanceSatoshis = 100_000_000
+    address2.lastUpdated = .now
+    
+    wallet.addresses = [address1, address2]
+    container.mainContext.insert(wallet)
+    
+    let viewModel = PortfolioViewModel()
+    
+    return WalletDetailView(wallet: wallet)
+        .modelContainer(container)
+        .environment(viewModel)
+}
+
+#Preview("Empty State") {
+    let config = ModelConfiguration(isStoredInMemoryOnly: true)
+    let container = try! ModelContainer(for: Wallet.self, BitcoinAddress.self, configurations: config)
+    
+    let wallet = Wallet(name: "Empty Wallet")
+    container.mainContext.insert(wallet)
+    
+    let viewModel = PortfolioViewModel()
+    
+    return WalletDetailView(wallet: wallet)
+        .modelContainer(container)
+        .environment(viewModel)
+}
+
+#Preview("Address Row") {
+    let address = BitcoinAddress(address: "bc1qxy2kgdygjrsqtzq2n0yrf2493p83kkfjhx0wlh")
+    address.balanceSatoshis = 50_000_000
+    address.lastUpdated = .now
+    
+    let viewModel = PortfolioViewModel()
+    
+    return AddressRow(address: address, viewModel: viewModel)
+        .padding()
+        .background(Color(hex: 0x0A0A0A))
+}
+
+#Preview("Address Row with Error") {
+    let address = BitcoinAddress(address: "bc1qxy2kgdygjrsqtzq2n0yrf2493p83kkfjhx0wlh")
+    address.fetchError = "Network error"
+    
+    let viewModel = PortfolioViewModel()
+    
+    return AddressRow(address: address, viewModel: viewModel)
+        .padding()
+        .background(Color(hex: 0x0A0A0A))
+}
+

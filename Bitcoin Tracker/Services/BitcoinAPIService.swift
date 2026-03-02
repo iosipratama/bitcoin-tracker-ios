@@ -20,10 +20,10 @@ enum APIError: LocalizedError {
     }
 }
 
-struct BlockstreamAddressResponse: Decodable {
+struct BlockstreamAddressResponse: Decodable, Sendable {
     let chain_stats: ChainStats
 
-    struct ChainStats: Decodable {
+    struct ChainStats: Decodable, Sendable {
         let funded_txo_sum: Int64
         let spent_txo_sum: Int64
     }
@@ -57,9 +57,10 @@ actor BitcoinAPIService {
             throw APIError.httpError(httpResponse.statusCode)
         }
 
-        guard let decoded = try? JSONDecoder().decode(BlockstreamAddressResponse.self, from: data) else {
-            throw APIError.decodingError
-        }
+        // Decode outside actor isolation
+        let decoded = try await Task {
+            try JSONDecoder().decode(BlockstreamAddressResponse.self, from: data)
+        }.value
 
         return decoded.chain_stats.funded_txo_sum - decoded.chain_stats.spent_txo_sum
     }

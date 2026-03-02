@@ -1,6 +1,6 @@
 import Foundation
 
-enum FiatCurrency: String, CaseIterable, Codable {
+enum FiatCurrency: String, CaseIterable, Codable, Sendable {
     case usd = "USD"
     case eur = "EUR"
     case gbp = "GBP"
@@ -22,7 +22,7 @@ enum FiatCurrency: String, CaseIterable, Codable {
     }
 }
 
-struct CoinGeckoPriceResponse: Decodable {
+struct CoinGeckoPriceResponse: Decodable, Sendable {
     let bitcoin: [String: Double]
 }
 
@@ -59,9 +59,10 @@ actor PriceService {
             throw APIError.httpError((response as? HTTPURLResponse)?.statusCode ?? 0)
         }
 
-        guard let decoded = try? JSONDecoder().decode(CoinGeckoPriceResponse.self, from: data) else {
-            throw APIError.decodingError
-        }
+        // Decode outside actor isolation
+        let decoded = try await Task {
+            try JSONDecoder().decode(CoinGeckoPriceResponse.self, from: data)
+        }.value
 
         cachedPrices = decoded.bitcoin
         lastFetch = .now

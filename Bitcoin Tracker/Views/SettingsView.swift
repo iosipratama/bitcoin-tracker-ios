@@ -34,27 +34,27 @@ struct SettingsView: View {
                             .foregroundStyle(.white)
                         Text("A minimalist read-only Bitcoin wallet tracker. No private keys are stored or used.")
                             .font(.caption)
-                            .foregroundStyle(.secondary)
+                            .foregroundStyle(Color.textSecondary)
                     }
                     .listRowBackground(Color.white.opacity(0.05))
 
                     Link(destination: URL(string: "https://blockstream.info")!) {
                         HStack {
                             Text("Balance data by Blockstream")
-                                .foregroundStyle(.secondary)
+                                .foregroundStyle(Color.textSecondary)
                             Spacer()
                             Image(systemName: "arrow.up.right")
-                                .foregroundStyle(.secondary)
+                                .foregroundStyle(Color.textSecondary)
                         }
                     }
 
                     Link(destination: URL(string: "https://www.coingecko.com")!) {
                         HStack {
                             Text("Price data by CoinGecko")
-                                .foregroundStyle(.secondary)
+                                .foregroundStyle(Color.textSecondary)
                             Spacer()
                             Image(systemName: "arrow.up.right")
-                                .foregroundStyle(.secondary)
+                                .foregroundStyle(Color.textSecondary)
                         }
                     }
                 }
@@ -71,3 +71,10 @@ struct SettingsView: View {
         }
     }
 }
+#Preview {
+    let viewModel = PortfolioViewModel()
+    
+    return SettingsView()
+        .environment(viewModel)
+}
+

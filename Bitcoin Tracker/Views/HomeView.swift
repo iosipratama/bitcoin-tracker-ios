@@ -20,9 +20,11 @@ struct HomeView: View {
                     portfolioHeader
                     walletList
                 }
-                .padding()
+                .padding(.horizontal)
+                .padding(.top, 16)
+                .padding(.bottom, 8)
             }
-            .background(Color(hex: 0x0A0A0A))
+            .background(Color(hex: 0x0A0A0A).ignoresSafeArea())
             .refreshable {
                 await viewModel.refreshBalances(wallets: wallets)
             }
@@ -61,35 +63,36 @@ struct HomeView: View {
         VStack(spacing: 8) {
             Text("Total Balance")
                 .font(.subheadline)
-                .foregroundStyle(.secondary)
+                .foregroundStyle(Color.textSecondary)
 
             AnimatingNumber(value: viewModel.fiatValue(btc: totalBTC)) { val in
                 viewModel.formattedFiat(val)
             }
-            .font(.system(size: 42, weight: .bold, design: .rounded))
+            .font(.system(size: 34, weight: .bold, design: .rounded))
             .foregroundStyle(.white)
 
             AnimatingNumber(value: totalBTC) { val in
                 viewModel.formattedBTC(val)
             }
             .font(.subheadline)
-            .foregroundStyle(.secondary)
+            .foregroundStyle(Color.textSecondary)
 
             if viewModel.isLoading {
                 ProgressView()
                     .tint(Color.bitcoinOrange)
                     .padding(.top, 4)
+                    .accessibilityLabel("Updating balance")
             }
 
             if let error = viewModel.priceError {
                 Text(error)
                     .font(.caption)
-                    .foregroundStyle(.red.opacity(0.8))
+                    .foregroundStyle(Color.errorText)
                     .padding(.top, 4)
             }
         }
         .frame(maxWidth: .infinity)
-        .padding(.vertical, 24)
+        .padding(.vertical, 20)
     }
 
     @ViewBuilder
@@ -97,7 +100,7 @@ struct HomeView: View {
         if wallets.isEmpty {
             emptyState
         } else {
-            LazyVStack(spacing: 12) {
+            LazyVStack(spacing: 16) {
                 ForEach(wallets) { wallet in
                     NavigationLink(value: wallet) {
                         WalletCard(wallet: wallet, viewModel: viewModel)
@@ -122,9 +125,47 @@ struct HomeView: View {
 
             Text("Tap + to add your first wallet\nand start tracking your Bitcoin.")
                 .font(.subheadline)
-                .foregroundStyle(.secondary)
+                .foregroundStyle(Color.textSecondary)
                 .multilineTextAlignment(.center)
         }
         .padding(.top, 40)
     }
 }
+#Preview("With Wallets") {
+    let config = ModelConfiguration(isStoredInMemoryOnly: true)
+    let container = try! ModelContainer(for: Wallet.self, BitcoinAddress.self, configurations: config)
+    
+    // Create sample data
+    let wallet1 = Wallet(name: "Personal")
+    let address1 = BitcoinAddress(address: "bc1qxy2kgdygjrsqtzq2n0yrf2493p83kkfjhx0wlh")
+    address1.balanceSatoshis = 50_000_000 // 0.5 BTC
+    address1.lastUpdated = .now
+    wallet1.addresses.append(address1)
+    
+    let wallet2 = Wallet(name: "Savings")
+    let address2 = BitcoinAddress(address: "1A1zP1eP5QGefi2DMPTfTL5SLmv7DivfNa")
+    address2.balanceSatoshis = 100_000_000 // 1.0 BTC
+    address2.lastUpdated = .now
+    wallet2.addresses.append(address2)
+    
+    container.mainContext.insert(wallet1)
+    container.mainContext.insert(wallet2)
+    
+    let viewModel = PortfolioViewModel()
+    
+    return HomeView()
+        .modelContainer(container)
+        .environment(viewModel)
+}
+
+#Preview("Empty State") {
+    let config = ModelConfiguration(isStoredInMemoryOnly: true)
+    let container = try! ModelContainer(for: Wallet.self, BitcoinAddress.self, configurations: config)
+    
+    let viewModel = PortfolioViewModel()
+    
+    return HomeView()
+        .modelContainer(container)
+        .environment(viewModel)
+}
+

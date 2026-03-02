@@ -25,7 +25,7 @@ struct AddAddressView: View {
                 VStack(alignment: .leading, spacing: 8) {
                     Text("Bitcoin Address")
                         .font(.subheadline)
-                        .foregroundStyle(.secondary)
+                        .foregroundStyle(Color.textSecondary)
 
                     TextField("1A1zP1eP5QGefi2DMPTfTL5SLmv7DivfNa", text: $addressText)
                         .textFieldStyle(.plain)
@@ -34,7 +34,7 @@ struct AddAddressView: View {
                         .textInputAutocapitalization(.never)
                         .padding()
                         .background(
-                            RoundedRectangle(cornerRadius: 12)
+                            RoundedRectangle(cornerRadius: .rowRadius)
                                 .fill(Color.white.opacity(0.05))
                         )
                         .onChange(of: addressText) {
@@ -50,19 +50,19 @@ struct AddAddressView: View {
                         HStack {
                             if isValidating {
                                 ProgressView()
-                                    .tint(.white)
+                                    .tint(Color.bitcoinOrange)
                             } else {
                                 Image(systemName: "magnifyingglass")
                             }
                             Text(isValidating ? "Checking..." : "Preview Balance")
                         }
-                        .font(.subheadline.bold())
-                        .foregroundStyle(.white)
+                        .font(.subheadline.weight(.medium))
+                        .foregroundStyle(Color.bitcoinOrange)
                         .frame(maxWidth: .infinity)
                         .padding(.vertical, 12)
                         .background(
-                            RoundedRectangle(cornerRadius: 12)
-                                .fill(Color.bitcoinOrange)
+                            RoundedRectangle(cornerRadius: .rowRadius)
+                                .strokeBorder(Color.bitcoinOrange.opacity(0.5), lineWidth: 1)
                         )
                     }
                     .disabled(isValidating)
@@ -73,7 +73,7 @@ struct AddAddressView: View {
                     VStack(spacing: 8) {
                         Text("Balance Preview")
                             .font(.caption)
-                            .foregroundStyle(.secondary)
+                            .foregroundStyle(Color.textSecondary)
 
                         Text(viewModel.formattedBTC(btc))
                             .font(.title3.bold())
@@ -81,12 +81,12 @@ struct AddAddressView: View {
 
                         Text(viewModel.formattedFiat(viewModel.fiatValue(btc: btc)))
                             .font(.subheadline)
-                            .foregroundStyle(.secondary)
+                            .foregroundStyle(Color.textSecondary)
                     }
                     .padding()
                     .frame(maxWidth: .infinity)
                     .background(
-                        RoundedRectangle(cornerRadius: 12)
+                        RoundedRectangle(cornerRadius: .rowRadius)
                             .fill(Color.white.opacity(0.05))
                     )
                 }
@@ -94,13 +94,15 @@ struct AddAddressView: View {
                 if let error = validationError {
                     Text(error)
                         .font(.caption)
-                        .foregroundStyle(.red.opacity(0.8))
+                        .foregroundStyle(Color.errorText)
                 }
 
                 Spacer()
             }
-            .padding()
-            .background(Color(hex: 0x0A0A0A))
+            .padding(.horizontal)
+            .padding(.top, 24)
+            .padding(.bottom, 16)
+            .background(Color(hex: 0x0A0A0A).ignoresSafeArea())
             .navigationTitle("Add Address")
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
@@ -112,12 +114,13 @@ struct AddAddressView: View {
                         saveAddress()
                     }
                     .fontWeight(.semibold)
-                    .foregroundStyle(previewBalance != nil ? Color.bitcoinOrange : .secondary)
+                    .foregroundStyle(previewBalance != nil ? Color.bitcoinOrange : Color.bitcoinOrangeDisabled)
                     .disabled(previewBalance == nil)
                 }
             }
         }
-        .presentationDetents([.medium, .large])
+        .presentationDetents([.medium])
+        .presentationDragIndicator(.visible)
     }
 
     private func validateAddress() async {
@@ -148,3 +151,17 @@ struct AddAddressView: View {
         dismiss()
     }
 }
+#Preview {
+    let config = ModelConfiguration(isStoredInMemoryOnly: true)
+    let container = try! ModelContainer(for: Wallet.self, BitcoinAddress.self, configurations: config)
+    
+    let wallet = Wallet(name: "Test Wallet")
+    container.mainContext.insert(wallet)
+    
+    let viewModel = PortfolioViewModel()
+    
+    return AddAddressView(wallet: wallet)
+        .modelContainer(container)
+        .environment(viewModel)
+}
+

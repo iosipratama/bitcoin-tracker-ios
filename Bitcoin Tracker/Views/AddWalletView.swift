@@ -17,22 +17,24 @@ struct AddWalletView: View {
                 VStack(alignment: .leading, spacing: 8) {
                     Text("Wallet Name")
                         .font(.subheadline)
-                        .foregroundStyle(.secondary)
+                        .foregroundStyle(Color.textSecondary)
 
                     TextField("e.g. Personal, Savings", text: $name)
                         .textFieldStyle(.plain)
                         .font(.title3)
                         .padding()
                         .background(
-                            RoundedRectangle(cornerRadius: 12)
+                            RoundedRectangle(cornerRadius: .rowRadius)
                                 .fill(Color.white.opacity(0.05))
                         )
                 }
 
                 Spacer()
             }
-            .padding()
-            .background(Color(hex: 0x0A0A0A))
+            .padding(.horizontal)
+            .padding(.top, 24)
+            .padding(.bottom, 16)
+            .background(Color(hex: 0x0A0A0A).ignoresSafeArea())
             .navigationTitle("New Wallet")
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
@@ -46,11 +48,20 @@ struct AddWalletView: View {
                         dismiss()
                     }
                     .fontWeight(.semibold)
-                    .foregroundStyle(isValid ? Color.bitcoinOrange : .secondary)
+                    .foregroundStyle(isValid ? Color.bitcoinOrange : Color.bitcoinOrangeDisabled)
                     .disabled(!isValid)
                 }
             }
         }
         .presentationDetents([.medium])
+        .presentationDragIndicator(.visible)
     }
 }
+#Preview {
+    let config = ModelConfiguration(isStoredInMemoryOnly: true)
+    let container = try! ModelContainer(for: Wallet.self, BitcoinAddress.self, configurations: config)
+    
+    return AddWalletView()
+        .modelContainer(container)
+}
+
