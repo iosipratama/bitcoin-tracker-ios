@@ -13,33 +13,41 @@ struct AddWalletView: View {
 
     var body: some View {
         NavigationStack {
-            VStack(spacing: 24) {
-                VStack(alignment: .leading, spacing: 8) {
-                    Text("Wallet Name")
-                        .font(.subheadline)
-                        .foregroundStyle(Color.textSecondary)
+            VStack(alignment: .leading, spacing: 0) {
+                Text("Wallet Name")
+                    .font(.caption)
+                    .foregroundStyle(Color.textSecondary)
+                    .kerning(1.2)
+                    .textCase(.uppercase)
+                    .padding(.bottom, 12)
 
-                    TextField("e.g. Personal, Savings", text: $name)
-                        .textFieldStyle(.plain)
-                        .font(.title3)
-                        .padding()
-                        .background(
-                            RoundedRectangle(cornerRadius: .rowRadius)
-                                .fill(Color.white.opacity(0.05))
-                        )
-                }
+                TextField("e.g. Personal, Savings, Cold Storage", text: $name)
+                    .textFieldStyle(.plain)
+                    .font(.title3)
+                    .foregroundStyle(.white)
+                    .padding(.vertical, 16)
+                    .padding(.horizontal, 18)
+                    .background(
+                        RoundedRectangle(cornerRadius: .rowRadius)
+                            .fill(Color.surfaceWarm)
+                            .overlay(
+                                RoundedRectangle(cornerRadius: .rowRadius)
+                                    .strokeBorder(Color.rowDivider, lineWidth: 0.5)
+                            )
+                    )
 
                 Spacer()
             }
-            .padding(.horizontal)
-            .padding(.top, 24)
+            .padding(.horizontal, 24)
+            .padding(.top, 28)
             .padding(.bottom, 16)
-            .background(Color(hex: 0x0A0A0A).ignoresSafeArea())
+            .background(Color.appBackground.ignoresSafeArea())
             .navigationTitle("New Wallet")
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
                 ToolbarItem(placement: .cancellationAction) {
                     Button("Cancel") { dismiss() }
+                        .foregroundStyle(Color.textSecondary)
                 }
                 ToolbarItem(placement: .confirmationAction) {
                     Button("Create") {
@@ -53,15 +61,16 @@ struct AddWalletView: View {
                 }
             }
         }
-        .presentationDetents([.medium])
+        .presentationDetents([.height(220)])
         .presentationDragIndicator(.visible)
+        .presentationBackground(Color.appBackground)
     }
 }
+
 #Preview {
     let config = ModelConfiguration(isStoredInMemoryOnly: true)
     let container = try! ModelContainer(for: Wallet.self, BitcoinAddress.self, configurations: config)
-    
+
     return AddWalletView()
         .modelContainer(container)
 }
-

@@ -10,15 +10,13 @@ struct WalletDetailView: View {
 
     var body: some View {
         ScrollView {
-            VStack(spacing: 24) {
+            VStack(spacing: 0) {
                 walletHeader
                 addressList
             }
-            .padding(.horizontal)
-            .padding(.top, 16)
-            .padding(.bottom, 8)
+            .padding(.bottom, 40)
         }
-        .background(Color(hex: 0x0A0A0A).ignoresSafeArea())
+        .background(Color.appBackground.ignoresSafeArea())
         .navigationTitle(wallet.name)
         .navigationBarTitleDisplayMode(.inline)
         .toolbar {
@@ -37,40 +35,60 @@ struct WalletDetailView: View {
     }
 
     private var walletHeader: some View {
-        VStack(spacing: 8) {
-            AnimatingNumber(value: viewModel.fiatValue(btc: wallet.totalBTC)) { val in
-                viewModel.formattedFiat(val)
-            }
-            .font(.system(size: 32, weight: .bold, design: .rounded))
-            .foregroundStyle(.white)
+        ZStack {
+            RadialGradient(
+                colors: [Color.bitcoinOrange.opacity(0.06), .clear],
+                center: .center,
+                startRadius: 0,
+                endRadius: 160
+            )
+            .frame(height: 240)
 
-            Text(viewModel.formattedBTC(wallet.totalBTC))
-                .font(.subheadline)
-                .foregroundStyle(Color.textSecondary)
+            VStack(spacing: 10) {
+                AnimatingNumber(value: viewModel.fiatValue(btc: wallet.totalBTC)) { val in
+                    viewModel.formattedFiat(val)
+                }
+                .font(.balanceMedium)
+                .foregroundStyle(.white)
+
+                Text(viewModel.formattedBTC(wallet.totalBTC))
+                    .font(.subheadline)
+                    .foregroundStyle(Color.textSecondary)
+            }
+            .padding(.vertical, 48)
         }
-        .frame(maxWidth: .infinity)
-        .padding(.vertical, 16)
     }
 
     @ViewBuilder
     private var addressList: some View {
         if wallet.addresses.isEmpty {
-            VStack(spacing: 12) {
-                Image(systemName: "key.horizontal")
-                    .font(.system(size: 32))
+            VStack(spacing: 14) {
+                Text("No addresses yet.")
+                    .font(.custom("Georgia", size: 18))
                     .foregroundStyle(Color.textSecondary)
 
-                Text("No Addresses")
-                    .font(.headline)
-                    .foregroundStyle(.white)
-
-                Text("Add a Bitcoin address to track its balance.")
+                Text("Add a Bitcoin address to start tracking.")
                     .font(.subheadline)
-                    .foregroundStyle(Color.textSecondary)
+                    .foregroundStyle(Color.textSecondary.opacity(0.6))
             }
-            .padding(.top, 40)
+            .padding(.top, 56)
         } else {
-            LazyVStack(spacing: 8) {
+            VStack(spacing: 0) {
+                HStack {
+                    Text("Addresses")
+                        .font(.caption)
+                        .foregroundStyle(Color.textSecondary)
+                        .kerning(1.5)
+                        .textCase(.uppercase)
+                    Spacer()
+                }
+                .padding(.horizontal, 24)
+                .padding(.bottom, 14)
+
+                Rectangle()
+                    .fill(Color.rowDivider)
+                    .frame(height: 0.5)
+
                 ForEach(wallet.addresses) { address in
                     AddressRow(address: address, viewModel: viewModel)
                         .contextMenu {
@@ -85,23 +103,19 @@ struct WalletDetailView: View {
                                 Label("Delete", systemImage: "trash")
                             }
                         }
+
+                    Rectangle()
+                        .fill(Color.rowDivider)
+                        .frame(height: 0.5)
                 }
-                .onDelete(perform: deleteAddresses)
             }
+            .padding(.top, 36)
         }
     }
 
     private func deleteAddress(_ address: BitcoinAddress) {
         wallet.addresses.removeAll { $0.id == address.id }
         modelContext.delete(address)
-    }
-
-    private func deleteAddresses(at offsets: IndexSet) {
-        for index in offsets {
-            let address = wallet.addresses[index]
-            modelContext.delete(address)
-        }
-        wallet.addresses.remove(atOffsets: offsets)
     }
 }
 
@@ -110,10 +124,10 @@ struct AddressRow: View {
     let viewModel: PortfolioViewModel
 
     var body: some View {
-        HStack {
-            VStack(alignment: .leading, spacing: 4) {
+        HStack(alignment: .center, spacing: 0) {
+            VStack(alignment: .leading, spacing: 5) {
                 Text(address.shortAddress)
-                    .font(.subheadline.monospaced().monospacedDigit())
+                    .font(.subheadline.monospaced())
                     .foregroundStyle(.white)
 
                 if let error = address.fetchError {
@@ -135,36 +149,34 @@ struct AddressRow: View {
                     .foregroundStyle(.white)
             }
         }
-        .padding(.vertical, 14)
-        .padding(.horizontal, 16)
-        .background(
-            RoundedRectangle(cornerRadius: .rowRadius)
-                .fill(Color.white.opacity(0.04))
-        )
+        .padding(.horizontal, 24)
+        .padding(.vertical, 20)
+        .background(Color.appBackground)
         .onTapGesture {
             UIPasteboard.general.string = address.address
         }
         .accessibilityHint("Double tap to copy address")
     }
 }
+
 #Preview("With Addresses") {
     let config = ModelConfiguration(isStoredInMemoryOnly: true)
     let container = try! ModelContainer(for: Wallet.self, BitcoinAddress.self, configurations: config)
-    
+
     let wallet = Wallet(name: "Personal Wallet")
     let address1 = BitcoinAddress(address: "bc1qxy2kgdygjrsqtzq2n0yrf2493p83kkfjhx0wlh")
     address1.balanceSatoshis = 50_000_000
     address1.lastUpdated = .now
-    
+
     let address2 = BitcoinAddress(address: "1A1zP1eP5QGefi2DMPTfTL5SLmv7DivfNa")
     address2.balanceSatoshis = 100_000_000
     address2.lastUpdated = .now
-    
+
     wallet.addresses = [address1, address2]
     container.mainContext.insert(wallet)
-    
+
     let viewModel = PortfolioViewModel()
-    
+
     return WalletDetailView(wallet: wallet)
         .modelContainer(container)
         .environment(viewModel)
@@ -173,12 +185,12 @@ struct AddressRow: View {
 #Preview("Empty State") {
     let config = ModelConfiguration(isStoredInMemoryOnly: true)
     let container = try! ModelContainer(for: Wallet.self, BitcoinAddress.self, configurations: config)
-    
-    let wallet = Wallet(name: "Empty Wallet")
+
+    let wallet = Wallet(name: "Cold Storage")
     container.mainContext.insert(wallet)
-    
+
     let viewModel = PortfolioViewModel()
-    
+
     return WalletDetailView(wallet: wallet)
         .modelContainer(container)
         .environment(viewModel)
@@ -188,22 +200,13 @@ struct AddressRow: View {
     let address = BitcoinAddress(address: "bc1qxy2kgdygjrsqtzq2n0yrf2493p83kkfjhx0wlh")
     address.balanceSatoshis = 50_000_000
     address.lastUpdated = .now
-    
-    let viewModel = PortfolioViewModel()
-    
-    return AddressRow(address: address, viewModel: viewModel)
-        .padding()
-        .background(Color(hex: 0x0A0A0A))
-}
 
-#Preview("Address Row with Error") {
-    let address = BitcoinAddress(address: "bc1qxy2kgdygjrsqtzq2n0yrf2493p83kkfjhx0wlh")
-    address.fetchError = "Network error"
-    
     let viewModel = PortfolioViewModel()
-    
-    return AddressRow(address: address, viewModel: viewModel)
-        .padding()
-        .background(Color(hex: 0x0A0A0A))
-}
 
+    return VStack(spacing: 0) {
+        Rectangle().fill(Color.rowDivider).frame(height: 0.5)
+        AddressRow(address: address, viewModel: viewModel)
+        Rectangle().fill(Color.rowDivider).frame(height: 0.5)
+    }
+    .background(Color.appBackground)
+}

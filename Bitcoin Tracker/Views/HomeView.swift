@@ -9,163 +9,122 @@ struct HomeView: View {
     @State private var showAddWallet = false
     @State private var showSettings = false
 
-    private var totalBTC: Double {
-        wallets.reduce(0) { $0 + $1.totalBTC }
-    }
-
     var body: some View {
         NavigationStack {
             ScrollView {
-                VStack(spacing: 24) {
-                    portfolioHeader
-                    walletList
-                }
-                .padding(.horizontal)
-                .padding(.top, 16)
-                .padding(.bottom, 8)
-            }
-            .background(Color(hex: 0x0A0A0A).ignoresSafeArea())
-            .refreshable {
-                await viewModel.refreshBalances(wallets: wallets)
-            }
-            .navigationTitle("Portfolio")
-            .toolbar {
-                ToolbarItem(placement: .topBarLeading) {
-                    Button {
-                        showSettings = true
-                    } label: {
-                        Image(systemName: "gearshape")
-                            .foregroundStyle(.secondary)
+                VStack(spacing: 12) {
+                    if wallets.isEmpty {
+                        emptyState
+                    } else {
+                        ForEach(wallets) { wallet in
+                            NavigationLink(value: wallet) {
+                                WalletCard(wallet: wallet)
+                            }
+                            .buttonStyle(.plain)
+                        }
                     }
                 }
-                ToolbarItem(placement: .topBarTrailing) {
-                    Button {
-                        showAddWallet = true
-                    } label: {
-                        Image(systemName: "plus")
-                            .foregroundStyle(Color.bitcoinOrange)
-                    }
-                }
-            }
-            .sheet(isPresented: $showAddWallet) {
-                AddWalletView()
-            }
-            .sheet(isPresented: $showSettings) {
-                SettingsView()
-            }
-            .task {
-                await viewModel.refreshBalances(wallets: wallets)
-            }
-        }
-    }
-
-    private var portfolioHeader: some View {
-        VStack(spacing: 8) {
-            Text("Total Balance")
-                .font(.subheadline)
-                .foregroundStyle(Color.textSecondary)
-
-            AnimatingNumber(value: viewModel.fiatValue(btc: totalBTC)) { val in
-                viewModel.formattedFiat(val)
-            }
-            .font(.system(size: 34, weight: .bold, design: .rounded))
-            .foregroundStyle(.white)
-
-            AnimatingNumber(value: totalBTC) { val in
-                viewModel.formattedBTC(val)
-            }
-            .font(.subheadline)
-            .foregroundStyle(Color.textSecondary)
-
-            if viewModel.isLoading {
-                ProgressView()
-                    .tint(Color.bitcoinOrange)
-                    .padding(.top, 4)
-                    .accessibilityLabel("Updating balance")
-            }
-
-            if let error = viewModel.priceError {
-                Text(error)
-                    .font(.caption)
-                    .foregroundStyle(Color.errorText)
-                    .padding(.top, 4)
-            }
-        }
-        .frame(maxWidth: .infinity)
-        .padding(.vertical, 20)
-    }
-
-    @ViewBuilder
-    private var walletList: some View {
-        if wallets.isEmpty {
-            emptyState
-        } else {
-            LazyVStack(spacing: 16) {
-                ForEach(wallets) { wallet in
-                    NavigationLink(value: wallet) {
-                        WalletCard(wallet: wallet, viewModel: viewModel)
-                    }
-                }
+                .padding(.horizontal, 20)
+                .padding(.top, 4)
+                .padding(.bottom, 40)
             }
             .navigationDestination(for: Wallet.self) { wallet in
                 WalletDetailView(wallet: wallet)
             }
+            .background(Color.appBackground.ignoresSafeArea())
+            .refreshable {
+                await viewModel.refreshBalances(wallets: wallets)
+            }
+            .navigationTitle("Portfolio")
+            .navigationBarTitleDisplayMode(.large)
+            .toolbar {
+                ToolbarItem(placement: .topBarLeading) {
+                    Button { showSettings = true } label: {
+                        Image(systemName: "gearshape")
+                            .foregroundStyle(Color.textSecondary)
+                    }
+                }
+                ToolbarItem(placement: .topBarTrailing) {
+                    if viewModel.isLoading {
+                        ProgressView()
+                            .tint(Color.bitcoinOrange)
+                            .scaleEffect(0.8)
+                    } else {
+                        Button { showAddWallet = true } label: {
+                            Image(systemName: "plus")
+                                .foregroundStyle(Color.bitcoinOrange)
+                        }
+                    }
+                }
+            }
+            .sheet(isPresented: $showAddWallet) { AddWalletView() }
+            .sheet(isPresented: $showSettings) { SettingsView() }
+            .task { await viewModel.refreshBalances(wallets: wallets) }
         }
     }
 
     private var emptyState: some View {
-        VStack(spacing: 16) {
-            Image(systemName: "bitcoinsign.circle")
-                .font(.system(size: 48))
-                .foregroundStyle(Color.bitcoinOrange.opacity(0.5))
-
-            Text("No Wallets Yet")
-                .font(.title3.bold())
-                .foregroundStyle(.white)
-
-            Text("Tap + to add your first wallet\nand start tracking your Bitcoin.")
-                .font(.subheadline)
+        VStack(spacing: 20) {
+            Text("Your stack begins\nwith one address.")
+                .font(.system(size: 22, weight: .semibold))
                 .foregroundStyle(Color.textSecondary)
                 .multilineTextAlignment(.center)
+                .lineSpacing(4)
+
+            Button {
+                showAddWallet = true
+            } label: {
+                Text("Add Wallet")
+                    .font(.subheadline.weight(.medium))
+                    .foregroundStyle(Color.bitcoinOrange)
+                    .padding(.horizontal, 24)
+                    .padding(.vertical, 10)
+                    .overlay(
+                        Capsule()
+                            .strokeBorder(Color.bitcoinOrange.opacity(0.4), lineWidth: 1)
+                    )
+            }
         }
-        .padding(.top, 40)
+        .padding(.top, 80)
     }
 }
+
+// MARK: - Previews
+
+private struct PreviewWallet {
+    let name: String
+    let satoshis: Int64
+    let goalSatoshis: Int64?
+}
+
+private let sampleWallets: [PreviewWallet] = [
+    PreviewWallet(name: "Stack", satoshis: 21_500_000, goalSatoshis: 100_000_000),
+    PreviewWallet(name: "Cold Storage", satoshis: 105_340_200, goalSatoshis: nil),
+]
+
 #Preview("With Wallets") {
     let config = ModelConfiguration(isStoredInMemoryOnly: true)
     let container = try! ModelContainer(for: Wallet.self, BitcoinAddress.self, configurations: config)
-    
-    // Create sample data
-    let wallet1 = Wallet(name: "Personal")
-    let address1 = BitcoinAddress(address: "bc1qxy2kgdygjrsqtzq2n0yrf2493p83kkfjhx0wlh")
-    address1.balanceSatoshis = 50_000_000 // 0.5 BTC
-    address1.lastUpdated = .now
-    wallet1.addresses.append(address1)
-    
-    let wallet2 = Wallet(name: "Savings")
-    let address2 = BitcoinAddress(address: "1A1zP1eP5QGefi2DMPTfTL5SLmv7DivfNa")
-    address2.balanceSatoshis = 100_000_000 // 1.0 BTC
-    address2.lastUpdated = .now
-    wallet2.addresses.append(address2)
-    
-    container.mainContext.insert(wallet1)
-    container.mainContext.insert(wallet2)
-    
-    let viewModel = PortfolioViewModel()
-    
+
+    for sample in sampleWallets {
+        let wallet = Wallet(name: sample.name)
+        let address = BitcoinAddress(address: "bc1qxy2kgdygjrsqtzq2n0yrf2493p83kkfjhx0wlh")
+        address.balanceSatoshis = sample.satoshis
+        address.lastUpdated = .now
+        wallet.addresses.append(address)
+        container.mainContext.insert(wallet)
+    }
+
     return HomeView()
         .modelContainer(container)
-        .environment(viewModel)
+        .environment(PortfolioViewModel())
 }
 
-#Preview("Empty State") {
+#Preview("Empty") {
     let config = ModelConfiguration(isStoredInMemoryOnly: true)
     let container = try! ModelContainer(for: Wallet.self, BitcoinAddress.self, configurations: config)
-    
-    let viewModel = PortfolioViewModel()
-    
+
     return HomeView()
         .modelContainer(container)
-        .environment(viewModel)
+        .environment(PortfolioViewModel())
 }
-

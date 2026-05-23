@@ -1,17 +1,24 @@
 import SwiftUI
 
 extension Color {
-    // Muted copper tone - editorial, restrained alternative to bright Bitcoin orange
     static let bitcoinOrange = Color(hex: 0xD4823B)
-    
-    // Disabled state for orange accent
     static let bitcoinOrangeDisabled = Color(hex: 0x7A4A0D)
-    
-    // WCAG AA compliant secondary text (5.7:1 contrast on #0A0A0A)
-    static let textSecondary = Color(hex: 0xA0A0A0)
-    
-    // WCAG AA compliant error text (5.1:1 contrast on #0A0A0A)
+
+    // WCAG AA compliant on true black (#000000)
+    static let textSecondary = Color(hex: 0x888888)
     static let errorText = Color(hex: 0xFF6B6B)
+
+    // Page background — warm dark gray
+    static let appBackground = Color(hex: 0x1A1A1A)
+
+    // Card surface — visible lift off background, no border needed
+    static let cardBackground = Color(hex: 0x272727)
+
+    // Warm surface for form inputs
+    static let surfaceWarm = Color(hex: 0x242218, opacity: 0.8)
+
+    // Hairline divider
+    static let rowDivider = Color(hex: 0xFFFFFF, opacity: 0.08)
 
     init(hex: UInt, opacity: Double = 1.0) {
         self.init(
@@ -23,6 +30,7 @@ extension Color {
         )
     }
 }
+
 extension CGFloat {
     static let cardRadius: CGFloat = 16
     static let rowRadius: CGFloat = 12

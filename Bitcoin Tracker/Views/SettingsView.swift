@@ -5,76 +5,140 @@ struct SettingsView: View {
     @Environment(PortfolioViewModel.self) private var viewModel
 
     var body: some View {
-        @Bindable var vm = viewModel
         NavigationStack {
-            List {
-                Section("Currency") {
-                    ForEach(FiatCurrency.allCases, id: \.self) { currency in
-                        Button {
-                            viewModel.selectedCurrency = currency
-                            Task { await viewModel.refreshPrices() }
-                        } label: {
-                            HStack {
-                                Text("\(currency.symbol) \(currency.rawValue)")
-                                    .foregroundStyle(.white)
-                                Spacer()
-                                if viewModel.selectedCurrency == currency {
-                                    Image(systemName: "checkmark")
-                                        .foregroundStyle(Color.bitcoinOrange)
-                                }
-                            }
-                        }
-                    }
+            ScrollView {
+                VStack(alignment: .leading, spacing: 40) {
+                    currencySection
+                    aboutSection
                 }
-
-                Section("About") {
-                    VStack(alignment: .leading, spacing: 8) {
-                        Text("Bitcoin Tracker")
-                            .font(.headline)
-                            .foregroundStyle(.white)
-                        Text("A minimalist read-only Bitcoin wallet tracker. No private keys are stored or used.")
-                            .font(.caption)
-                            .foregroundStyle(Color.textSecondary)
-                    }
-                    .listRowBackground(Color.white.opacity(0.05))
-
-                    Link(destination: URL(string: "https://blockstream.info")!) {
-                        HStack {
-                            Text("Balance data by Blockstream")
-                                .foregroundStyle(Color.textSecondary)
-                            Spacer()
-                            Image(systemName: "arrow.up.right")
-                                .foregroundStyle(Color.textSecondary)
-                        }
-                    }
-
-                    Link(destination: URL(string: "https://www.coingecko.com")!) {
-                        HStack {
-                            Text("Price data by CoinGecko")
-                                .foregroundStyle(Color.textSecondary)
-                            Spacer()
-                            Image(systemName: "arrow.up.right")
-                                .foregroundStyle(Color.textSecondary)
-                        }
-                    }
-                }
+                .padding(.horizontal, 24)
+                .padding(.top, 28)
+                .padding(.bottom, 40)
             }
-            .scrollContentBackground(.hidden)
-            .background(Color(hex: 0x0A0A0A))
+            .background(Color.appBackground.ignoresSafeArea())
             .navigationTitle("Settings")
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
                 ToolbarItem(placement: .confirmationAction) {
                     Button("Done") { dismiss() }
+                        .foregroundStyle(Color.bitcoinOrange)
                 }
             }
         }
+        .presentationBackground(Color.appBackground)
+    }
+
+    private var currencySection: some View {
+        VStack(alignment: .leading, spacing: 14) {
+            sectionHeader("Fiat Currency")
+
+            Rectangle()
+                .fill(Color.rowDivider)
+                .frame(height: 0.5)
+
+            ForEach(FiatCurrency.allCases, id: \.self) { currency in
+                Button {
+                    viewModel.selectedCurrency = currency
+                    Task { await viewModel.refreshPrices() }
+                } label: {
+                    HStack {
+                        Text("\(currency.symbol) \(currency.rawValue)")
+                            .font(.subheadline)
+                            .foregroundStyle(.white)
+                        Spacer()
+                        if viewModel.selectedCurrency == currency {
+                            Image(systemName: "checkmark")
+                                .font(.subheadline.weight(.medium))
+                                .foregroundStyle(Color.bitcoinOrange)
+                        }
+                    }
+                    .padding(.vertical, 14)
+                }
+
+                if currency != FiatCurrency.allCases.last {
+                    Rectangle()
+                        .fill(Color.rowDivider)
+                        .frame(height: 0.5)
+                }
+            }
+
+            Rectangle()
+                .fill(Color.rowDivider)
+                .frame(height: 0.5)
+        }
+    }
+
+    private var aboutSection: some View {
+        VStack(alignment: .leading, spacing: 14) {
+            sectionHeader("About")
+
+            Rectangle()
+                .fill(Color.rowDivider)
+                .frame(height: 0.5)
+
+            VStack(alignment: .leading, spacing: 6) {
+                Text("Bitcoin Tracker")
+                    .font(.subheadline.weight(.medium))
+                    .foregroundStyle(.white)
+                Text("A minimalist read-only wallet tracker.\nNo private keys stored or used.")
+                    .font(.caption)
+                    .foregroundStyle(Color.textSecondary)
+                    .lineSpacing(3)
+            }
+            .padding(.vertical, 14)
+
+            Rectangle()
+                .fill(Color.rowDivider)
+                .frame(height: 0.5)
+
+            Link(destination: URL(string: "https://blockstream.info")!) {
+                HStack {
+                    Text("Balance data by Blockstream")
+                        .font(.subheadline)
+                        .foregroundStyle(Color.textSecondary)
+                    Spacer()
+                    Image(systemName: "arrow.up.right")
+                        .font(.caption)
+                        .foregroundStyle(Color.textSecondary.opacity(0.5))
+                }
+                .padding(.vertical, 14)
+            }
+
+            Rectangle()
+                .fill(Color.rowDivider)
+                .frame(height: 0.5)
+
+            Link(destination: URL(string: "https://www.coingecko.com")!) {
+                HStack {
+                    Text("Price data by CoinGecko")
+                        .font(.subheadline)
+                        .foregroundStyle(Color.textSecondary)
+                    Spacer()
+                    Image(systemName: "arrow.up.right")
+                        .font(.caption)
+                        .foregroundStyle(Color.textSecondary.opacity(0.5))
+                }
+                .padding(.vertical, 14)
+            }
+
+            Rectangle()
+                .fill(Color.rowDivider)
+                .frame(height: 0.5)
+        }
+    }
+
+    private func sectionHeader(_ title: String) -> some View {
+        Text(title)
+            .font(.caption)
+            .foregroundStyle(Color.textSecondary)
+            .kerning(1.5)
+            .textCase(.uppercase)
     }
 }
+
 #Preview {
     let viewModel = PortfolioViewModel()
-    
+
     return SettingsView()
         .environment(viewModel)
 }
-

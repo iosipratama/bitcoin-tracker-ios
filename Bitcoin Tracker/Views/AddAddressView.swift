@@ -21,21 +21,29 @@ struct AddAddressView: View {
 
     var body: some View {
         NavigationStack {
-            VStack(spacing: 24) {
-                VStack(alignment: .leading, spacing: 8) {
+            VStack(alignment: .leading, spacing: 24) {
+                VStack(alignment: .leading, spacing: 12) {
                     Text("Bitcoin Address")
-                        .font(.subheadline)
+                        .font(.caption)
                         .foregroundStyle(Color.textSecondary)
+                        .kerning(1.2)
+                        .textCase(.uppercase)
 
                     TextField("1A1zP1eP5QGefi2DMPTfTL5SLmv7DivfNa", text: $addressText)
                         .textFieldStyle(.plain)
                         .font(.subheadline.monospaced())
+                        .foregroundStyle(.white)
                         .autocorrectionDisabled()
                         .textInputAutocapitalization(.never)
-                        .padding()
+                        .padding(.vertical, 16)
+                        .padding(.horizontal, 18)
                         .background(
                             RoundedRectangle(cornerRadius: .rowRadius)
-                                .fill(Color.white.opacity(0.05))
+                                .fill(Color.surfaceWarm)
+                                .overlay(
+                                    RoundedRectangle(cornerRadius: .rowRadius)
+                                        .strokeBorder(Color.rowDivider, lineWidth: 0.5)
+                                )
                         )
                         .onChange(of: addressText) {
                             previewBalance = nil
@@ -47,22 +55,24 @@ struct AddAddressView: View {
                     Button {
                         Task { await validateAddress() }
                     } label: {
-                        HStack {
+                        HStack(spacing: 8) {
                             if isValidating {
                                 ProgressView()
                                     .tint(Color.bitcoinOrange)
+                                    .scaleEffect(0.85)
                             } else {
                                 Image(systemName: "magnifyingglass")
+                                    .font(.subheadline)
                             }
-                            Text(isValidating ? "Checking..." : "Preview Balance")
+                            Text(isValidating ? "Checking…" : "Preview Balance")
                         }
                         .font(.subheadline.weight(.medium))
                         .foregroundStyle(Color.bitcoinOrange)
                         .frame(maxWidth: .infinity)
-                        .padding(.vertical, 12)
-                        .background(
+                        .padding(.vertical, 14)
+                        .overlay(
                             RoundedRectangle(cornerRadius: .rowRadius)
-                                .strokeBorder(Color.bitcoinOrange.opacity(0.5), lineWidth: 1)
+                                .strokeBorder(Color.bitcoinOrange.opacity(0.4), lineWidth: 1)
                         )
                     }
                     .disabled(isValidating)
@@ -70,24 +80,30 @@ struct AddAddressView: View {
 
                 if let balance = previewBalance {
                     let btc = Double(balance) / 100_000_000
-                    VStack(spacing: 8) {
+                    VStack(spacing: 6) {
                         Text("Balance Preview")
                             .font(.caption)
                             .foregroundStyle(Color.textSecondary)
-
-                        Text(viewModel.formattedBTC(btc))
-                            .font(.title3.bold())
-                            .foregroundStyle(.white)
+                            .kerning(1.2)
+                            .textCase(.uppercase)
 
                         Text(viewModel.formattedFiat(viewModel.fiatValue(btc: btc)))
+                            .font(.balanceMedium)
+                            .foregroundStyle(.white)
+
+                        Text(viewModel.formattedBTC(btc))
                             .font(.subheadline)
                             .foregroundStyle(Color.textSecondary)
                     }
-                    .padding()
                     .frame(maxWidth: .infinity)
+                    .padding(.vertical, 24)
                     .background(
                         RoundedRectangle(cornerRadius: .rowRadius)
-                            .fill(Color.white.opacity(0.05))
+                            .fill(Color.surfaceWarm)
+                            .overlay(
+                                RoundedRectangle(cornerRadius: .rowRadius)
+                                    .strokeBorder(Color.rowDivider, lineWidth: 0.5)
+                            )
                     )
                 }
 
@@ -99,15 +115,16 @@ struct AddAddressView: View {
 
                 Spacer()
             }
-            .padding(.horizontal)
-            .padding(.top, 24)
+            .padding(.horizontal, 24)
+            .padding(.top, 28)
             .padding(.bottom, 16)
-            .background(Color(hex: 0x0A0A0A).ignoresSafeArea())
+            .background(Color.appBackground.ignoresSafeArea())
             .navigationTitle("Add Address")
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
                 ToolbarItem(placement: .cancellationAction) {
                     Button("Cancel") { dismiss() }
+                        .foregroundStyle(Color.textSecondary)
                 }
                 ToolbarItem(placement: .confirmationAction) {
                     Button("Save") {
@@ -121,6 +138,7 @@ struct AddAddressView: View {
         }
         .presentationDetents([.medium])
         .presentationDragIndicator(.visible)
+        .presentationBackground(Color.appBackground)
     }
 
     private func validateAddress() async {
@@ -151,17 +169,17 @@ struct AddAddressView: View {
         dismiss()
     }
 }
+
 #Preview {
     let config = ModelConfiguration(isStoredInMemoryOnly: true)
     let container = try! ModelContainer(for: Wallet.self, BitcoinAddress.self, configurations: config)
-    
+
     let wallet = Wallet(name: "Test Wallet")
     container.mainContext.insert(wallet)
-    
+
     let viewModel = PortfolioViewModel()
-    
+
     return AddAddressView(wallet: wallet)
         .modelContainer(container)
         .environment(viewModel)
 }
-
