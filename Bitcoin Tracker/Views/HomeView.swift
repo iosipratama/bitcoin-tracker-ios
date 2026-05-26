@@ -8,41 +8,43 @@ struct HomeView: View {
 
     @State private var showAddWallet = false
     @State private var showSettings = false
+    @State private var walletToDelete: Wallet? = nil
 
     var body: some View {
         NavigationStack {
             ScrollView {
-                VStack(spacing: 12) {
+                LazyVStack(spacing: 0) {
                     if wallets.isEmpty {
                         emptyState
                     } else {
                         ForEach(wallets) { wallet in
                             NavigationLink(value: wallet) {
-                                WalletCard(wallet: wallet)
+                                WalletRow(wallet: wallet)
                             }
                             .buttonStyle(.plain)
+                            .swipeActions(edge: .trailing, allowsFullSwipe: false) {
+                                Button(role: .destructive) {
+                                    walletToDelete = wallet
+                                } label: {
+                                    Label("Delete", systemImage: "trash")
+                                }
+                            }
                         }
                     }
                 }
-                .padding(.horizontal, 20)
-                .padding(.top, 4)
                 .padding(.bottom, 40)
             }
-            .navigationDestination(for: Wallet.self) { wallet in
-                WalletDetailView(wallet: wallet)
-            }
             .background(Color.appBackground.ignoresSafeArea())
-            .refreshable {
-                await viewModel.refreshBalances(wallets: wallets)
-            }
-            .navigationTitle("Portfolio")
-            .navigationBarTitleDisplayMode(.large)
+            .navigationTitle("")
+            .navigationBarTitleDisplayMode(.inline)
             .toolbar {
                 ToolbarItem(placement: .topBarLeading) {
                     Button { showSettings = true } label: {
-                        Image(systemName: "gearshape")
-                            .foregroundStyle(Color.textSecondary)
+                        Circle()
+                            .fill(Color.bitcoinOrange)
+                            .frame(width: 16, height: 16)
                     }
+                    .buttonStyle(.plain)
                 }
                 ToolbarItem(placement: .topBarTrailing) {
                     if viewModel.isLoading {
@@ -57,9 +59,31 @@ struct HomeView: View {
                     }
                 }
             }
+            .navigationDestination(for: Wallet.self) { wallet in
+                WalletDetailView(wallet: wallet)
+            }
+            .refreshable {
+                await viewModel.refreshBalances(wallets: wallets)
+            }
             .sheet(isPresented: $showAddWallet) { AddWalletView() }
             .sheet(isPresented: $showSettings) { SettingsView() }
             .task { await viewModel.refreshBalances(wallets: wallets) }
+            .alert("Remove \(walletToDelete?.name ?? "wallet")?", isPresented: .init(
+                get: { walletToDelete != nil },
+                set: { if !$0 { walletToDelete = nil } }
+            )) {
+                Button("Remove", role: .destructive) {
+                    if let wallet = walletToDelete {
+                        modelContext.delete(wallet)
+                    }
+                    walletToDelete = nil
+                }
+                Button("Cancel", role: .cancel) {
+                    walletToDelete = nil
+                }
+            } message: {
+                Text("This removes the wallet from your tracker. Your bitcoin on-chain is not affected.")
+            }
         }
     }
 
@@ -91,25 +115,21 @@ struct HomeView: View {
 
 // MARK: - Previews
 
-private struct PreviewWallet {
-    let name: String
-    let satoshis: Int64
-    let goalSatoshis: Int64?
-}
-
-private let sampleWallets: [PreviewWallet] = [
-    PreviewWallet(name: "Stack", satoshis: 21_500_000, goalSatoshis: 100_000_000),
-    PreviewWallet(name: "Cold Storage", satoshis: 105_340_200, goalSatoshis: nil),
-]
-
 #Preview("With Wallets") {
     let config = ModelConfiguration(isStoredInMemoryOnly: true)
     let container = try! ModelContainer(for: Wallet.self, BitcoinAddress.self, configurations: config)
 
-    for sample in sampleWallets {
-        let wallet = Wallet(name: sample.name)
+    let samples: [(String, Int64)] = [
+        ("Family saving", 32_221_303),
+        ("Anna", 541_234),
+        ("Retirement", 1_221_303),
+        ("Emergency Fund", 1_212_000),
+    ]
+
+    for (name, sats) in samples {
+        let wallet = Wallet(name: name)
         let address = BitcoinAddress(address: "bc1qxy2kgdygjrsqtzq2n0yrf2493p83kkfjhx0wlh")
-        address.balanceSatoshis = sample.satoshis
+        address.balanceSatoshis = sats
         address.lastUpdated = .now
         wallet.addresses.append(address)
         container.mainContext.insert(wallet)
