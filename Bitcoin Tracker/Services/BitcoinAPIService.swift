@@ -2,6 +2,8 @@ import Foundation
 
 enum APIError: LocalizedError {
     case invalidURL
+    case invalidAddress
+    case rateLimited
     case networkError(Error)
     case decodingError
     case httpError(Int)
@@ -10,6 +12,10 @@ enum APIError: LocalizedError {
         switch self {
         case .invalidURL:
             "Invalid URL"
+        case .invalidAddress:
+            "Address not recognized"
+        case .rateLimited:
+            "Too many requests — try again shortly"
         case .networkError(let error):
             error.localizedDescription
         case .decodingError:
@@ -42,8 +48,10 @@ actor BitcoinAPIService {
         self.session = URLSession(configuration: config)
     }
 
-    func fetchBalance(for address: String) async throws -> Int64 {
-        guard let url = URL(string: "\(baseURL)/address/\(address)") else {
+    // nonisolated: this path touches only immutable state, so it needs no actor hop.
+    nonisolated func fetchBalance(for address: String) async throws -> Int64 {
+        guard let encoded = address.addingPercentEncoding(withAllowedCharacters: .alphanumerics),
+              let url = URL(string: "\(baseURL)/address/\(encoded)") else {
             throw APIError.invalidURL
         }
 
@@ -53,14 +61,16 @@ actor BitcoinAPIService {
             throw APIError.networkError(URLError(.badServerResponse))
         }
 
-        guard httpResponse.statusCode == 200 else {
-            throw APIError.httpError(httpResponse.statusCode)
+        switch httpResponse.statusCode {
+        case 200: break
+        case 400, 404: throw APIError.invalidAddress
+        case 429: throw APIError.rateLimited
+        default: throw APIError.httpError(httpResponse.statusCode)
         }
 
-        // Decode outside actor isolation
-        let decoded = try await Task {
-            try JSONDecoder().decode(BlockstreamAddressResponse.self, from: data)
-        }.value
+        guard let decoded = try? JSONDecoder().decode(BlockstreamAddressResponse.self, from: data) else {
+            throw APIError.decodingError
+        }
 
         return decoded.chain_stats.funded_txo_sum - decoded.chain_stats.spent_txo_sum
     }

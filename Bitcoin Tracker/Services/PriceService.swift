@@ -43,9 +43,9 @@ actor PriceService {
     }
 
     func fetchPrices() async throws -> [String: Double] {
-        if let lastFetch, let cached = cachedPrices as [String: Double]?,
-           !cached.isEmpty, Date.now.timeIntervalSince(lastFetch) < cacheInterval {
-            return cached
+        if let lastFetch, !cachedPrices.isEmpty,
+           Date.now.timeIntervalSince(lastFetch) < cacheInterval {
+            return cachedPrices
         }
 
         guard let url = URL(string: priceURL) else {
@@ -54,15 +54,19 @@ actor PriceService {
 
         let (data, response) = try await session.data(from: url)
 
-        guard let httpResponse = response as? HTTPURLResponse,
-              httpResponse.statusCode == 200 else {
-            throw APIError.httpError((response as? HTTPURLResponse)?.statusCode ?? 0)
+        guard let httpResponse = response as? HTTPURLResponse else {
+            throw APIError.networkError(URLError(.badServerResponse))
         }
 
-        // Decode outside actor isolation
-        let decoded = try await Task {
-            try JSONDecoder().decode(CoinGeckoPriceResponse.self, from: data)
-        }.value
+        switch httpResponse.statusCode {
+        case 200: break
+        case 429: throw APIError.rateLimited
+        default: throw APIError.httpError(httpResponse.statusCode)
+        }
+
+        guard let decoded = try? JSONDecoder().decode(CoinGeckoPriceResponse.self, from: data) else {
+            throw APIError.decodingError
+        }
 
         cachedPrices = decoded.bitcoin
         lastFetch = .now
