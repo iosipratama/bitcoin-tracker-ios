@@ -1,27 +1,5 @@
 import Foundation
 
-enum FiatCurrency: String, CaseIterable, Codable, Sendable {
-    case usd = "USD"
-    case eur = "EUR"
-    case gbp = "GBP"
-
-    var symbol: String {
-        switch self {
-        case .usd: "$"
-        case .eur: "€"
-        case .gbp: "£"
-        }
-    }
-
-    var locale: Locale {
-        switch self {
-        case .usd: Locale(identifier: "en_US")
-        case .eur: Locale(identifier: "de_DE")
-        case .gbp: Locale(identifier: "en_GB")
-        }
-    }
-}
-
 struct CoinGeckoPriceResponse: Decodable, Sendable {
     let bitcoin: [String: Double]
 }
@@ -30,7 +8,8 @@ actor PriceService {
     static let shared = PriceService()
 
     private let session: URLSession
-    private let priceURL = "https://api.coingecko.com/api/v3/simple/price?ids=bitcoin&vs_currencies=usd,eur,gbp"
+    private let priceURL = "https://api.coingecko.com/api/v3/simple/price?ids=bitcoin&vs_currencies="
+        + FiatCurrency.allCases.map(\.apiKey).joined(separator: ",")
 
     private var cachedPrices: [String: Double] = [:]
     private var lastFetch: Date?
@@ -75,7 +54,7 @@ actor PriceService {
 
     func price(for currency: FiatCurrency) async throws -> Double {
         let prices = try await fetchPrices()
-        guard let price = prices[currency.rawValue.lowercased()] else {
+        guard let price = prices[currency.apiKey] else {
             throw APIError.decodingError
         }
         return price

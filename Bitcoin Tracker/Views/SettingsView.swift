@@ -10,7 +10,7 @@ struct SettingsView: View {
         return NavigationStack {
             ScrollView {
                 VStack(alignment: .leading, spacing: 40) {
-                    fiatSection(showFiat: $bindable.showFiat)
+                    fiatSection(showFiat: $bindable.showFiat, currency: $bindable.selectedCurrency)
                     aboutSection
                 }
                 .padding(.horizontal, 24)
@@ -30,7 +30,7 @@ struct SettingsView: View {
         .presentationBackground(Color.appBackground)
     }
 
-    private func fiatSection(showFiat: Binding<Bool>) -> some View {
+    private func fiatSection(showFiat: Binding<Bool>, currency: Binding<FiatCurrency>) -> some View {
         VStack(alignment: .leading, spacing: 14) {
             sectionHeader("Fiat Value")
 
@@ -56,41 +56,42 @@ struct SettingsView: View {
                 .frame(height: 0.5)
 
             if viewModel.showFiat {
-                currencyList
+                currencyPicker(currency: currency)
                     .transition(.opacity.combined(with: .move(edge: .top)))
             }
         }
         .animation(.smooth, value: viewModel.showFiat)
     }
 
-    @ViewBuilder
-    private var currencyList: some View {
+    private func currencyPicker(currency: Binding<FiatCurrency>) -> some View {
         VStack(alignment: .leading, spacing: 0) {
-            ForEach(FiatCurrency.allCases, id: \.self) { currency in
-                Button {
-                    viewModel.selectedCurrency = currency
-                    Task { await viewModel.refreshPrices() }
-                } label: {
-                    HStack {
-                        Text("\(currency.symbol) \(currency.rawValue)")
-                            .font(.subheadline)
-                            .foregroundStyle(.white)
-                        Spacer()
-                        if viewModel.selectedCurrency == currency {
-                            Image(systemName: "checkmark")
-                                .font(.subheadline.weight(.medium))
-                                .foregroundStyle(Color.bitcoinOrange)
-                        }
-                    }
-                    .contentShape(Rectangle())
-                    .padding(.vertical, 14)
-                }
-                .accessibilityAddTraits(viewModel.selectedCurrency == currency ? .isSelected : [])
+            HStack {
+                Text("Currency")
+                    .font(.subheadline)
+                    .foregroundStyle(.white)
 
-                Rectangle()
-                    .fill(Color.rowDivider)
-                    .frame(height: 0.5)
+                Spacer()
+
+                Picker("Currency", selection: currency) {
+                    ForEach(FiatCurrency.allCases) { option in
+                        Text(option.displayName).tag(option)
+                    }
+                }
+                .pickerStyle(.menu)
+                .labelsHidden()
+                .tint(Color.bitcoinOrange)
             }
+            .padding(.vertical, 6)
+
+            Rectangle()
+                .fill(Color.rowDivider)
+                .frame(height: 0.5)
+                .padding(.top, 8)
+        }
+        .onChange(of: currency.wrappedValue) {
+            // The cached response carries every currency, so this only matters
+            // when the first fetch failed.
+            Task { await viewModel.refreshPrices() }
         }
     }
 

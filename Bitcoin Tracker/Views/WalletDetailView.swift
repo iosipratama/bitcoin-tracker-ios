@@ -51,6 +51,9 @@ struct WalletDetailView: View {
                     }
                     .font(.balanceMedium)
                     .foregroundStyle(.white)
+                    .lineLimit(1)
+                    .minimumScaleFactor(0.5)
+                    .padding(.horizontal, 24)
 
                     Text(viewModel.formattedBTC(wallet.totalBTC))
                         .font(.subheadline)
@@ -177,6 +180,8 @@ struct AddressRow: View {
                     Text(viewModel.formattedFiat(viewModel.fiatValue(btc: address.balanceBTC)))
                         .font(.subheadline.weight(.medium))
                         .foregroundStyle(.white)
+                        .lineLimit(1)
+                        .minimumScaleFactor(0.6)
                 }
             }
             .padding(.horizontal, 24)

@@ -40,7 +40,7 @@ final class PortfolioViewModel {
     }
 
     var currentPrice: Double {
-        prices[selectedCurrency.rawValue.lowercased()] ?? 0
+        prices[selectedCurrency.apiKey] ?? 0
     }
 
     /// False when the price fetch failed or hasn't landed yet. Without this check a
@@ -61,14 +61,15 @@ final class PortfolioViewModel {
         value.btcDisplay
     }
 
+    /// Delegates fraction digits to the currency itself — JPY, KRW and VND have
+    /// none, so a hardcoded two would have rendered "¥1,234.00". Above four
+    /// figures the decimals are dropped entirely; on a rupiah balance they are
+    /// only noise.
     func formattedFiat(_ value: Double) -> String {
-        let formatter = NumberFormatter()
-        formatter.numberStyle = .currency
-        formatter.locale = selectedCurrency.locale
-        formatter.currencyCode = selectedCurrency.rawValue
-        formatter.maximumFractionDigits = 2
-        formatter.minimumFractionDigits = 2
-        return formatter.string(from: NSNumber(value: value)) ?? "\(selectedCurrency.symbol)\(value)"
+        let style = FloatingPointFormatStyle<Double>.Currency(code: selectedCurrency.rawValue)
+        return abs(value) >= 10_000
+            ? value.formatted(style.precision(.fractionLength(0)))
+            : value.formatted(style)
     }
 
     func refreshPrices() async {

@@ -141,6 +141,8 @@ struct HomeView: View {
             Text(viewModel.formattedFiat(viewModel.fiatValue(btc: totalBTC)))
                 .font(.system(size: 17))
                 .foregroundStyle(Color.textSecondary)
+                .lineLimit(1)
+                .minimumScaleFactor(0.6)
         } else {
             Text("Price unavailable")
                 .font(.system(size: 15))

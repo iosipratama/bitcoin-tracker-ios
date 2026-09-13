@@ -116,6 +116,9 @@ struct AddAddressView: View {
                             Text(viewModel.formattedFiat(viewModel.fiatValue(btc: btc)))
                                 .font(.balanceMedium)
                                 .foregroundStyle(.white)
+                                .lineLimit(1)
+                                .minimumScaleFactor(0.5)
+                                .padding(.horizontal, 16)
 
                             Text(viewModel.formattedBTC(btc))
                                 .font(.subheadline)
