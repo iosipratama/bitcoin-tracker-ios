@@ -8,6 +8,10 @@ struct WalletDetailView: View {
 
     @State private var showAddAddress = false
 
+    private var oldestUpdate: Date? {
+        wallet.addresses.compactMap(\.lastUpdated).min()
+    }
+
     var body: some View {
         ScrollView {
             VStack(spacing: 0) {
@@ -21,12 +25,8 @@ struct WalletDetailView: View {
         .navigationBarTitleDisplayMode(.inline)
         .toolbar {
             ToolbarItem(placement: .topBarTrailing) {
-                Button {
-                    showAddAddress = true
-                } label: {
-                    Image(systemName: "plus")
-                        .foregroundStyle(Color.bitcoinOrange)
-                }
+                Button("Add Address", systemImage: "plus") { showAddAddress = true }
+                    .tint(Color.bitcoinOrange)
             }
         }
         .sheet(isPresented: $showAddAddress) {
@@ -45,17 +45,30 @@ struct WalletDetailView: View {
             .frame(height: 240)
 
             VStack(spacing: 10) {
-                AnimatingNumber(value: viewModel.fiatValue(btc: wallet.totalBTC)) { val in
-                    viewModel.formattedFiat(val)
-                }
-                .font(.balanceMedium)
-                .foregroundStyle(.white)
+                if viewModel.showsFiatValues {
+                    AnimatingNumber(value: viewModel.fiatValue(btc: wallet.totalBTC)) { val in
+                        viewModel.formattedFiat(val)
+                    }
+                    .font(.balanceMedium)
+                    .foregroundStyle(.white)
 
-                Text(viewModel.formattedBTC(wallet.totalBTC))
-                    .font(.subheadline)
-                    .foregroundStyle(Color.textSecondary)
+                    Text(viewModel.formattedBTC(wallet.totalBTC))
+                        .font(.subheadline)
+                        .foregroundStyle(Color.textSecondary)
+                } else {
+                    Text(viewModel.formattedBTC(wallet.totalBTC))
+                        .font(.balanceMedium)
+                        .foregroundStyle(.white)
+
+                    if viewModel.showFiat {
+                        Text("Price unavailable")
+                            .font(.subheadline)
+                            .foregroundStyle(Color.textSecondary.opacity(0.7))
+                    }
+                }
             }
             .padding(.vertical, 48)
+            .accessibilityElement(children: .combine)
         }
     }
 
@@ -81,6 +94,11 @@ struct WalletDetailView: View {
                         .kerning(1.5)
                         .textCase(.uppercase)
                     Spacer()
+                    if let updated = oldestUpdate {
+                        Text("Updated \(updated, format: .relative(presentation: .named))")
+                            .font(.caption2)
+                            .foregroundStyle(Color.textSecondary.opacity(0.7))
+                    }
                 }
                 .padding(.horizontal, 24)
                 .padding(.bottom, 14)
@@ -123,39 +141,60 @@ struct AddressRow: View {
     let address: BitcoinAddress
     let viewModel: PortfolioViewModel
 
-    var body: some View {
-        HStack(alignment: .center, spacing: 0) {
-            VStack(alignment: .leading, spacing: 5) {
-                Text(address.shortAddress)
-                    .font(.subheadline.monospaced())
-                    .foregroundStyle(.white)
+    @State private var didCopy = false
 
-                if let error = address.fetchError {
-                    Text(error)
-                        .font(.caption2)
-                        .foregroundStyle(Color.errorText)
-                } else {
-                    Text(viewModel.formattedBTC(address.balanceBTC))
+    var body: some View {
+        Button {
+            UIPasteboard.general.string = address.address
+            withAnimation(.snappy) { didCopy = true }
+        } label: {
+            HStack(alignment: .center, spacing: 0) {
+                VStack(alignment: .leading, spacing: 5) {
+                    Text(address.shortAddress)
+                        .font(.subheadline.monospaced())
+                        .foregroundStyle(.white)
+
+                    if let error = address.fetchError {
+                        Text(error)
+                            .font(.caption2)
+                            .foregroundStyle(Color.errorText)
+                    } else {
+                        Text(viewModel.formattedBTC(address.balanceBTC))
+                            .font(.caption)
+                            .foregroundStyle(Color.textSecondary)
+                    }
+                }
+
+                Spacer()
+
+                if didCopy {
+                    Label("Copied", systemImage: "checkmark")
+                        .labelStyle(.titleAndIcon)
                         .font(.caption)
-                        .foregroundStyle(Color.textSecondary)
+                        .foregroundStyle(Color.bitcoinOrange)
+                        .transition(.opacity)
+                } else if address.fetchError == nil, viewModel.showsFiatValues {
+                    Text(viewModel.formattedFiat(viewModel.fiatValue(btc: address.balanceBTC)))
+                        .font(.subheadline.weight(.medium))
+                        .foregroundStyle(.white)
                 }
             }
-
-            Spacer()
-
-            if address.fetchError == nil {
-                Text(viewModel.formattedFiat(viewModel.fiatValue(btc: address.balanceBTC)))
-                    .font(.subheadline.weight(.medium))
-                    .foregroundStyle(.white)
-            }
+            .padding(.horizontal, 24)
+            .padding(.vertical, 20)
+            .frame(maxWidth: .infinity)
+            .background(Color.appBackground)
+            .contentShape(Rectangle())
         }
-        .padding(.horizontal, 24)
-        .padding(.vertical, 20)
-        .background(Color.appBackground)
-        .onTapGesture {
-            UIPasteboard.general.string = address.address
+        .buttonStyle(.plain)
+        .sensoryFeedback(.success, trigger: didCopy)
+        .task(id: didCopy) {
+            guard didCopy else { return }
+            try? await Task.sleep(for: .seconds(2))
+            withAnimation(.smooth) { didCopy = false }
         }
-        .accessibilityHint("Double tap to copy address")
+        .accessibilityLabel("Address \(address.address)")
+        .accessibilityValue(address.fetchError ?? viewModel.formattedBTC(address.balanceBTC))
+        .accessibilityHint("Copies the address")
     }
 }
 

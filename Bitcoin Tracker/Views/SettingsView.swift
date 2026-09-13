@@ -5,10 +5,12 @@ struct SettingsView: View {
     @Environment(PortfolioViewModel.self) private var viewModel
 
     var body: some View {
-        NavigationStack {
+        @Bindable var bindable = viewModel
+
+        return NavigationStack {
             ScrollView {
                 VStack(alignment: .leading, spacing: 40) {
-                    currencySection
+                    fiatSection(showFiat: $bindable.showFiat)
                     aboutSection
                 }
                 .padding(.horizontal, 24)
@@ -28,14 +30,42 @@ struct SettingsView: View {
         .presentationBackground(Color.appBackground)
     }
 
-    private var currencySection: some View {
+    private func fiatSection(showFiat: Binding<Bool>) -> some View {
         VStack(alignment: .leading, spacing: 14) {
-            sectionHeader("Fiat Currency")
+            sectionHeader("Fiat Value")
 
             Rectangle()
                 .fill(Color.rowDivider)
                 .frame(height: 0.5)
 
+            Toggle(isOn: showFiat) {
+                VStack(alignment: .leading, spacing: 4) {
+                    Text("Show fiat value")
+                        .font(.subheadline)
+                        .foregroundStyle(.white)
+                    Text("Off keeps every figure denominated in bitcoin.")
+                        .font(.caption)
+                        .foregroundStyle(Color.textSecondary)
+                }
+            }
+            .tint(Color.bitcoinOrange)
+            .padding(.vertical, 14)
+
+            Rectangle()
+                .fill(Color.rowDivider)
+                .frame(height: 0.5)
+
+            if viewModel.showFiat {
+                currencyList
+                    .transition(.opacity.combined(with: .move(edge: .top)))
+            }
+        }
+        .animation(.smooth, value: viewModel.showFiat)
+    }
+
+    @ViewBuilder
+    private var currencyList: some View {
+        VStack(alignment: .leading, spacing: 0) {
             ForEach(FiatCurrency.allCases, id: \.self) { currency in
                 Button {
                     viewModel.selectedCurrency = currency
@@ -52,19 +82,15 @@ struct SettingsView: View {
                                 .foregroundStyle(Color.bitcoinOrange)
                         }
                     }
+                    .contentShape(Rectangle())
                     .padding(.vertical, 14)
                 }
+                .accessibilityAddTraits(viewModel.selectedCurrency == currency ? .isSelected : [])
 
-                if currency != FiatCurrency.allCases.last {
-                    Rectangle()
-                        .fill(Color.rowDivider)
-                        .frame(height: 0.5)
-                }
+                Rectangle()
+                    .fill(Color.rowDivider)
+                    .frame(height: 0.5)
             }
-
-            Rectangle()
-                .fill(Color.rowDivider)
-                .frame(height: 0.5)
         }
     }
 

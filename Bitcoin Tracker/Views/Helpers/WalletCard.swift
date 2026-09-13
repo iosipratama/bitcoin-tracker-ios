@@ -10,7 +10,7 @@ struct WalletRow: View {
                 .foregroundStyle(Color.textSecondary)
 
             HStack(alignment: .lastTextBaseline, spacing: 6) {
-                Text(formattedBTC)
+                Text(wallet.totalBTC.btcDigits)
                     .font(.system(size: 36, weight: .semibold, design: .monospaced))
                     .foregroundStyle(.white)
 
@@ -23,13 +23,7 @@ struct WalletRow: View {
         .padding(.horizontal, 20)
         .padding(.vertical, 22)
         .contentShape(Rectangle())
-    }
-
-    private var formattedBTC: String {
-        let btc = wallet.totalBTC
-        if btc == 0 { return "0.00000000" }
-        if btc >= 1 { return String(format: "%.4f", btc) }
-        return String(format: "%.8f", btc)
+        .accessibilityElement(children: .combine)
     }
 }
 

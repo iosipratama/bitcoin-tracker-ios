@@ -4,6 +4,7 @@ import SwiftData
 struct AddAddressView: View {
     let wallet: Wallet
 
+    @Query private var allWallets: [Wallet]
     @Environment(\.modelContext) private var modelContext
     @Environment(\.dismiss) private var dismiss
     @Environment(PortfolioViewModel.self) private var viewModel
@@ -13,10 +14,34 @@ struct AddAddressView: View {
     @State private var isValidating = false
     @State private var validationError: String?
 
+    private var trimmedAddress: String {
+        addressText.trimmingCharacters(in: .whitespacesAndNewlines)
+    }
+
     private var isValidFormat: Bool {
-        let trimmed = addressText.trimmingCharacters(in: .whitespacesAndNewlines)
-        guard !trimmed.isEmpty else { return false }
-        return trimmed.hasPrefix("1") || trimmed.hasPrefix("3") || trimmed.hasPrefix("bc1")
+        BitcoinAddress.isValidFormat(trimmedAddress)
+    }
+
+    /// The same address in two places would be counted twice in every total,
+    /// so an address may only live in one wallet.
+    private var duplicateOwner: Wallet? {
+        guard !trimmedAddress.isEmpty else { return nil }
+        return allWallets.first { candidate in
+            candidate.addresses.contains {
+                $0.address.caseInsensitiveCompare(trimmedAddress) == .orderedSame
+            }
+        }
+    }
+
+    private var duplicateMessage: String? {
+        guard let owner = duplicateOwner else { return nil }
+        return owner.persistentModelID == wallet.persistentModelID
+            ? "This address is already in this wallet."
+            : "This address is already tracked in “\(owner.name)”."
+    }
+
+    private var canSave: Bool {
+        isValidFormat && duplicateMessage == nil
     }
 
     var body: some View {
@@ -51,7 +76,7 @@ struct AddAddressView: View {
                         }
                 }
 
-                if isValidFormat {
+                if canSave {
                     Button {
                         Task { await validateAddress() }
                     } label: {
@@ -87,13 +112,19 @@ struct AddAddressView: View {
                             .kerning(1.2)
                             .textCase(.uppercase)
 
-                        Text(viewModel.formattedFiat(viewModel.fiatValue(btc: btc)))
-                            .font(.balanceMedium)
-                            .foregroundStyle(.white)
+                        if viewModel.showsFiatValues {
+                            Text(viewModel.formattedFiat(viewModel.fiatValue(btc: btc)))
+                                .font(.balanceMedium)
+                                .foregroundStyle(.white)
 
-                        Text(viewModel.formattedBTC(btc))
-                            .font(.subheadline)
-                            .foregroundStyle(Color.textSecondary)
+                            Text(viewModel.formattedBTC(btc))
+                                .font(.subheadline)
+                                .foregroundStyle(Color.textSecondary)
+                        } else {
+                            Text(viewModel.formattedBTC(btc))
+                                .font(.balanceMedium)
+                                .foregroundStyle(.white)
+                        }
                     }
                     .frame(maxWidth: .infinity)
                     .padding(.vertical, 24)
@@ -107,8 +138,12 @@ struct AddAddressView: View {
                     )
                 }
 
-                if let error = validationError {
-                    Text(error)
+                if let message = duplicateMessage ?? validationError {
+                    Text(message)
+                        .font(.caption)
+                        .foregroundStyle(Color.errorText)
+                } else if !trimmedAddress.isEmpty && !isValidFormat {
+                    Text("That doesn\u{2019}t look like a Bitcoin address.")
                         .font(.caption)
                         .foregroundStyle(Color.errorText)
                 }
@@ -131,8 +166,8 @@ struct AddAddressView: View {
                         saveAddress()
                     }
                     .fontWeight(.semibold)
-                    .foregroundStyle(previewBalance != nil ? Color.bitcoinOrange : Color.bitcoinOrangeDisabled)
-                    .disabled(previewBalance == nil)
+                    .foregroundStyle(canSave ? Color.bitcoinOrange : Color.bitcoinOrangeDisabled)
+                    .disabled(!canSave)
                 }
             }
         }
@@ -142,14 +177,13 @@ struct AddAddressView: View {
     }
 
     private func validateAddress() async {
-        let trimmed = addressText.trimmingCharacters(in: .whitespacesAndNewlines)
+        let trimmed = trimmedAddress
         isValidating = true
         validationError = nil
         previewBalance = nil
 
         do {
-            let balance = try await BitcoinAPIService.shared.fetchBalance(for: trimmed)
-            previewBalance = balance
+            previewBalance = try await BitcoinAPIService.shared.fetchBalance(for: trimmed)
         } catch {
             validationError = error.localizedDescription
         }
@@ -157,14 +191,17 @@ struct AddAddressView: View {
         isValidating = false
     }
 
+    /// Saving never requires the network — an unfetched address simply picks up its
+    /// balance on the next refresh.
     private func saveAddress() {
-        let trimmed = addressText.trimmingCharacters(in: .whitespacesAndNewlines)
-        let btcAddress = BitcoinAddress(address: trimmed)
-        if let balance = previewBalance {
-            btcAddress.balanceSatoshis = balance
+        guard canSave else { return }
+
+        let btcAddress = BitcoinAddress(address: trimmedAddress)
+        if let previewBalance {
+            btcAddress.balanceSatoshis = previewBalance
             btcAddress.lastUpdated = .now
         }
-        btcAddress.wallet = wallet
+        // SwiftData maintains the inverse; setting both sides can duplicate the row.
         wallet.addresses.append(btcAddress)
         dismiss()
     }
