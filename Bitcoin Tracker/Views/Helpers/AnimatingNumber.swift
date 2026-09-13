@@ -4,13 +4,19 @@ struct AnimatingNumber: View {
     let value: Double
     let formatter: (Double) -> String
 
-    @State private var displayValue: Double = 0
+    // nil until the first value lands, so the figure appears settled rather than
+    // counting up from zero every time the screen opens.
+    @State private var displayValue: Double?
 
     var body: some View {
-        Text(formatter(displayValue))
-            .contentTransition(.numericText(value: displayValue))
+        Text(formatter(displayValue ?? value))
+            .contentTransition(.numericText(value: displayValue ?? value))
             .onChange(of: value, initial: true) { _, newValue in
-                withAnimation(.easeOut(duration: 0.6)) {
+                guard displayValue != nil else {
+                    displayValue = newValue
+                    return
+                }
+                withAnimation(.smooth) {
                     displayValue = newValue
                 }
             }

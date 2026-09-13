@@ -5,10 +5,12 @@ struct SettingsView: View {
     @Environment(PortfolioViewModel.self) private var viewModel
 
     var body: some View {
-        NavigationStack {
+        @Bindable var bindable = viewModel
+
+        return NavigationStack {
             ScrollView {
                 VStack(alignment: .leading, spacing: 40) {
-                    currencySection
+                    fiatSection(showFiat: $bindable.showFiat, currency: $bindable.selectedCurrency)
                     aboutSection
                 }
                 .padding(.horizontal, 24)
@@ -28,43 +30,68 @@ struct SettingsView: View {
         .presentationBackground(Color.appBackground)
     }
 
-    private var currencySection: some View {
+    private func fiatSection(showFiat: Binding<Bool>, currency: Binding<FiatCurrency>) -> some View {
         VStack(alignment: .leading, spacing: 14) {
-            sectionHeader("Fiat Currency")
+            sectionHeader("Fiat Value")
 
             Rectangle()
                 .fill(Color.rowDivider)
                 .frame(height: 0.5)
 
-            ForEach(FiatCurrency.allCases, id: \.self) { currency in
-                Button {
-                    viewModel.selectedCurrency = currency
-                    Task { await viewModel.refreshPrices() }
-                } label: {
-                    HStack {
-                        Text("\(currency.symbol) \(currency.rawValue)")
-                            .font(.subheadline)
-                            .foregroundStyle(.white)
-                        Spacer()
-                        if viewModel.selectedCurrency == currency {
-                            Image(systemName: "checkmark")
-                                .font(.subheadline.weight(.medium))
-                                .foregroundStyle(Color.bitcoinOrange)
-                        }
-                    }
-                    .padding(.vertical, 14)
-                }
-
-                if currency != FiatCurrency.allCases.last {
-                    Rectangle()
-                        .fill(Color.rowDivider)
-                        .frame(height: 0.5)
+            Toggle(isOn: showFiat) {
+                VStack(alignment: .leading, spacing: 4) {
+                    Text("Show fiat value")
+                        .font(.subheadline)
+                        .foregroundStyle(.white)
+                    Text("Off keeps every figure denominated in bitcoin.")
+                        .font(.caption)
+                        .foregroundStyle(Color.textSecondary)
                 }
             }
+            .tint(Color.bitcoinOrange)
+            .padding(.vertical, 14)
 
             Rectangle()
                 .fill(Color.rowDivider)
                 .frame(height: 0.5)
+
+            if viewModel.showFiat {
+                currencyPicker(currency: currency)
+                    .transition(.opacity.combined(with: .move(edge: .top)))
+            }
+        }
+        .animation(.smooth, value: viewModel.showFiat)
+    }
+
+    private func currencyPicker(currency: Binding<FiatCurrency>) -> some View {
+        VStack(alignment: .leading, spacing: 0) {
+            HStack {
+                Text("Currency")
+                    .font(.subheadline)
+                    .foregroundStyle(.white)
+
+                Spacer()
+
+                Picker("Currency", selection: currency) {
+                    ForEach(FiatCurrency.allCases) { option in
+                        Text(option.displayName).tag(option)
+                    }
+                }
+                .pickerStyle(.menu)
+                .labelsHidden()
+                .tint(Color.bitcoinOrange)
+            }
+            .padding(.vertical, 6)
+
+            Rectangle()
+                .fill(Color.rowDivider)
+                .frame(height: 0.5)
+                .padding(.top, 8)
+        }
+        .onChange(of: currency.wrappedValue) {
+            // The cached response carries every currency, so this only matters
+            // when the first fetch failed.
+            Task { await viewModel.refreshPrices() }
         }
     }
 

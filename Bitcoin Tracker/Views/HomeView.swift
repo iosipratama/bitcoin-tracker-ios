@@ -10,60 +10,47 @@ struct HomeView: View {
     @State private var showSettings = false
     @State private var walletToDelete: Wallet? = nil
 
+    private var totalBTC: Double {
+        Double(wallets.reduce(0) { $0 + $1.totalSatoshis }) / 100_000_000
+    }
+
+    /// The oldest successful fetch across the portfolio — the honest answer to
+    /// "how current is this number?"
+    private var oldestUpdate: Date? {
+        wallets.flatMap(\.addresses).compactMap(\.lastUpdated).min()
+    }
+
     var body: some View {
         NavigationStack {
-            ScrollView {
-                LazyVStack(spacing: 0) {
-                    if wallets.isEmpty {
-                        emptyState
-                    } else {
-                        ForEach(wallets) { wallet in
-                            NavigationLink(value: wallet) {
-                                WalletRow(wallet: wallet)
-                            }
-                            .buttonStyle(.plain)
-                            .swipeActions(edge: .trailing, allowsFullSwipe: false) {
-                                Button(role: .destructive) {
-                                    walletToDelete = wallet
-                                } label: {
-                                    Label("Delete", systemImage: "trash")
-                                }
-                            }
-                        }
-                    }
+            Group {
+                if wallets.isEmpty {
+                    emptyState
+                } else {
+                    walletList
                 }
-                .padding(.bottom, 40)
             }
             .background(Color.appBackground.ignoresSafeArea())
-            .navigationTitle("")
+            .navigationTitle("Wallets")
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
                 ToolbarItem(placement: .topBarLeading) {
-                    Button { showSettings = true } label: {
-                        Circle()
-                            .fill(Color.bitcoinOrange)
-                            .frame(width: 16, height: 16)
-                    }
-                    .buttonStyle(.plain)
+                    Button("Settings", systemImage: "gearshape") { showSettings = true }
+                        .tint(Color.bitcoinOrange)
                 }
                 ToolbarItem(placement: .topBarTrailing) {
                     if viewModel.isLoading {
                         ProgressView()
                             .tint(Color.bitcoinOrange)
                             .scaleEffect(0.8)
+                            .accessibilityLabel("Refreshing balances")
                     } else {
-                        Button { showAddWallet = true } label: {
-                            Image(systemName: "plus")
-                                .foregroundStyle(Color.bitcoinOrange)
-                        }
+                        Button("Add Wallet", systemImage: "plus") { showAddWallet = true }
+                            .tint(Color.bitcoinOrange)
                     }
                 }
             }
             .navigationDestination(for: Wallet.self) { wallet in
                 WalletDetailView(wallet: wallet)
-            }
-            .refreshable {
-                await viewModel.refreshBalances(wallets: wallets)
             }
             .sheet(isPresented: $showAddWallet) { AddWalletView() }
             .sheet(isPresented: $showSettings) { SettingsView() }
@@ -84,6 +71,82 @@ struct HomeView: View {
             } message: {
                 Text("This removes the wallet from your tracker. Your bitcoin on-chain is not affected.")
             }
+        }
+    }
+
+    // Swipe actions only exist on List rows — in a LazyVStack the modifier is silently ignored.
+    private var walletList: some View {
+        List {
+            portfolioSummary
+                .listRowInsets(EdgeInsets(top: 28, leading: 20, bottom: 32, trailing: 20))
+                .listRowBackground(Color.appBackground)
+                .listRowSeparator(.hidden)
+
+            ForEach(wallets) { wallet in
+                NavigationLink(value: wallet) {
+                    WalletRow(wallet: wallet)
+                }
+                .listRowInsets(EdgeInsets())
+                .listRowBackground(Color.appBackground)
+                .listRowSeparatorTint(Color.rowDivider)
+                .swipeActions(edge: .trailing, allowsFullSwipe: false) {
+                    Button("Delete", systemImage: "trash", role: .destructive) {
+                        walletToDelete = wallet
+                    }
+                }
+            }
+        }
+        .listStyle(.plain)
+        .scrollContentBackground(.hidden)
+        .refreshable {
+            await viewModel.refreshBalances(wallets: wallets)
+        }
+    }
+
+    private var portfolioSummary: some View {
+        VStack(alignment: .leading, spacing: 8) {
+            Text("Total")
+                .font(.caption)
+                .foregroundStyle(Color.textSecondary)
+                .kerning(1.5)
+                .textCase(.uppercase)
+
+            HStack(alignment: .lastTextBaseline, spacing: 6) {
+                Text(totalBTC.btcDigits)
+                    .font(.system(size: 40, weight: .semibold, design: .monospaced))
+                    .foregroundStyle(.white)
+
+                Text("BTC")
+                    .font(.system(size: 16))
+                    .foregroundStyle(Color.textSecondary)
+            }
+
+            if viewModel.showFiat {
+                fiatSubtitle
+            }
+
+            if let oldestUpdate {
+                Text("Updated \(oldestUpdate, format: .relative(presentation: .named))")
+                    .font(.caption2)
+                    .foregroundStyle(Color.textSecondary.opacity(0.7))
+            }
+        }
+        .frame(maxWidth: .infinity, alignment: .leading)
+        .accessibilityElement(children: .combine)
+    }
+
+    @ViewBuilder
+    private var fiatSubtitle: some View {
+        if viewModel.isFiatAvailable {
+            Text(viewModel.formattedFiat(viewModel.fiatValue(btc: totalBTC)))
+                .font(.system(size: 17))
+                .foregroundStyle(Color.textSecondary)
+                .lineLimit(1)
+                .minimumScaleFactor(0.6)
+        } else {
+            Text("Price unavailable")
+                .font(.system(size: 15))
+                .foregroundStyle(Color.textSecondary.opacity(0.7))
         }
     }
 
@@ -108,7 +171,9 @@ struct HomeView: View {
                             .strokeBorder(Color.bitcoinOrange.opacity(0.4), lineWidth: 1)
                     )
             }
+            .buttonStyle(.plain)
         }
+        .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .top)
         .padding(.top, 80)
     }
 }
