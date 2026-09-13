@@ -14,11 +14,16 @@ final class Wallet {
         self.createdAt = .now
     }
 
-    var totalSatoshis: Int64 {
-        addresses.reduce(0) { $0 + $1.balanceSatoshis }
+    var balance: AddressBalance {
+        addresses.reduce(.zero) { running, address in
+            AddressBalance(
+                confirmedSatoshis: running.confirmedSatoshis + address.balanceSatoshis,
+                pendingSatoshis: running.pendingSatoshis + address.pendingSatoshis
+            )
+        }
     }
 
-    var totalBTC: Double {
-        Double(totalSatoshis) / 100_000_000
-    }
+    var totalSatoshis: Int64 { balance.totalSatoshis }
+
+    var totalBTC: Double { balance.totalBTC }
 }
