@@ -25,6 +25,8 @@ struct AddWalletView: View {
                     .textFieldStyle(.plain)
                     .font(.title3)
                     .foregroundStyle(.white)
+                    .autocorrectionDisabled()
+                    .textInputAutocapitalization(.never)
                     .padding(.vertical, 16)
                     .padding(.horizontal, 18)
                     .background(

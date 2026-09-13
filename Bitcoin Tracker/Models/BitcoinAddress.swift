@@ -4,7 +4,15 @@ import SwiftData
 @Model
 final class BitcoinAddress {
     var address: String
+
+    /// Confirmed on-chain balance. Kept under its original name so existing
+    /// stores migrate without a mapping model.
     var balanceSatoshis: Int64
+
+    /// Unconfirmed mempool delta. Negative while an outgoing spend is pending.
+    /// Defaults to zero so lightweight migration can add it.
+    var pendingSatoshis: Int64 = 0
+
     var lastUpdated: Date?
     var fetchError: String?
 
@@ -13,12 +21,26 @@ final class BitcoinAddress {
     init(address: String) {
         self.address = address
         self.balanceSatoshis = 0
+        self.pendingSatoshis = 0
         self.lastUpdated = nil
         self.fetchError = nil
     }
 
+    var balance: AddressBalance {
+        AddressBalance(confirmedSatoshis: balanceSatoshis, pendingSatoshis: pendingSatoshis)
+    }
+
+    var totalSatoshis: Int64 { balance.totalSatoshis }
+
     var balanceBTC: Double {
-        Double(balanceSatoshis) / 100_000_000
+        Double(balanceSatoshis) / .satoshisPerBTC
+    }
+
+    func apply(_ balance: AddressBalance) {
+        balanceSatoshis = balance.confirmedSatoshis
+        pendingSatoshis = balance.pendingSatoshis
+        lastUpdated = .now
+        fetchError = nil
     }
 
     var shortAddress: String {

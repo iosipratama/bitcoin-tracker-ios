@@ -118,9 +118,9 @@ struct SettingsView: View {
                 .fill(Color.rowDivider)
                 .frame(height: 0.5)
 
-            Link(destination: URL(string: "https://blockstream.info")!) {
+            Link(destination: URL(string: "https://mempool.space")!) {
                 HStack {
-                    Text("Balance data by Blockstream")
+                    Text("Balance data by mempool.space")
                         .font(.subheadline)
                         .foregroundStyle(Color.textSecondary)
                     Spacer()

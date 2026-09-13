@@ -10,12 +10,15 @@ final class PortfolioViewModel {
         static let showFiat = "showFiat"
     }
 
-    /// Blockstream's public API throttles aggressive clients, and a throttled
-    /// response surfaces as an error badge on a wallet row. Stay well under.
+    /// Public explorer APIs throttle aggressive clients, and a throttled response
+    /// surfaces as an error badge on a wallet row. Stay well under.
     private static let maxConcurrentFetches = 4
 
     var isLoading = false
     var priceError: String?
+    /// Set when every address in a refresh failed, so the UI can distinguish
+    /// "nothing is reachable" from a single address having trouble.
+    var balanceError: String?
     var prices: [String: Double] = [:]
 
     var selectedCurrency: FiatCurrency {
@@ -61,6 +64,22 @@ final class PortfolioViewModel {
         value.btcDisplay
     }
 
+    func portfolioBalance(_ wallets: [Wallet]) -> AddressBalance {
+        wallets.reduce(.zero) { running, wallet in
+            let wallet = wallet.balance
+            return AddressBalance(
+                confirmedSatoshis: running.confirmedSatoshis + wallet.confirmedSatoshis,
+                pendingSatoshis: running.pendingSatoshis + wallet.pendingSatoshis
+            )
+        }
+    }
+
+    /// Signed so an unconfirmed outgoing spend reads as "-0.0010 BTC pending".
+    func formattedPending(_ satoshis: Int64) -> String {
+        let sign = satoshis < 0 ? "-" : "+"
+        return "\(sign)\(abs(Double(satoshis) / .satoshisPerBTC).btcDisplay)"
+    }
+
     /// Delegates fraction digits to the currency itself — JPY, KRW and VND have
     /// none, so a hardcoded two would have rendered "¥1,234.00". Above four
     /// figures the decimals are dropped entirely; on a rupiah balance they are
@@ -90,31 +109,41 @@ final class PortfolioViewModel {
 
         let addresses = wallets.flatMap(\.addresses)
         let unique = Array(Set(addresses.map(\.address)))
-        guard !unique.isEmpty else { return }
+        guard !unique.isEmpty else {
+            balanceError = nil
+            return
+        }
 
         let results = await Self.fetchBalances(for: unique)
 
+        var failures = 0
         for address in addresses {
             switch results[address.address] {
-            case .balance(let satoshis):
-                address.balanceSatoshis = satoshis
-                address.lastUpdated = .now
-                address.fetchError = nil
+            case .balance(let balance):
+                address.apply(balance)
             case .failure(let message):
                 address.fetchError = message
+                failures += 1
             case nil:
                 break
             }
         }
+
+        balanceError = failures == addresses.count
+            ? results.values.compactMap(\.failureMessage).first
+            : nil
     }
 
     private enum BalanceFetch: Sendable {
-        case balance(Int64)
+        case balance(AddressBalance)
         case failure(String)
+
+        var failureMessage: String? {
+            if case .failure(let message) = self { return message }
+            return nil
+        }
     }
 
-    /// Runs off the main actor over plain strings, keeping SwiftData models on the
-    /// main actor and capping how many requests are in flight at once.
     private nonisolated static func fetchBalances(for addresses: [String]) async -> [String: BalanceFetch] {
         await withTaskGroup(of: (String, BalanceFetch).self) { group in
             var results: [String: BalanceFetch] = [:]
@@ -126,8 +155,8 @@ final class PortfolioViewModel {
                 next += 1
                 group.addTask {
                     do {
-                        let satoshis = try await BitcoinAPIService.shared.fetchBalance(for: address)
-                        return (address, .balance(satoshis))
+                        let balance = try await BitcoinAPIService.shared.fetchBalance(for: address)
+                        return (address, .balance(balance))
                     } catch {
                         return (address, .failure(error.localizedDescription))
                     }

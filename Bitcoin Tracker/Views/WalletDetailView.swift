@@ -69,6 +69,13 @@ struct WalletDetailView: View {
                             .foregroundStyle(Color.textSecondary.opacity(0.7))
                     }
                 }
+
+                if wallet.balance.hasPending {
+                    Text("\(viewModel.formattedPending(wallet.balance.pendingSatoshis)) pending confirmation")
+                        .font(.caption)
+                        .foregroundStyle(Color.bitcoinOrange)
+                        .padding(.top, 2)
+                }
             }
             .padding(.vertical, 48)
             .accessibilityElement(children: .combine)
@@ -162,9 +169,17 @@ struct AddressRow: View {
                             .font(.caption2)
                             .foregroundStyle(Color.errorText)
                     } else {
-                        Text(viewModel.formattedBTC(address.balanceBTC))
-                            .font(.caption)
-                            .foregroundStyle(Color.textSecondary)
+                        HStack(spacing: 6) {
+                            Text(viewModel.formattedBTC(address.balance.totalBTC))
+                                .font(.caption)
+                                .foregroundStyle(Color.textSecondary)
+
+                            if address.balance.hasPending {
+                                Text("\(viewModel.formattedPending(address.pendingSatoshis)) pending")
+                                    .font(.caption2)
+                                    .foregroundStyle(Color.bitcoinOrange)
+                            }
+                        }
                     }
                 }
 
@@ -177,7 +192,7 @@ struct AddressRow: View {
                         .foregroundStyle(Color.bitcoinOrange)
                         .transition(.opacity)
                 } else if address.fetchError == nil, viewModel.showsFiatValues {
-                    Text(viewModel.formattedFiat(viewModel.fiatValue(btc: address.balanceBTC)))
+                    Text(viewModel.formattedFiat(viewModel.fiatValue(btc: address.balance.totalBTC)))
                         .font(.subheadline.weight(.medium))
                         .foregroundStyle(.white)
                         .lineLimit(1)
@@ -198,7 +213,7 @@ struct AddressRow: View {
             withAnimation(.smooth) { didCopy = false }
         }
         .accessibilityLabel("Address \(address.address)")
-        .accessibilityValue(address.fetchError ?? viewModel.formattedBTC(address.balanceBTC))
+        .accessibilityValue(address.fetchError ?? viewModel.formattedBTC(address.balance.totalBTC))
         .accessibilityHint("Copies the address")
     }
 }

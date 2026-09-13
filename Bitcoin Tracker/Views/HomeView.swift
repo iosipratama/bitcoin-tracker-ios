@@ -10,9 +10,11 @@ struct HomeView: View {
     @State private var showSettings = false
     @State private var walletToDelete: Wallet? = nil
 
-    private var totalBTC: Double {
-        Double(wallets.reduce(0) { $0 + $1.totalSatoshis }) / 100_000_000
+    private var portfolio: AddressBalance {
+        viewModel.portfolioBalance(wallets)
     }
+
+    private var totalBTC: Double { portfolio.totalBTC }
 
     /// The oldest successful fetch across the portfolio — the honest answer to
     /// "how current is this number?"
@@ -125,7 +127,18 @@ struct HomeView: View {
                 fiatSubtitle
             }
 
-            if let oldestUpdate {
+            if portfolio.hasPending {
+                Text("\(viewModel.formattedPending(portfolio.pendingSatoshis)) pending confirmation")
+                    .font(.caption)
+                    .foregroundStyle(Color.bitcoinOrange)
+            }
+
+            if let error = viewModel.balanceError {
+                Text(error)
+                    .font(.caption)
+                    .foregroundStyle(Color.errorText)
+                    .fixedSize(horizontal: false, vertical: true)
+            } else if let oldestUpdate {
                 Text("Updated \(oldestUpdate, format: .relative(presentation: .named))")
                     .font(.caption2)
                     .foregroundStyle(Color.textSecondary.opacity(0.7))

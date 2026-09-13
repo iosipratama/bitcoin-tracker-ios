@@ -10,7 +10,7 @@ struct AddAddressView: View {
     @Environment(PortfolioViewModel.self) private var viewModel
 
     @State private var addressText = ""
-    @State private var previewBalance: Int64?
+    @State private var previewBalance: AddressBalance?
     @State private var isValidating = false
     @State private var validationError: String?
 
@@ -104,7 +104,7 @@ struct AddAddressView: View {
                 }
 
                 if let balance = previewBalance {
-                    let btc = Double(balance) / 100_000_000
+                    let btc = balance.totalBTC
                     VStack(spacing: 6) {
                         Text("Balance Preview")
                             .font(.caption)
@@ -127,6 +127,12 @@ struct AddAddressView: View {
                             Text(viewModel.formattedBTC(btc))
                                 .font(.balanceMedium)
                                 .foregroundStyle(.white)
+                        }
+
+                        if balance.hasPending {
+                            Text("\(viewModel.formattedPending(balance.pendingSatoshis)) pending")
+                                .font(.caption)
+                                .foregroundStyle(Color.bitcoinOrange)
                         }
                     }
                     .frame(maxWidth: .infinity)
@@ -201,8 +207,7 @@ struct AddAddressView: View {
 
         let btcAddress = BitcoinAddress(address: trimmedAddress)
         if let previewBalance {
-            btcAddress.balanceSatoshis = previewBalance
-            btcAddress.lastUpdated = .now
+            btcAddress.apply(previewBalance)
         }
         // SwiftData maintains the inverse; setting both sides can duplicate the row.
         wallet.addresses.append(btcAddress)

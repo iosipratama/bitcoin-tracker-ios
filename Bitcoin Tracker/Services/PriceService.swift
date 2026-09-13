@@ -1,6 +1,6 @@
 import Foundation
 
-struct CoinGeckoPriceResponse: Decodable, Sendable {
+nonisolated struct CoinGeckoPriceResponse: Decodable, Sendable {
     let bitcoin: [String: Double]
 }
 
@@ -34,7 +34,7 @@ actor PriceService {
         let (data, response) = try await session.data(from: url)
 
         guard let httpResponse = response as? HTTPURLResponse else {
-            throw APIError.networkError(URLError(.badServerResponse))
+            throw APIError.networkError(URLError(.badServerResponse).localizedDescription)
         }
 
         switch httpResponse.statusCode {
