@@ -3,7 +3,7 @@ import Foundation
 /// Popular fiat currencies, all of which CoinGecko quotes directly. Ordered
 /// roughly by how widely they're held rather than alphabetically, so the most
 /// likely choices sit at the top of the menu.
-enum FiatCurrency: String, CaseIterable, Codable, Sendable, Identifiable {
+nonisolated enum FiatCurrency: String, CaseIterable, Codable, Sendable, Identifiable {
     case usd = "USD"
     case eur = "EUR"
     case gbp = "GBP"

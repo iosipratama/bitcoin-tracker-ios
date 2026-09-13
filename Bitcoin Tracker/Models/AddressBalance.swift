@@ -2,7 +2,7 @@ import Foundation
 
 /// A point-in-time balance for a single address, split into what the chain has
 /// confirmed and what is still sitting in the mempool.
-struct AddressBalance: Sendable, Equatable {
+nonisolated struct AddressBalance: Sendable, Equatable {
     var confirmedSatoshis: Int64
     var pendingSatoshis: Int64
 
@@ -19,6 +19,6 @@ struct AddressBalance: Sendable, Equatable {
     var hasPending: Bool { pendingSatoshis != 0 }
 }
 
-extension Double {
+nonisolated extension Double {
     static let satoshisPerBTC: Double = 100_000_000
 }

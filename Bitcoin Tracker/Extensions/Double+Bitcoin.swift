@@ -1,6 +1,6 @@
 import Foundation
 
-extension Double {
+nonisolated extension Double {
     /// Four decimals above 1 BTC, full satoshi precision below — enough detail to
     /// track a stack without turning every figure into eight digits of noise.
     var btcDigits: String {
