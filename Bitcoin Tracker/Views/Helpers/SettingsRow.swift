@@ -1,7 +1,7 @@
 import SwiftUI
 
-/// A grouped card of settings rows, drawn on the card surface with hairlines
-/// between rows rather than around the group.
+/// A titled group of settings rows on a single rounded surface. Rows are
+/// separated by spacing alone — no hairlines.
 struct SettingsGroup<Content: View>: View {
     let title: String?
     @ViewBuilder var content: Content
@@ -10,7 +10,7 @@ struct SettingsGroup<Content: View>: View {
         VStack(alignment: .leading, spacing: 8) {
             if let title {
                 Text(title)
-                    .font(.system(size: 15, weight: .regular))
+                    .font(.system(size: 17, weight: .semibold))
                     .foregroundStyle(.secondaryLabel)
                     .padding(.horizontal, 4)
             }
@@ -20,7 +20,7 @@ struct SettingsGroup<Content: View>: View {
             }
             .background(
                 RoundedRectangle(cornerRadius: .cardRadius, style: .continuous)
-                    .fill(.cardBackground)
+                    .fill(.groupedBackground)
             )
         }
     }
@@ -32,38 +32,28 @@ struct SettingsGroup<Content: View>: View {
 struct SettingsRow<Trailing: View>: View {
     let icon: ImageResource
     let title: String
-    var showsDivider: Bool = true
     @ViewBuilder var trailing: Trailing
 
     var body: some View {
-        VStack(spacing: 0) {
-            HStack(spacing: 14) {
-                Image(icon)
-                    .renderingMode(.template)
-                    .resizable()
-                    .scaledToFit()
-                    .frame(width: 22, height: 22)
-                    .foregroundStyle(.secondaryLabel)
-                    .accessibilityHidden(true)
+        HStack(spacing: 14) {
+            Image(icon)
+                .renderingMode(.template)
+                .resizable()
+                .scaledToFit()
+                .frame(width: 22, height: 22)
+                .foregroundStyle(.secondaryLabel)
+                .accessibilityHidden(true)
 
-                Text(title)
-                    .font(.system(size: 16, weight: .regular))
-                    .foregroundStyle(.label)
+            Text(title)
+                .font(.system(size: 17, weight: .semibold))
+                .foregroundStyle(.label)
 
-                Spacer(minLength: 8)
+            Spacer(minLength: 8)
 
-                trailing
-            }
-            .padding(.horizontal, 16)
-            .frame(minHeight: 52)
-
-            if showsDivider {
-                Rectangle()
-                    .fill(.divider)
-                    .frame(height: 0.5)
-                    .padding(.leading, 52)
-            }
+            trailing
         }
+        .padding(.horizontal, 16)
+        .frame(minHeight: 52)
     }
 }
 
@@ -72,7 +62,6 @@ struct SettingsLinkRow: View {
     let icon: ImageResource
     let title: String
     let url: URL
-    var showsDivider: Bool = true
 
     @Environment(\.openURL) private var openURL
 
@@ -80,7 +69,7 @@ struct SettingsLinkRow: View {
         Button {
             openURL(url)
         } label: {
-            SettingsRow(icon: icon, title: title, showsDivider: showsDivider) {
+            SettingsRow(icon: icon, title: title) {
                 Image(systemName: "chevron.right")
                     .font(.system(size: 14, weight: .semibold))
                     .foregroundStyle(.tertiaryLabel)

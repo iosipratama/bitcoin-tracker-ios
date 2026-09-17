@@ -14,6 +14,8 @@ enum SupportLinks {
     static let terms = URL(string: "https://github.com/iosipratama/bitcoin-tracker-ios")!
     static let suggestFeature = URL(string: "https://github.com/iosipratama/bitcoin-tracker-ios/issues/new")!
 
+    static let designer = URL(string: "https://mekarya.studio/")!
+
     static let blockExplorer = URL(string: "https://mempool.space")!
     static let priceData = URL(string: "https://www.coingecko.com")!
 }

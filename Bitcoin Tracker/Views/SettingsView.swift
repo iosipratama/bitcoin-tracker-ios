@@ -43,7 +43,7 @@ struct SettingsView: View {
 
     private func bitcoinSection(showSatoshi: Binding<Bool>) -> some View {
         SettingsGroup(title: "Bitcoin") {
-            SettingsRow(icon: .iconSatoshi, title: "Show in Satoshi", showsDivider: false) {
+            SettingsRow(icon: .iconSatoshi, title: "Show in Satoshi") {
                 Toggle("", isOn: showSatoshi)
                     .labelsHidden()
                     .tint(.brand)
@@ -55,8 +55,7 @@ struct SettingsView: View {
         SettingsGroup(title: "Fiat") {
             SettingsRow(
                 icon: .iconCircleDollar,
-                title: "Show fiat",
-                showsDivider: viewModel.showFiat
+                title: "Show fiat"
             ) {
                 Toggle("", isOn: showFiat)
                     .labelsHidden()
@@ -64,7 +63,7 @@ struct SettingsView: View {
             }
 
             if viewModel.showFiat {
-                SettingsRow(icon: .iconGlobe, title: "Select currency", showsDivider: false) {
+                SettingsRow(icon: .iconGlobe, title: "Select currency") {
                     Picker("Select currency", selection: currency) {
                         ForEach(FiatCurrency.allCases) { option in
                             Text(option.displayName).tag(option)
@@ -101,7 +100,7 @@ struct SettingsView: View {
             NavigationLink {
                 AboutView()
             } label: {
-                SettingsRow(icon: .iconInfo, title: "About", showsDivider: false) {
+                SettingsRow(icon: .iconInfo, title: "About") {
                     Image(systemName: "chevron.right")
                         .font(.system(size: 14, weight: .semibold))
                         .foregroundStyle(.tertiaryLabel)
@@ -139,17 +138,17 @@ struct SettingsView: View {
 
                 Spacer(minLength: 0)
 
-                // Placeholder for the illustration that is still to be supplied.
-                Image(systemName: "laurel.leading")
-                    .font(.system(size: 52, weight: .ultraLight))
-                    .foregroundStyle(.tertiaryLabel)
+                Image(.rateIllustration)
+                    .resizable()
+                    .scaledToFit()
+                    .frame(height: 92)
                     .accessibilityHidden(true)
             }
             .padding(16)
             .frame(maxWidth: .infinity, alignment: .leading)
             .background(
                 RoundedRectangle(cornerRadius: .cardRadius, style: .continuous)
-                    .fill(.cardBackground)
+                    .fill(.groupedBackground)
             )
         }
         .buttonStyle(.plain)
@@ -167,9 +166,11 @@ struct SettingsView: View {
                 .font(.system(size: 13))
                 .foregroundStyle(.secondaryLabel)
 
-            Text("mekarya")
-                .font(.system(size: 13, weight: .semibold))
-                .foregroundStyle(.label)
+            Link(destination: SupportLinks.designer) {
+                Text("mekarya")
+                    .font(.system(size: 13, weight: .semibold))
+                    .foregroundStyle(.label)
+            }
 
             Text("2026 Sats Keeper. \(appVersion)")
                 .font(.system(size: 12))
@@ -200,8 +201,7 @@ struct AboutView: View {
                     SettingsLinkRow(
                         icon: .iconCircleDollar,
                         title: "Prices by CoinGecko",
-                        url: SupportLinks.priceData,
-                        showsDivider: false
+                        url: SupportLinks.priceData
                     )
                 }
             }
