@@ -10,7 +10,7 @@ private enum Palette {
     static let brandDisabled = Color(hex: 0x7A4A0D)
     static let negative = Color(hex: 0xFF6B6B)
 
-    static let background = Color(hex: 0x1A1A1A)
+    static let background = Color(hex: 0x141414)
     static let cardBackground = Color(hex: 0x2A2A2A)
     static let cardInsetBackground = Color(hex: 0x232323)
     static let controlFill = Color(hex: 0x242218, opacity: 0.8)

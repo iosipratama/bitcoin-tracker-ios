@@ -89,7 +89,7 @@ struct HomeView: View {
                     WalletRow(wallet: wallet)
                 }
                 .buttonStyle(.plain)
-                .listRowInsets(EdgeInsets(top: 6, leading: 16, bottom: 6, trailing: 16))
+                .listRowInsets(EdgeInsets(top: 8, leading: 16, bottom: 8, trailing: 16))
                 .listRowBackground(Color.clear)
                 .listRowSeparator(.hidden)
                 .swipeActions(edge: .trailing, allowsFullSwipe: false) {
@@ -125,27 +125,21 @@ struct HomeView: View {
     /// Pinned rather than scrolled: `safeAreaInset` also insets the list content,
     /// so the last card can still be reached.
     private var quoteFooter: some View {
-        VStack(spacing: 8) {
+        VStack(spacing: 6) {
             Image(systemName: "quote.opening")
-                .font(.system(size: 26, weight: .semibold))
+                .font(.system(size: 40, weight: .regular))
                 .foregroundStyle(.tertiaryLabel)
                 .accessibilityHidden(true)
 
-            Text(Quotes.current.text)
+            Text(Quotes.current)
                 .font(.system(size: 14))
                 .italic()
                 .multilineTextAlignment(.center)
                 .foregroundStyle(.tertiaryLabel)
-
-            if let attribution = Quotes.current.attribution {
-                Text(attribution)
-                    .font(.system(size: 12))
-                    .foregroundStyle(.tertiaryLabel.opacity(0.7))
-            }
         }
         .fontDesign(.rounded)
         .frame(maxWidth: .infinity)
-        .padding(.horizontal, 36)
+        .padding(.horizontal, 64)
         .padding(.bottom, 8)
         .accessibilityElement(children: .combine)
     }

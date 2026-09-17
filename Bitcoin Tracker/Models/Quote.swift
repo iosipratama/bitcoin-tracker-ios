@@ -1,45 +1,21 @@
 import Foundation
 
-struct Quote: Identifiable, Hashable {
-    let text: String
-    let attribution: String?
-
-    var id: String { text }
-}
-
 enum Quotes {
     /// Picked once per process, so it changes when the app is launched but stays
     /// put while someone is reading it.
-    static let current: Quote = all.randomElement() ?? all[0]
+    static let current: String = all.randomElement() ?? all[0]
 
-    static let all: [Quote] = [
-        Quote(
-            text: "It might make sense just to get some in case it catches on.",
-            attribution: "Satoshi Nakamoto"
-        ),
-        Quote(
-            text: "The root problem with conventional currency is all the trust that's required to make it work.",
-            attribution: "Satoshi Nakamoto"
-        ),
-        Quote(
-            text: "If you don't believe it or don't get it, I don't have the time to try to convince you.",
-            attribution: "Satoshi Nakamoto"
-        ),
-        Quote(
-            text: "Time in the market beats timing the market.",
-            attribution: nil
-        ),
-        Quote(
-            text: "The reward for patience is rarely loud.",
-            attribution: nil
-        ),
-        Quote(
-            text: "You don't have to watch it to own it.",
-            attribution: nil
-        ),
-        Quote(
-            text: "Volatility is the price of admission, not a reason to leave.",
-            attribution: nil
-        ),
+    /// Kept short: the footer is a narrow column and a long line wraps into a
+    /// paragraph, which is louder than this screen wants to be.
+    static let all: [String] = [
+        "Time in the market beats timing the market.",
+        "The reward for patience is rarely loud.",
+        "You don't have to watch it to own it.",
+        "Volatility is the price of admission.",
+        "Stack quietly. Check rarely.",
+        "Conviction is quieter than confidence.",
+        "Not your keys, not your coins.",
+        "The best trade is often no trade.",
+        "Slow is a strategy, not a failure.",
     ]
 }
