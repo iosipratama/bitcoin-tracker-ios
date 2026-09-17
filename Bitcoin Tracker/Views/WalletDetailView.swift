@@ -20,13 +20,13 @@ struct WalletDetailView: View {
             }
             .padding(.bottom, 40)
         }
-        .background(Color.appBackground.ignoresSafeArea())
+        .background(.appBackground)
         .navigationTitle(wallet.name)
         .navigationBarTitleDisplayMode(.inline)
         .toolbar {
             ToolbarItem(placement: .topBarTrailing) {
                 Button("Add Address", systemImage: "plus") { showAddAddress = true }
-                    .tint(Color.bitcoinOrange)
+                    .tint(.brand)
             }
         }
         .sheet(isPresented: $showAddAddress) {
@@ -37,7 +37,7 @@ struct WalletDetailView: View {
     private var walletHeader: some View {
         ZStack {
             RadialGradient(
-                colors: [Color.bitcoinOrange.opacity(0.06), .clear],
+                colors: [Color.brand.opacity(0.06), .clear],
                 center: .center,
                 startRadius: 0,
                 endRadius: 160
@@ -50,30 +50,30 @@ struct WalletDetailView: View {
                         viewModel.formattedFiat(val)
                     }
                     .font(.balanceMedium)
-                    .foregroundStyle(.white)
+                    .foregroundStyle(.label)
                     .lineLimit(1)
                     .minimumScaleFactor(0.5)
                     .padding(.horizontal, 24)
 
                     Text(viewModel.formattedBTC(wallet.totalBTC))
                         .font(.subheadline)
-                        .foregroundStyle(Color.textSecondary)
+                        .foregroundStyle(.secondaryLabel)
                 } else {
                     Text(viewModel.formattedBTC(wallet.totalBTC))
                         .font(.balanceMedium)
-                        .foregroundStyle(.white)
+                        .foregroundStyle(.label)
 
                     if viewModel.showFiat {
                         Text("Price unavailable")
                             .font(.subheadline)
-                            .foregroundStyle(Color.textSecondary.opacity(0.7))
+                            .foregroundStyle(.tertiaryLabel)
                     }
                 }
 
                 if wallet.balance.hasPending {
                     Text("\(viewModel.formattedPending(wallet.balance.pendingSatoshis)) pending confirmation")
                         .font(.caption)
-                        .foregroundStyle(Color.bitcoinOrange)
+                        .foregroundStyle(.brand)
                         .padding(.top, 2)
                 }
             }
@@ -88,11 +88,11 @@ struct WalletDetailView: View {
             VStack(spacing: 14) {
                 Text("No addresses yet.")
                     .font(.custom("Georgia", size: 18))
-                    .foregroundStyle(Color.textSecondary)
+                    .foregroundStyle(.secondaryLabel)
 
                 Text("Add a Bitcoin address to start tracking.")
                     .font(.subheadline)
-                    .foregroundStyle(Color.textSecondary.opacity(0.6))
+                    .foregroundStyle(.tertiaryLabel)
             }
             .padding(.top, 56)
         } else {
@@ -100,21 +100,21 @@ struct WalletDetailView: View {
                 HStack {
                     Text("Addresses")
                         .font(.caption)
-                        .foregroundStyle(Color.textSecondary)
+                        .foregroundStyle(.secondaryLabel)
                         .kerning(1.5)
                         .textCase(.uppercase)
                     Spacer()
                     if let updated = oldestUpdate {
                         Text("Updated \(updated, format: .relative(presentation: .named))")
                             .font(.caption2)
-                            .foregroundStyle(Color.textSecondary.opacity(0.7))
+                            .foregroundStyle(.tertiaryLabel)
                     }
                 }
                 .padding(.horizontal, 24)
                 .padding(.bottom, 14)
 
                 Rectangle()
-                    .fill(Color.rowDivider)
+                    .fill(.divider)
                     .frame(height: 0.5)
 
                 ForEach(wallet.addresses) { address in
@@ -133,7 +133,7 @@ struct WalletDetailView: View {
                         }
 
                     Rectangle()
-                        .fill(Color.rowDivider)
+                        .fill(.divider)
                         .frame(height: 0.5)
                 }
             }
@@ -162,22 +162,22 @@ struct AddressRow: View {
                 VStack(alignment: .leading, spacing: 5) {
                     Text(address.shortAddress)
                         .font(.subheadline.monospaced())
-                        .foregroundStyle(.white)
+                        .foregroundStyle(.label)
 
                     if let error = address.fetchError {
                         Text(error)
                             .font(.caption2)
-                            .foregroundStyle(Color.errorText)
+                            .foregroundStyle(.negative)
                     } else {
                         HStack(spacing: 6) {
                             Text(viewModel.formattedBTC(address.balance.totalBTC))
                                 .font(.caption)
-                                .foregroundStyle(Color.textSecondary)
+                                .foregroundStyle(.secondaryLabel)
 
                             if address.balance.hasPending {
                                 Text("\(viewModel.formattedPending(address.pendingSatoshis)) pending")
                                     .font(.caption2)
-                                    .foregroundStyle(Color.bitcoinOrange)
+                                    .foregroundStyle(.brand)
                             }
                         }
                     }
@@ -189,12 +189,12 @@ struct AddressRow: View {
                     Label("Copied", systemImage: "checkmark")
                         .labelStyle(.titleAndIcon)
                         .font(.caption)
-                        .foregroundStyle(Color.bitcoinOrange)
+                        .foregroundStyle(.brand)
                         .transition(.opacity)
                 } else if address.fetchError == nil, viewModel.showsFiatValues {
                     Text(viewModel.formattedFiat(viewModel.fiatValue(btc: address.balance.totalBTC)))
                         .font(.subheadline.weight(.medium))
-                        .foregroundStyle(.white)
+                        .foregroundStyle(.label)
                         .lineLimit(1)
                         .minimumScaleFactor(0.6)
                 }
@@ -202,7 +202,7 @@ struct AddressRow: View {
             .padding(.horizontal, 24)
             .padding(.vertical, 20)
             .frame(maxWidth: .infinity)
-            .background(Color.appBackground)
+            .background(.appBackground)
             .contentShape(Rectangle())
         }
         .buttonStyle(.plain)
@@ -263,9 +263,9 @@ struct AddressRow: View {
     let viewModel = PortfolioViewModel()
 
     return VStack(spacing: 0) {
-        Rectangle().fill(Color.rowDivider).frame(height: 0.5)
+        Rectangle().fill(Color.divider).frame(height: 0.5)
         AddressRow(address: address, viewModel: viewModel)
-        Rectangle().fill(Color.rowDivider).frame(height: 0.5)
+        Rectangle().fill(Color.divider).frame(height: 0.5)
     }
     .background(Color.appBackground)
 }

@@ -7,16 +7,16 @@ struct WalletRow: View {
         VStack(alignment: .leading, spacing: 4) {
             Text(wallet.name)
                 .font(.system(size: 14, weight: .regular))
-                .foregroundStyle(Color.textSecondary)
+                .foregroundStyle(.secondaryLabel)
 
             HStack(alignment: .lastTextBaseline, spacing: 6) {
                 Text(wallet.totalBTC.btcDigits)
                     .font(.system(size: 36, weight: .semibold, design: .monospaced))
-                    .foregroundStyle(.white)
+                    .foregroundStyle(.label)
 
                 Text("BTC")
                     .font(.system(size: 15, weight: .regular))
-                    .foregroundStyle(Color.textSecondary)
+                    .foregroundStyle(.secondaryLabel)
             }
         }
         .frame(maxWidth: .infinity, alignment: .leading)
@@ -52,7 +52,7 @@ struct WalletRow: View {
 
     return VStack(spacing: 0) {
         WalletRow(wallet: w1)
-        Rectangle().fill(Color.rowDivider).frame(height: 0.5)
+        Rectangle().fill(Color.divider).frame(height: 0.5)
         WalletRow(wallet: w2)
     }
     .background(Color.appBackground)

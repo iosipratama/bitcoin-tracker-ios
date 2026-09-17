@@ -17,17 +17,17 @@ struct SettingsView: View {
                 .padding(.top, 28)
                 .padding(.bottom, 40)
             }
-            .background(Color.appBackground.ignoresSafeArea())
+            .background(.appBackground)
             .navigationTitle("Settings")
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
                 ToolbarItem(placement: .confirmationAction) {
                     Button("Done") { dismiss() }
-                        .foregroundStyle(Color.bitcoinOrange)
+                        .foregroundStyle(.brand)
                 }
             }
         }
-        .presentationBackground(Color.appBackground)
+        .presentationBackground(.appBackground)
     }
 
     private func fiatSection(showFiat: Binding<Bool>, currency: Binding<FiatCurrency>) -> some View {
@@ -35,24 +35,24 @@ struct SettingsView: View {
             sectionHeader("Fiat Value")
 
             Rectangle()
-                .fill(Color.rowDivider)
+                .fill(.divider)
                 .frame(height: 0.5)
 
             Toggle(isOn: showFiat) {
                 VStack(alignment: .leading, spacing: 4) {
                     Text("Show fiat value")
                         .font(.subheadline)
-                        .foregroundStyle(.white)
+                        .foregroundStyle(.label)
                     Text("Off keeps every figure denominated in bitcoin.")
                         .font(.caption)
-                        .foregroundStyle(Color.textSecondary)
+                        .foregroundStyle(.secondaryLabel)
                 }
             }
-            .tint(Color.bitcoinOrange)
+            .tint(.brand)
             .padding(.vertical, 14)
 
             Rectangle()
-                .fill(Color.rowDivider)
+                .fill(.divider)
                 .frame(height: 0.5)
 
             if viewModel.showFiat {
@@ -68,7 +68,7 @@ struct SettingsView: View {
             HStack {
                 Text("Currency")
                     .font(.subheadline)
-                    .foregroundStyle(.white)
+                    .foregroundStyle(.label)
 
                 Spacer()
 
@@ -79,12 +79,12 @@ struct SettingsView: View {
                 }
                 .pickerStyle(.menu)
                 .labelsHidden()
-                .tint(Color.bitcoinOrange)
+                .tint(.brand)
             }
             .padding(.vertical, 6)
 
             Rectangle()
-                .fill(Color.rowDivider)
+                .fill(.divider)
                 .frame(height: 0.5)
                 .padding(.top, 8)
         }
@@ -100,56 +100,56 @@ struct SettingsView: View {
             sectionHeader("About")
 
             Rectangle()
-                .fill(Color.rowDivider)
+                .fill(.divider)
                 .frame(height: 0.5)
 
             VStack(alignment: .leading, spacing: 6) {
                 Text("Bitcoin Tracker")
                     .font(.subheadline.weight(.medium))
-                    .foregroundStyle(.white)
+                    .foregroundStyle(.label)
                 Text("A minimalist read-only wallet tracker.\nNo private keys stored or used.")
                     .font(.caption)
-                    .foregroundStyle(Color.textSecondary)
+                    .foregroundStyle(.secondaryLabel)
                     .lineSpacing(3)
             }
             .padding(.vertical, 14)
 
             Rectangle()
-                .fill(Color.rowDivider)
+                .fill(.divider)
                 .frame(height: 0.5)
 
             Link(destination: URL(string: "https://mempool.space")!) {
                 HStack {
                     Text("Balance data by mempool.space")
                         .font(.subheadline)
-                        .foregroundStyle(Color.textSecondary)
+                        .foregroundStyle(.secondaryLabel)
                     Spacer()
                     Image(systemName: "arrow.up.right")
                         .font(.caption)
-                        .foregroundStyle(Color.textSecondary.opacity(0.5))
+                        .foregroundStyle(.tertiaryLabel)
                 }
                 .padding(.vertical, 14)
             }
 
             Rectangle()
-                .fill(Color.rowDivider)
+                .fill(.divider)
                 .frame(height: 0.5)
 
             Link(destination: URL(string: "https://www.coingecko.com")!) {
                 HStack {
                     Text("Price data by CoinGecko")
                         .font(.subheadline)
-                        .foregroundStyle(Color.textSecondary)
+                        .foregroundStyle(.secondaryLabel)
                     Spacer()
                     Image(systemName: "arrow.up.right")
                         .font(.caption)
-                        .foregroundStyle(Color.textSecondary.opacity(0.5))
+                        .foregroundStyle(.tertiaryLabel)
                 }
                 .padding(.vertical, 14)
             }
 
             Rectangle()
-                .fill(Color.rowDivider)
+                .fill(.divider)
                 .frame(height: 0.5)
         }
     }
@@ -157,7 +157,7 @@ struct SettingsView: View {
     private func sectionHeader(_ title: String) -> some View {
         Text(title)
             .font(.caption)
-            .foregroundStyle(Color.textSecondary)
+            .foregroundStyle(.secondaryLabel)
             .kerning(1.5)
             .textCase(.uppercase)
     }
