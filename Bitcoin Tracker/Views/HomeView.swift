@@ -31,23 +31,23 @@ struct HomeView: View {
                     walletList
                 }
             }
-            .background(Color.appBackground.ignoresSafeArea())
+            .background(.appBackground)
             .navigationTitle("Wallets")
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
                 ToolbarItem(placement: .topBarLeading) {
                     Button("Settings", systemImage: "gearshape") { showSettings = true }
-                        .tint(Color.bitcoinOrange)
+                        .tint(.brand)
                 }
                 ToolbarItem(placement: .topBarTrailing) {
                     if viewModel.isLoading {
                         ProgressView()
-                            .tint(Color.bitcoinOrange)
+                            .tint(.brand)
                             .scaleEffect(0.8)
                             .accessibilityLabel("Refreshing balances")
                     } else {
                         Button("Add Wallet", systemImage: "plus") { showAddWallet = true }
-                            .tint(Color.bitcoinOrange)
+                            .tint(.brand)
                     }
                 }
             }
@@ -90,7 +90,7 @@ struct HomeView: View {
                 }
                 .listRowInsets(EdgeInsets())
                 .listRowBackground(Color.appBackground)
-                .listRowSeparatorTint(Color.rowDivider)
+                .listRowSeparatorTint(Color.divider)
                 .swipeActions(edge: .trailing, allowsFullSwipe: false) {
                     Button("Delete", systemImage: "trash", role: .destructive) {
                         walletToDelete = wallet
@@ -109,18 +109,18 @@ struct HomeView: View {
         VStack(alignment: .leading, spacing: 8) {
             Text("Total")
                 .font(.caption)
-                .foregroundStyle(Color.textSecondary)
+                .foregroundStyle(.secondaryLabel)
                 .kerning(1.5)
                 .textCase(.uppercase)
 
             HStack(alignment: .lastTextBaseline, spacing: 6) {
                 Text(totalBTC.btcDigits)
                     .font(.system(size: 40, weight: .semibold, design: .monospaced))
-                    .foregroundStyle(.white)
+                    .foregroundStyle(.label)
 
                 Text("BTC")
                     .font(.system(size: 16))
-                    .foregroundStyle(Color.textSecondary)
+                    .foregroundStyle(.secondaryLabel)
             }
 
             if viewModel.showFiat {
@@ -130,18 +130,18 @@ struct HomeView: View {
             if portfolio.hasPending {
                 Text("\(viewModel.formattedPending(portfolio.pendingSatoshis)) pending confirmation")
                     .font(.caption)
-                    .foregroundStyle(Color.bitcoinOrange)
+                    .foregroundStyle(.brand)
             }
 
             if let error = viewModel.balanceError {
                 Text(error)
                     .font(.caption)
-                    .foregroundStyle(Color.errorText)
+                    .foregroundStyle(.negative)
                     .fixedSize(horizontal: false, vertical: true)
             } else if let oldestUpdate {
                 Text("Updated \(oldestUpdate, format: .relative(presentation: .named))")
                     .font(.caption2)
-                    .foregroundStyle(Color.textSecondary.opacity(0.7))
+                    .foregroundStyle(.tertiaryLabel)
             }
         }
         .frame(maxWidth: .infinity, alignment: .leading)
@@ -153,13 +153,13 @@ struct HomeView: View {
         if viewModel.isFiatAvailable {
             Text(viewModel.formattedFiat(viewModel.fiatValue(btc: totalBTC)))
                 .font(.system(size: 17))
-                .foregroundStyle(Color.textSecondary)
+                .foregroundStyle(.secondaryLabel)
                 .lineLimit(1)
                 .minimumScaleFactor(0.6)
         } else {
             Text("Price unavailable")
                 .font(.system(size: 15))
-                .foregroundStyle(Color.textSecondary.opacity(0.7))
+                .foregroundStyle(.tertiaryLabel)
         }
     }
 
@@ -167,7 +167,7 @@ struct HomeView: View {
         VStack(spacing: 20) {
             Text("Your stack begins\nwith one address.")
                 .font(.system(size: 22, weight: .semibold))
-                .foregroundStyle(Color.textSecondary)
+                .foregroundStyle(.secondaryLabel)
                 .multilineTextAlignment(.center)
                 .lineSpacing(4)
 
@@ -176,12 +176,12 @@ struct HomeView: View {
             } label: {
                 Text("Add Wallet")
                     .font(.subheadline.weight(.medium))
-                    .foregroundStyle(Color.bitcoinOrange)
+                    .foregroundStyle(.brand)
                     .padding(.horizontal, 24)
                     .padding(.vertical, 10)
                     .overlay(
                         Capsule()
-                            .strokeBorder(Color.bitcoinOrange.opacity(0.4), lineWidth: 1)
+                            .strokeBorder(.brand.opacity(0.4), lineWidth: 1)
                     )
             }
             .buttonStyle(.plain)

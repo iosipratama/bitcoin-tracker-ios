@@ -16,7 +16,7 @@ struct AddWalletView: View {
             VStack(alignment: .leading, spacing: 0) {
                 Text("Wallet Name")
                     .font(.caption)
-                    .foregroundStyle(Color.textSecondary)
+                    .foregroundStyle(.secondaryLabel)
                     .kerning(1.2)
                     .textCase(.uppercase)
                     .padding(.bottom, 12)
@@ -24,17 +24,17 @@ struct AddWalletView: View {
                 TextField("e.g. Personal, Savings, Cold Storage", text: $name)
                     .textFieldStyle(.plain)
                     .font(.title3)
-                    .foregroundStyle(.white)
+                    .foregroundStyle(.label)
                     .autocorrectionDisabled()
                     .textInputAutocapitalization(.never)
                     .padding(.vertical, 16)
                     .padding(.horizontal, 18)
                     .background(
                         RoundedRectangle(cornerRadius: .rowRadius)
-                            .fill(Color.surfaceWarm)
+                            .fill(.controlFill)
                             .overlay(
                                 RoundedRectangle(cornerRadius: .rowRadius)
-                                    .strokeBorder(Color.rowDivider, lineWidth: 0.5)
+                                    .strokeBorder(.divider, lineWidth: 0.5)
                             )
                     )
 
@@ -43,13 +43,13 @@ struct AddWalletView: View {
             .padding(.horizontal, 24)
             .padding(.top, 28)
             .padding(.bottom, 16)
-            .background(Color.appBackground.ignoresSafeArea())
+            .background(.appBackground)
             .navigationTitle("New Wallet")
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
                 ToolbarItem(placement: .cancellationAction) {
                     Button("Cancel") { dismiss() }
-                        .foregroundStyle(Color.textSecondary)
+                        .foregroundStyle(.secondaryLabel)
                 }
                 ToolbarItem(placement: .confirmationAction) {
                     Button("Create") {
@@ -58,14 +58,14 @@ struct AddWalletView: View {
                         dismiss()
                     }
                     .fontWeight(.semibold)
-                    .foregroundStyle(isValid ? Color.bitcoinOrange : Color.bitcoinOrangeDisabled)
+                    .foregroundStyle(isValid ? Color.brand : Color.brandDisabled)
                     .disabled(!isValid)
                 }
             }
         }
         .presentationDetents([.height(220)])
         .presentationDragIndicator(.visible)
-        .presentationBackground(Color.appBackground)
+        .presentationBackground(.appBackground)
     }
 }
 

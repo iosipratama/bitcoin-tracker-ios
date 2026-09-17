@@ -50,24 +50,24 @@ struct AddAddressView: View {
                 VStack(alignment: .leading, spacing: 12) {
                     Text("Bitcoin Address")
                         .font(.caption)
-                        .foregroundStyle(Color.textSecondary)
+                        .foregroundStyle(.secondaryLabel)
                         .kerning(1.2)
                         .textCase(.uppercase)
 
                     TextField("1A1zP1eP5QGefi2DMPTfTL5SLmv7DivfNa", text: $addressText)
                         .textFieldStyle(.plain)
                         .font(.subheadline.monospaced())
-                        .foregroundStyle(.white)
+                        .foregroundStyle(.label)
                         .autocorrectionDisabled()
                         .textInputAutocapitalization(.never)
                         .padding(.vertical, 16)
                         .padding(.horizontal, 18)
                         .background(
                             RoundedRectangle(cornerRadius: .rowRadius)
-                                .fill(Color.surfaceWarm)
+                                .fill(.controlFill)
                                 .overlay(
                                     RoundedRectangle(cornerRadius: .rowRadius)
-                                        .strokeBorder(Color.rowDivider, lineWidth: 0.5)
+                                        .strokeBorder(.divider, lineWidth: 0.5)
                                 )
                         )
                         .onChange(of: addressText) {
@@ -83,7 +83,7 @@ struct AddAddressView: View {
                         HStack(spacing: 8) {
                             if isValidating {
                                 ProgressView()
-                                    .tint(Color.bitcoinOrange)
+                                    .tint(.brand)
                                     .scaleEffect(0.85)
                             } else {
                                 Image(systemName: "magnifyingglass")
@@ -92,12 +92,12 @@ struct AddAddressView: View {
                             Text(isValidating ? "Checking…" : "Preview Balance")
                         }
                         .font(.subheadline.weight(.medium))
-                        .foregroundStyle(Color.bitcoinOrange)
+                        .foregroundStyle(.brand)
                         .frame(maxWidth: .infinity)
                         .padding(.vertical, 14)
                         .overlay(
                             RoundedRectangle(cornerRadius: .rowRadius)
-                                .strokeBorder(Color.bitcoinOrange.opacity(0.4), lineWidth: 1)
+                                .strokeBorder(.brand.opacity(0.4), lineWidth: 1)
                         )
                     }
                     .disabled(isValidating)
@@ -108,41 +108,41 @@ struct AddAddressView: View {
                     VStack(spacing: 6) {
                         Text("Balance Preview")
                             .font(.caption)
-                            .foregroundStyle(Color.textSecondary)
+                            .foregroundStyle(.secondaryLabel)
                             .kerning(1.2)
                             .textCase(.uppercase)
 
                         if viewModel.showsFiatValues {
                             Text(viewModel.formattedFiat(viewModel.fiatValue(btc: btc)))
                                 .font(.balanceMedium)
-                                .foregroundStyle(.white)
+                                .foregroundStyle(.label)
                                 .lineLimit(1)
                                 .minimumScaleFactor(0.5)
                                 .padding(.horizontal, 16)
 
                             Text(viewModel.formattedBTC(btc))
                                 .font(.subheadline)
-                                .foregroundStyle(Color.textSecondary)
+                                .foregroundStyle(.secondaryLabel)
                         } else {
                             Text(viewModel.formattedBTC(btc))
                                 .font(.balanceMedium)
-                                .foregroundStyle(.white)
+                                .foregroundStyle(.label)
                         }
 
                         if balance.hasPending {
                             Text("\(viewModel.formattedPending(balance.pendingSatoshis)) pending")
                                 .font(.caption)
-                                .foregroundStyle(Color.bitcoinOrange)
+                                .foregroundStyle(.brand)
                         }
                     }
                     .frame(maxWidth: .infinity)
                     .padding(.vertical, 24)
                     .background(
                         RoundedRectangle(cornerRadius: .rowRadius)
-                            .fill(Color.surfaceWarm)
+                            .fill(.controlFill)
                             .overlay(
                                 RoundedRectangle(cornerRadius: .rowRadius)
-                                    .strokeBorder(Color.rowDivider, lineWidth: 0.5)
+                                    .strokeBorder(.divider, lineWidth: 0.5)
                             )
                     )
                 }
@@ -150,11 +150,11 @@ struct AddAddressView: View {
                 if let message = duplicateMessage ?? validationError {
                     Text(message)
                         .font(.caption)
-                        .foregroundStyle(Color.errorText)
+                        .foregroundStyle(.negative)
                 } else if !trimmedAddress.isEmpty && !isValidFormat {
                     Text("That doesn\u{2019}t look like a Bitcoin address.")
                         .font(.caption)
-                        .foregroundStyle(Color.errorText)
+                        .foregroundStyle(.negative)
                 }
 
                 Spacer()
@@ -162,27 +162,27 @@ struct AddAddressView: View {
             .padding(.horizontal, 24)
             .padding(.top, 28)
             .padding(.bottom, 16)
-            .background(Color.appBackground.ignoresSafeArea())
+            .background(.appBackground)
             .navigationTitle("Add Address")
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
                 ToolbarItem(placement: .cancellationAction) {
                     Button("Cancel") { dismiss() }
-                        .foregroundStyle(Color.textSecondary)
+                        .foregroundStyle(.secondaryLabel)
                 }
                 ToolbarItem(placement: .confirmationAction) {
                     Button("Save") {
                         saveAddress()
                     }
                     .fontWeight(.semibold)
-                    .foregroundStyle(canSave ? Color.bitcoinOrange : Color.bitcoinOrangeDisabled)
+                    .foregroundStyle(canSave ? Color.brand : Color.brandDisabled)
                     .disabled(!canSave)
                 }
             }
         }
         .presentationDetents([.medium])
         .presentationDragIndicator(.visible)
-        .presentationBackground(Color.appBackground)
+        .presentationBackground(.appBackground)
     }
 
     private func validateAddress() async {
