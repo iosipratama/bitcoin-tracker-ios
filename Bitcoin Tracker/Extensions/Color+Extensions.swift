@@ -120,6 +120,6 @@ extension Color {
 }
 
 extension CGFloat {
-    static let cardRadius: CGFloat = 16
+    static let cardRadius: CGFloat = 18
     static let rowRadius: CGFloat = 12
 }

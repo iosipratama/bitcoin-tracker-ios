@@ -12,11 +12,11 @@ struct WalletRow: View {
     private var balance: AddressBalance { wallet.balance }
 
     var body: some View {
-        VStack(alignment: .leading, spacing: 10) {
+        VStack(alignment: .leading, spacing: 12) {
             header
             balancePanel
         }
-        .padding(12)
+        .padding(4)
         .frame(maxWidth: .infinity, alignment: .leading)
         .background(
             RoundedRectangle(cornerRadius: .cardRadius, style: .continuous)
@@ -30,12 +30,12 @@ struct WalletRow: View {
 
     private var header: some View {
         HStack(spacing: 10) {
-            RoundedRectangle(cornerRadius: 10, style: .continuous)
+            RoundedRectangle(cornerRadius: 8, style: .continuous)
                 .fill(wallet.accent.color)
-                .frame(width: 34, height: 34)
+                .frame(width: 25, height: 25)
                 .overlay {
                     Image(systemName: wallet.symbol.systemName)
-                        .font(.system(size: 16, weight: .semibold))
+                        .font(.system(size: 15, weight: .semibold))
                         .foregroundStyle(.onAccent)
                 }
                 .accessibilityHidden(true)
@@ -46,6 +46,7 @@ struct WalletRow: View {
 
             Spacer(minLength: 0)
         }
+        .padding(.top, panelInset)
         .padding(.leading, panelInset)
     }
 
