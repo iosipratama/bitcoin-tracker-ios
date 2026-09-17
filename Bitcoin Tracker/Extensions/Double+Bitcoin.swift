@@ -11,3 +11,8 @@ nonisolated extension Double {
 
     var btcDisplay: String { "\(btcDigits) BTC" }
 }
+
+nonisolated extension Int64 {
+    /// Grouped by the reader's locale, so a sats figure stays scannable.
+    var satsDigits: String { formatted(.number) }
+}

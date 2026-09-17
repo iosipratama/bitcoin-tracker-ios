@@ -13,6 +13,7 @@ private enum Palette {
     static let background = Color(hex: 0x141414)
     static let cardBackground = Color(hex: 0x262626)
     static let cardInsetBackground = Color(hex: 0x141414)
+    static let groupedBackground = Color(hex: 0x1F1F1F)
     static let controlFill = Color(hex: 0x242218, opacity: 0.8)
     static let divider = Color(hex: 0xFFFFFF, opacity: 0.08)
 
@@ -85,6 +86,10 @@ extension ShapeStyle where Self == Color {
 
     /// The balance panel nested inside a card, one step further in.
     static var cardInsetBackground: Color { Palette.cardInsetBackground }
+
+    /// Grouped rows — settings sections and the rate card. Sits lower than a
+    /// wallet card, which competes with the page for attention by design.
+    static var groupedBackground: Color { Palette.groupedBackground }
 
     /// Foreground for glyphs drawn on an accent tile.
     static var onAccent: Color { Palette.onAccent }
