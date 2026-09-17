@@ -9,12 +9,7 @@ struct HomeView: View {
     @State private var showAddWallet = false
     @State private var showSettings = false
     @State private var walletToDelete: Wallet? = nil
-
-    private var portfolio: AddressBalance {
-        viewModel.portfolioBalance(wallets)
-    }
-
-    private var totalBTC: Double { portfolio.totalBTC }
+    @State private var selectedWallet: Wallet? = nil
 
     /// The oldest successful fetch across the portfolio — the honest answer to
     /// "how current is this number?"
@@ -31,8 +26,9 @@ struct HomeView: View {
                     walletList
                 }
             }
+            .safeAreaInset(edge: .bottom) { quoteFooter }
             .background(.appBackground)
-            .navigationTitle("Wallets")
+            .navigationTitle("Wallet")
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
                 ToolbarItem(placement: .topBarLeading) {
@@ -51,7 +47,7 @@ struct HomeView: View {
                     }
                 }
             }
-            .navigationDestination(for: Wallet.self) { wallet in
+            .navigationDestination(item: $selectedWallet) { wallet in
                 WalletDetailView(wallet: wallet)
             }
             .sheet(isPresented: $showAddWallet) { AddWalletView() }
@@ -79,18 +75,23 @@ struct HomeView: View {
     // Swipe actions only exist on List rows — in a LazyVStack the modifier is silently ignored.
     private var walletList: some View {
         List {
-            portfolioSummary
-                .listRowInsets(EdgeInsets(top: 28, leading: 20, bottom: 32, trailing: 20))
-                .listRowBackground(Color.appBackground)
-                .listRowSeparator(.hidden)
+            if viewModel.balanceError != nil || oldestUpdate != nil {
+                statusLine
+                    .listRowInsets(EdgeInsets(top: 12, leading: 20, bottom: 4, trailing: 20))
+                    .listRowBackground(Color.clear)
+                    .listRowSeparator(.hidden)
+            }
 
             ForEach(wallets) { wallet in
-                NavigationLink(value: wallet) {
+                Button {
+                    selectedWallet = wallet
+                } label: {
                     WalletRow(wallet: wallet)
                 }
-                .listRowInsets(EdgeInsets())
-                .listRowBackground(Color.appBackground)
-                .listRowSeparatorTint(Color.divider)
+                .buttonStyle(.plain)
+                .listRowInsets(EdgeInsets(top: 8, leading: 16, bottom: 8, trailing: 16))
+                .listRowBackground(Color.clear)
+                .listRowSeparator(.hidden)
                 .swipeActions(edge: .trailing, allowsFullSwipe: false) {
                     Button("Delete", systemImage: "trash", role: .destructive) {
                         walletToDelete = wallet
@@ -105,62 +106,42 @@ struct HomeView: View {
         }
     }
 
-    private var portfolioSummary: some View {
-        VStack(alignment: .leading, spacing: 8) {
-            Text("Total")
-                .font(.caption)
-                .foregroundStyle(.secondaryLabel)
-                .kerning(1.5)
-                .textCase(.uppercase)
-
-            HStack(alignment: .lastTextBaseline, spacing: 6) {
-                Text(totalBTC.btcDigits)
-                    .font(.system(size: 40, weight: .semibold, design: .monospaced))
-                    .foregroundStyle(.label)
-
-                Text("BTC")
-                    .font(.system(size: 16))
-                    .foregroundStyle(.secondaryLabel)
-            }
-
-            if viewModel.showFiat {
-                fiatSubtitle
-            }
-
-            if portfolio.hasPending {
-                Text("\(viewModel.formattedPending(portfolio.pendingSatoshis)) pending confirmation")
-                    .font(.caption)
-                    .foregroundStyle(.brand)
-            }
-
-            if let error = viewModel.balanceError {
-                Text(error)
-                    .font(.caption)
-                    .foregroundStyle(.negative)
-                    .fixedSize(horizontal: false, vertical: true)
-            } else if let oldestUpdate {
-                Text("Updated \(oldestUpdate, format: .relative(presentation: .named))")
-                    .font(.caption2)
-                    .foregroundStyle(.tertiaryLabel)
-            }
-        }
-        .frame(maxWidth: .infinity, alignment: .leading)
-        .accessibilityElement(children: .combine)
-    }
-
+    /// What remains of the portfolio header. A failed refresh and a stale figure
+    /// are the two things a glance at the rows cannot reveal on its own.
     @ViewBuilder
-    private var fiatSubtitle: some View {
-        if viewModel.isFiatAvailable {
-            Text(viewModel.formattedFiat(viewModel.fiatValue(btc: totalBTC)))
-                .font(.system(size: 17))
-                .foregroundStyle(.secondaryLabel)
-                .lineLimit(1)
-                .minimumScaleFactor(0.6)
-        } else {
-            Text("Price unavailable")
-                .font(.system(size: 15))
+    private var statusLine: some View {
+        if let error = viewModel.balanceError {
+            Text(error)
+                .font(.caption)
+                .foregroundStyle(.negative)
+                .fixedSize(horizontal: false, vertical: true)
+        } else if let oldestUpdate {
+            Text("Updated \(oldestUpdate, format: .relative(presentation: .named))")
+                .font(.caption2)
                 .foregroundStyle(.tertiaryLabel)
         }
+    }
+
+    /// Pinned rather than scrolled: `safeAreaInset` also insets the list content,
+    /// so the last card can still be reached.
+    private var quoteFooter: some View {
+        VStack(spacing: 6) {
+            Image(systemName: "quote.opening")
+                .font(.system(size: 40, weight: .regular))
+                .foregroundStyle(.tertiaryLabel)
+                .accessibilityHidden(true)
+
+            Text(Quotes.current)
+                .font(.system(size: 14))
+                .italic()
+                .multilineTextAlignment(.center)
+                .foregroundStyle(.tertiaryLabel)
+        }
+        .fontDesign(.rounded)
+        .frame(maxWidth: .infinity)
+        .padding(.horizontal, 64)
+        .padding(.bottom, 8)
+        .accessibilityElement(children: .combine)
     }
 
     private var emptyState: some View {
