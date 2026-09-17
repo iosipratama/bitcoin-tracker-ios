@@ -55,13 +55,21 @@ struct WalletRow: View {
             // ₿ and ≡ are literal characters rather than SF Symbols so they sit
             // on the text baseline and pick up the rounded design.
             HStack(spacing: 6) {
-                Text("\u{20BF}")
-                    .font(.walletBalance)
-                    .foregroundStyle(.secondaryLabel)
+                if let prefix = viewModel.amountPrefix {
+                    Text(prefix)
+                        .font(.walletBalance)
+                        .foregroundStyle(.secondaryLabel)
+                }
 
-                Text(wallet.totalBTC.btcDigits)
+                Text(viewModel.formattedAmount(btc: wallet.totalBTC))
                     .font(.walletBalance)
                     .foregroundStyle(.label)
+
+                if let suffix = viewModel.amountSuffix {
+                    Text(suffix)
+                        .font(.walletFiat)
+                        .foregroundStyle(.secondaryLabel)
+                }
             }
 
             if viewModel.showsFiatValues {

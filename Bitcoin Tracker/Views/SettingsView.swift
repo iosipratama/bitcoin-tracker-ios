@@ -4,90 +4,80 @@ struct SettingsView: View {
     @Environment(\.dismiss) private var dismiss
     @Environment(PortfolioViewModel.self) private var viewModel
 
+    private var appVersion: String {
+        let version = Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String ?? "1.0"
+        return "v\(version)"
+    }
+
     var body: some View {
         @Bindable var bindable = viewModel
 
         return NavigationStack {
             ScrollView {
-                VStack(alignment: .leading, spacing: 40) {
+                VStack(alignment: .leading, spacing: 28) {
+                    bitcoinSection(showSatoshi: $bindable.showSatoshi)
                     fiatSection(showFiat: $bindable.showFiat, currency: $bindable.selectedCurrency)
-                    aboutSection
+                    supportSection
+                    rateCard
+                    footer
                 }
-                .padding(.horizontal, 24)
-                .padding(.top, 28)
-                .padding(.bottom, 40)
+                .padding(.horizontal, 16)
+                .padding(.top, 12)
+                .padding(.bottom, 32)
             }
             .background(.appBackground)
             .navigationTitle("Settings")
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
-                ToolbarItem(placement: .confirmationAction) {
-                    Button("Done") { dismiss() }
-                        .foregroundStyle(.brand)
+                ToolbarItem(placement: .topBarLeading) {
+                    Button("Close", systemImage: "xmark") { dismiss() }
+                        .tint(.label)
                 }
             }
         }
+        .fontDesign(.rounded)
         .presentationBackground(.appBackground)
     }
 
-    private func fiatSection(showFiat: Binding<Bool>, currency: Binding<FiatCurrency>) -> some View {
-        VStack(alignment: .leading, spacing: 14) {
-            sectionHeader("Fiat Value")
+    // MARK: - Sections
 
-            Rectangle()
-                .fill(.divider)
-                .frame(height: 0.5)
-
-            Toggle(isOn: showFiat) {
-                VStack(alignment: .leading, spacing: 4) {
-                    Text("Show fiat value")
-                        .font(.subheadline)
-                        .foregroundStyle(.label)
-                    Text("Off keeps every figure denominated in bitcoin.")
-                        .font(.caption)
-                        .foregroundStyle(.secondaryLabel)
-                }
+    private func bitcoinSection(showSatoshi: Binding<Bool>) -> some View {
+        SettingsGroup(title: "Bitcoin") {
+            SettingsRow(icon: "bitcoinsign", title: "Show in Satoshi", showsDivider: false) {
+                Toggle("", isOn: showSatoshi)
+                    .labelsHidden()
+                    .tint(.brand)
             }
-            .tint(.brand)
-            .padding(.vertical, 14)
+        }
+    }
 
-            Rectangle()
-                .fill(.divider)
-                .frame(height: 0.5)
+    private func fiatSection(showFiat: Binding<Bool>, currency: Binding<FiatCurrency>) -> some View {
+        SettingsGroup(title: "Fiat") {
+            SettingsRow(
+                icon: "dollarsign.circle",
+                title: "Show fiat",
+                showsDivider: viewModel.showFiat
+            ) {
+                Toggle("", isOn: showFiat)
+                    .labelsHidden()
+                    .tint(.brand)
+            }
 
             if viewModel.showFiat {
-                currencyPicker(currency: currency)
-                    .transition(.opacity.combined(with: .move(edge: .top)))
+                SettingsRow(icon: "globe", title: "Select currency", showsDivider: false) {
+                    Picker("Select currency", selection: currency) {
+                        ForEach(FiatCurrency.allCases) { option in
+                            Text(option.displayName).tag(option)
+                        }
+                    }
+                    .pickerStyle(.menu)
+                    .labelsHidden()
+                    .tint(.label)
+                }
+                .transition(.opacity)
             }
         }
         .animation(.smooth, value: viewModel.showFiat)
-    }
-
-    private func currencyPicker(currency: Binding<FiatCurrency>) -> some View {
-        VStack(alignment: .leading, spacing: 0) {
-            HStack {
-                Text("Currency")
-                    .font(.subheadline)
-                    .foregroundStyle(.label)
-
-                Spacer()
-
-                Picker("Currency", selection: currency) {
-                    ForEach(FiatCurrency.allCases) { option in
-                        Text(option.displayName).tag(option)
-                    }
-                }
-                .pickerStyle(.menu)
-                .labelsHidden()
-                .tint(.brand)
-            }
-            .padding(.vertical, 6)
-
-            Rectangle()
-                .fill(.divider)
-                .frame(height: 0.5)
-                .padding(.top, 8)
-        }
         .onChange(of: currency.wrappedValue) {
             // The cached response carries every currency, so this only matters
             // when the first fetch failed.
@@ -95,77 +85,132 @@ struct SettingsView: View {
         }
     }
 
-    private var aboutSection: some View {
-        VStack(alignment: .leading, spacing: 14) {
-            sectionHeader("About")
-
-            Rectangle()
-                .fill(.divider)
-                .frame(height: 0.5)
-
-            VStack(alignment: .leading, spacing: 6) {
-                Text("Bitcoin Tracker")
-                    .font(.subheadline.weight(.medium))
-                    .foregroundStyle(.label)
-                Text("A minimalist read-only wallet tracker.\nNo private keys stored or used.")
-                    .font(.caption)
-                    .foregroundStyle(.secondaryLabel)
-                    .lineSpacing(3)
-            }
-            .padding(.vertical, 14)
-
-            Rectangle()
-                .fill(.divider)
-                .frame(height: 0.5)
-
-            Link(destination: URL(string: "https://mempool.space")!) {
-                HStack {
-                    Text("Balance data by mempool.space")
-                        .font(.subheadline)
-                        .foregroundStyle(.secondaryLabel)
-                    Spacer()
-                    Image(systemName: "arrow.up.right")
-                        .font(.caption)
+    private var supportSection: some View {
+        SettingsGroup(title: "Support") {
+            SettingsLinkRow(icon: "hand.raised", title: "Suggest a feature", url: SupportLinks.suggestFeature)
+            ShareLink(item: SupportLinks.appStore) {
+                SettingsRow(icon: "arrowshape.turn.up.right", title: "Share with friends") {
+                    Image(systemName: "chevron.right")
+                        .font(.system(size: 14, weight: .semibold))
                         .foregroundStyle(.tertiaryLabel)
                 }
-                .padding(.vertical, 14)
             }
-
-            Rectangle()
-                .fill(.divider)
-                .frame(height: 0.5)
-
-            Link(destination: URL(string: "https://www.coingecko.com")!) {
-                HStack {
-                    Text("Price data by CoinGecko")
-                        .font(.subheadline)
-                        .foregroundStyle(.secondaryLabel)
-                    Spacer()
-                    Image(systemName: "arrow.up.right")
-                        .font(.caption)
+            .buttonStyle(.plain)
+            SettingsLinkRow(icon: "doc.text", title: "Privacy", url: SupportLinks.privacy)
+            SettingsLinkRow(icon: "doc.text", title: "Terms", url: SupportLinks.terms)
+            NavigationLink {
+                AboutView()
+            } label: {
+                SettingsRow(icon: "info.circle", title: "About", showsDivider: false) {
+                    Image(systemName: "chevron.right")
+                        .font(.system(size: 14, weight: .semibold))
                         .foregroundStyle(.tertiaryLabel)
                 }
-                .padding(.vertical, 14)
             }
-
-            Rectangle()
-                .fill(.divider)
-                .frame(height: 0.5)
+            .buttonStyle(.plain)
         }
     }
 
-    private func sectionHeader(_ title: String) -> some View {
-        Text(title)
-            .font(.caption)
-            .foregroundStyle(.secondaryLabel)
-            .kerning(1.5)
-            .textCase(.uppercase)
+    private var rateCard: some View {
+        Button {
+            UIApplication.shared.open(SupportLinks.writeReview)
+        } label: {
+            HStack(alignment: .top, spacing: 12) {
+                VStack(alignment: .leading, spacing: 8) {
+                    Text("Rate Sats Keeper")
+                        .font(.system(size: 17, weight: .bold))
+                        .foregroundStyle(.label)
+
+                    Text("If this app has been helpful, leave an app store review. It helps a lot.")
+                        .font(.system(size: 14))
+                        .foregroundStyle(.secondaryLabel)
+                        .fixedSize(horizontal: false, vertical: true)
+                        .multilineTextAlignment(.leading)
+
+                    HStack(spacing: 2) {
+                        ForEach(0..<5, id: \.self) { _ in
+                            Image(systemName: "star.fill")
+                                .font(.system(size: 15))
+                                .foregroundStyle(.walletYellow)
+                        }
+                    }
+                    .accessibilityHidden(true)
+                }
+
+                Spacer(minLength: 0)
+
+                // Placeholder for the illustration that is still to be supplied.
+                Image(systemName: "laurel.leading")
+                    .font(.system(size: 52, weight: .ultraLight))
+                    .foregroundStyle(.tertiaryLabel)
+                    .accessibilityHidden(true)
+            }
+            .padding(16)
+            .frame(maxWidth: .infinity, alignment: .leading)
+            .background(
+                RoundedRectangle(cornerRadius: .cardRadius, style: .continuous)
+                    .fill(.cardBackground)
+            )
+        }
+        .buttonStyle(.plain)
+        .accessibilityLabel("Rate Sats Keeper on the App Store")
+    }
+
+    private var footer: some View {
+        VStack(spacing: 4) {
+            Image(systemName: "heart.fill")
+                .font(.system(size: 13))
+                .foregroundStyle(.brand)
+                .accessibilityHidden(true)
+
+            Text("Designed by")
+                .font(.system(size: 13))
+                .foregroundStyle(.secondaryLabel)
+
+            Text("mekarya")
+                .font(.system(size: 13, weight: .semibold))
+                .foregroundStyle(.label)
+
+            Text("2026 Sats Keeper. \(appVersion)")
+                .font(.system(size: 12))
+                .foregroundStyle(.tertiaryLabel)
+                .padding(.top, 8)
+        }
+        .frame(maxWidth: .infinity)
+        .padding(.top, 8)
     }
 }
 
-#Preview {
-    let viewModel = PortfolioViewModel()
+/// The attribution that used to sit inline in Settings.
+struct AboutView: View {
+    var body: some View {
+        ScrollView {
+            VStack(alignment: .leading, spacing: 20) {
+                Text("Sats Keeper is a read-only Bitcoin wallet tracker. It stores no private keys and has no account.")
+                    .font(.system(size: 15))
+                    .foregroundStyle(.secondaryLabel)
+                    .fixedSize(horizontal: false, vertical: true)
 
-    return SettingsView()
-        .environment(viewModel)
+                SettingsGroup(title: "Data") {
+                    SettingsLinkRow(
+                        icon: "cube",
+                        title: "Balances by mempool.space",
+                        url: SupportLinks.blockExplorer
+                    )
+                    SettingsLinkRow(
+                        icon: "chart.line.uptrend.xyaxis",
+                        title: "Prices by CoinGecko",
+                        url: SupportLinks.priceData,
+                        showsDivider: false
+                    )
+                }
+            }
+            .padding(.horizontal, 16)
+            .padding(.top, 16)
+        }
+        .background(.appBackground)
+        .navigationTitle("About")
+        .navigationBarTitleDisplayMode(.inline)
+        .fontDesign(.rounded)
+    }
 }

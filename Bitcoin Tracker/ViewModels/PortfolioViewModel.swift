@@ -8,6 +8,7 @@ final class PortfolioViewModel {
     private enum Key {
         static let currency = "selectedCurrency"
         static let showFiat = "showFiat"
+        static let showSatoshi = "showSatoshi"
     }
 
     /// Public explorer APIs throttle aggressive clients, and a throttled response
@@ -35,11 +36,21 @@ final class PortfolioViewModel {
         }
     }
 
+    /// Denominate in satoshis rather than BTC. Below a whole coin a sats figure
+    /// is easier to read than eight decimal places.
+    var showSatoshi: Bool {
+        didSet {
+            guard showSatoshi != oldValue else { return }
+            UserDefaults.standard.set(showSatoshi, forKey: Key.showSatoshi)
+        }
+    }
+
     init() {
         let defaults = UserDefaults.standard
         selectedCurrency = defaults.string(forKey: Key.currency)
             .flatMap(FiatCurrency.init(rawValue:)) ?? .usd
         showFiat = defaults.object(forKey: Key.showFiat) as? Bool ?? true
+        showSatoshi = defaults.object(forKey: Key.showSatoshi) as? Bool ?? false
     }
 
     var currentPrice: Double {
@@ -61,8 +72,19 @@ final class PortfolioViewModel {
     }
 
     func formattedBTC(_ value: Double) -> String {
-        value.btcDisplay
+        showSatoshi ? "\(Int64((value * .satoshisPerBTC).rounded()).satsDigits) sats" : value.btcDisplay
     }
+
+    /// The bare figure, without a unit. The card draws the unit itself so it can
+    /// style it separately.
+    func formattedAmount(btc: Double) -> String {
+        showSatoshi ? Int64((btc * .satoshisPerBTC).rounded()).satsDigits : btc.btcDigits
+    }
+
+    /// ₿ leads a BTC figure; a sats figure is trailed by its unit instead, since
+    /// ₿ denotes whole coins and would be wrong in front of a satoshi count.
+    var amountPrefix: String? { showSatoshi ? nil : "\u{20BF}" }
+    var amountSuffix: String? { showSatoshi ? "sats" : nil }
 
     /// Signed so an unconfirmed outgoing spend reads as "-0.0010 BTC pending".
     func formattedPending(_ satoshis: Int64) -> String {
