@@ -5,6 +5,10 @@ struct WalletRow: View {
 
     @Environment(PortfolioViewModel.self) private var viewModel
 
+    /// The balance panel's internal padding. The header borrows it as leading
+    /// padding so the symbol tile lines up with the ₿ directly beneath it.
+    private let panelInset: CGFloat = 12
+
     private var balance: AddressBalance { wallet.balance }
 
     var body: some View {
@@ -42,6 +46,7 @@ struct WalletRow: View {
 
             Spacer(minLength: 0)
         }
+        .padding(.leading, panelInset)
     }
 
     private var balancePanel: some View {
@@ -79,7 +84,7 @@ struct WalletRow: View {
             }
         }
         .frame(maxWidth: .infinity, alignment: .leading)
-        .padding(.horizontal, 12)
+        .padding(.horizontal, panelInset)
         .padding(.vertical, 10)
         .background(
             RoundedRectangle(cornerRadius: .rowRadius, style: .continuous)

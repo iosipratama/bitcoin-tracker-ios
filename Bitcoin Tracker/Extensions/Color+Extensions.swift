@@ -11,8 +11,8 @@ private enum Palette {
     static let negative = Color(hex: 0xFF6B6B)
 
     static let background = Color(hex: 0x141414)
-    static let cardBackground = Color(hex: 0x2A2A2A)
-    static let cardInsetBackground = Color(hex: 0x232323)
+    static let cardBackground = Color(hex: 0x262626)
+    static let cardInsetBackground = Color(hex: 0x141414)
     static let controlFill = Color(hex: 0x242218, opacity: 0.8)
     static let divider = Color(hex: 0xFFFFFF, opacity: 0.08)
 
