@@ -43,7 +43,7 @@ struct SettingsView: View {
 
     private func bitcoinSection(showSatoshi: Binding<Bool>) -> some View {
         SettingsGroup(title: "Bitcoin") {
-            SettingsRow(icon: "bitcoinsign", title: "Show in Satoshi", showsDivider: false) {
+            SettingsRow(icon: .iconSatoshi, title: "Show in Satoshi", showsDivider: false) {
                 Toggle("", isOn: showSatoshi)
                     .labelsHidden()
                     .tint(.brand)
@@ -54,7 +54,7 @@ struct SettingsView: View {
     private func fiatSection(showFiat: Binding<Bool>, currency: Binding<FiatCurrency>) -> some View {
         SettingsGroup(title: "Fiat") {
             SettingsRow(
-                icon: "dollarsign.circle",
+                icon: .iconCircleDollar,
                 title: "Show fiat",
                 showsDivider: viewModel.showFiat
             ) {
@@ -64,7 +64,7 @@ struct SettingsView: View {
             }
 
             if viewModel.showFiat {
-                SettingsRow(icon: "globe", title: "Select currency", showsDivider: false) {
+                SettingsRow(icon: .iconGlobe, title: "Select currency", showsDivider: false) {
                     Picker("Select currency", selection: currency) {
                         ForEach(FiatCurrency.allCases) { option in
                             Text(option.displayName).tag(option)
@@ -87,21 +87,21 @@ struct SettingsView: View {
 
     private var supportSection: some View {
         SettingsGroup(title: "Support") {
-            SettingsLinkRow(icon: "hand.raised", title: "Suggest a feature", url: SupportLinks.suggestFeature)
+            SettingsLinkRow(icon: .iconRaiseHand, title: "Suggest a feature", url: SupportLinks.suggestFeature)
             ShareLink(item: SupportLinks.appStore) {
-                SettingsRow(icon: "arrowshape.turn.up.right", title: "Share with friends") {
+                SettingsRow(icon: .iconShareRight, title: "Share with friends") {
                     Image(systemName: "chevron.right")
                         .font(.system(size: 14, weight: .semibold))
                         .foregroundStyle(.tertiaryLabel)
                 }
             }
             .buttonStyle(.plain)
-            SettingsLinkRow(icon: "doc.text", title: "Privacy", url: SupportLinks.privacy)
-            SettingsLinkRow(icon: "doc.text", title: "Terms", url: SupportLinks.terms)
+            SettingsLinkRow(icon: .iconPage, title: "Privacy", url: SupportLinks.privacy)
+            SettingsLinkRow(icon: .iconPage, title: "Terms", url: SupportLinks.terms)
             NavigationLink {
                 AboutView()
             } label: {
-                SettingsRow(icon: "info.circle", title: "About", showsDivider: false) {
+                SettingsRow(icon: .iconInfo, title: "About", showsDivider: false) {
                     Image(systemName: "chevron.right")
                         .font(.system(size: 14, weight: .semibold))
                         .foregroundStyle(.tertiaryLabel)
@@ -193,12 +193,12 @@ struct AboutView: View {
 
                 SettingsGroup(title: "Data") {
                     SettingsLinkRow(
-                        icon: "cube",
+                        icon: .iconGlobe,
                         title: "Balances by mempool.space",
                         url: SupportLinks.blockExplorer
                     )
                     SettingsLinkRow(
-                        icon: "chart.line.uptrend.xyaxis",
+                        icon: .iconCircleDollar,
                         title: "Prices by CoinGecko",
                         url: SupportLinks.priceData,
                         showsDivider: false

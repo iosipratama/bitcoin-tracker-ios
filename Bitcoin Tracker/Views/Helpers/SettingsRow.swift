@@ -27,10 +27,10 @@ struct SettingsGroup<Content: View>: View {
 }
 
 /// One row: leading glyph, label, and whatever the row is for on the trailing
-/// side. The glyph is a placeholder SF Symbol until the custom artwork lands —
-/// swapping it means changing `icon` to an `Image(.assetName)`.
+/// side. The glyph is a template asset, so it tints from the colour roles
+/// rather than carrying its own colour.
 struct SettingsRow<Trailing: View>: View {
-    let icon: String
+    let icon: ImageResource
     let title: String
     var showsDivider: Bool = true
     @ViewBuilder var trailing: Trailing
@@ -38,10 +38,12 @@ struct SettingsRow<Trailing: View>: View {
     var body: some View {
         VStack(spacing: 0) {
             HStack(spacing: 14) {
-                Image(systemName: icon)
-                    .font(.system(size: 17, weight: .regular))
+                Image(icon)
+                    .renderingMode(.template)
+                    .resizable()
+                    .scaledToFit()
+                    .frame(width: 22, height: 22)
                     .foregroundStyle(.secondaryLabel)
-                    .frame(width: 24)
                     .accessibilityHidden(true)
 
                 Text(title)
@@ -59,7 +61,7 @@ struct SettingsRow<Trailing: View>: View {
                 Rectangle()
                     .fill(.divider)
                     .frame(height: 0.5)
-                    .padding(.leading, 54)
+                    .padding(.leading, 52)
             }
         }
     }
@@ -67,7 +69,7 @@ struct SettingsRow<Trailing: View>: View {
 
 /// A row that opens a URL, with the chevron the design shows.
 struct SettingsLinkRow: View {
-    let icon: String
+    let icon: ImageResource
     let title: String
     let url: URL
     var showsDivider: Bool = true
