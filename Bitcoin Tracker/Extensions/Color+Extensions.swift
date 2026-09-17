@@ -11,9 +11,27 @@ private enum Palette {
     static let negative = Color(hex: 0xFF6B6B)
 
     static let background = Color(hex: 0x1A1A1A)
-    static let elevatedBackground = Color(hex: 0x272727)
+    static let cardBackground = Color(hex: 0x2A2A2A)
+    static let cardInsetBackground = Color(hex: 0x232323)
     static let controlFill = Color(hex: 0x242218, opacity: 0.8)
     static let divider = Color(hex: 0xFFFFFF, opacity: 0.08)
+
+    /// Sits on a saturated accent tile, so it is near-black rather than the page
+    /// colour — the two happen to be close but mean different things.
+    static let onAccent = Color(hex: 0x10100E)
+
+    /// The selectable wallet accents. Adding a case here is all a new colour
+    /// needs; `WalletAccent` enumerates them for the picker.
+    enum Accent {
+        static let green = Color(hex: 0x3DDC97)
+        static let pink = Color(hex: 0xE84FD0)
+        static let blue = Color(hex: 0x4A9DF7)
+        static let purple = Color(hex: 0x9B7BF0)
+        static let teal = Color(hex: 0x3FC9D4)
+        static let orange = Color(hex: 0xF2954A)
+        static let red = Color(hex: 0xF0605F)
+        static let yellow = Color(hex: 0xE8C04A)
+    }
 }
 
 // MARK: - Semantic roles
@@ -62,14 +80,31 @@ extension ShapeStyle where Self == Color {
     /// The page behind everything.
     static var appBackground: Color { Palette.background }
 
-    /// One step up: cards and grouped surfaces.
-    static var elevatedBackground: Color { Palette.elevatedBackground }
+    /// A wallet card.
+    static var cardBackground: Color { Palette.cardBackground }
+
+    /// The balance panel nested inside a card, one step further in.
+    static var cardInsetBackground: Color { Palette.cardInsetBackground }
+
+    /// Foreground for glyphs drawn on an accent tile.
+    static var onAccent: Color { Palette.onAccent }
 
     /// Control interiors — text fields and inputs.
     static var controlFill: Color { Palette.controlFill }
 
     /// Hairline rule between rows.
     static var divider: Color { Palette.divider }
+
+    // Wallet accents. Chosen per wallet; see `WalletAccent`.
+
+    static var walletGreen: Color { Palette.Accent.green }
+    static var walletPink: Color { Palette.Accent.pink }
+    static var walletBlue: Color { Palette.Accent.blue }
+    static var walletPurple: Color { Palette.Accent.purple }
+    static var walletTeal: Color { Palette.Accent.teal }
+    static var walletOrange: Color { Palette.Accent.orange }
+    static var walletRed: Color { Palette.Accent.red }
+    static var walletYellow: Color { Palette.Accent.yellow }
 }
 
 extension Color {

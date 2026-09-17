@@ -81,6 +81,15 @@ final class PortfolioViewModel {
             : value.formatted(style)
     }
 
+    /// Whole currency units, for the wallet cards. A glanceable summary reads
+    /// better without cents; `formattedFiat` keeps them for the detail view.
+    func formattedFiatWhole(_ value: Double) -> String {
+        value.formatted(
+            FloatingPointFormatStyle<Double>.Currency(code: selectedCurrency.rawValue)
+                .precision(.fractionLength(0))
+        )
+    }
+
     func refreshPrices() async {
         do {
             prices = try await PriceService.shared.fetchPrices()

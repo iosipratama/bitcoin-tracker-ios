@@ -3,57 +3,87 @@ import SwiftUI
 struct WalletRow: View {
     let wallet: Wallet
 
+    @Environment(PortfolioViewModel.self) private var viewModel
+
+    private var balance: AddressBalance { wallet.balance }
+
     var body: some View {
-        VStack(alignment: .leading, spacing: 4) {
-            Text(wallet.name)
-                .font(.system(size: 14, weight: .regular))
-                .foregroundStyle(.secondaryLabel)
-
-            HStack(alignment: .lastTextBaseline, spacing: 6) {
-                Text(wallet.totalBTC.btcDigits)
-                    .font(.system(size: 36, weight: .semibold, design: .monospaced))
-                    .foregroundStyle(.label)
-
-                Text("BTC")
-                    .font(.system(size: 15, weight: .regular))
-                    .foregroundStyle(.secondaryLabel)
-            }
+        VStack(alignment: .leading, spacing: 10) {
+            header
+            balancePanel
         }
+        .padding(12)
         .frame(maxWidth: .infinity, alignment: .leading)
-        .padding(.horizontal, 20)
-        .padding(.vertical, 22)
+        .background(
+            RoundedRectangle(cornerRadius: .cardRadius, style: .continuous)
+                .fill(.cardBackground)
+        )
+        // Applied once here; every Text below inherits the rounded design.
+        .fontDesign(.rounded)
         .contentShape(Rectangle())
         .accessibilityElement(children: .combine)
     }
-}
 
-// MARK: - Previews
+    private var header: some View {
+        HStack(spacing: 10) {
+            RoundedRectangle(cornerRadius: 10, style: .continuous)
+                .fill(wallet.accent.color)
+                .frame(width: 34, height: 34)
+                .overlay {
+                    Image(systemName: wallet.symbol.systemName)
+                        .font(.system(size: 16, weight: .semibold))
+                        .foregroundStyle(.onAccent)
+                }
+                .accessibilityHidden(true)
 
-#Preview("Single row") {
-    let wallet = Wallet(name: "Cold Storage")
-    let a = BitcoinAddress(address: "bc1q")
-    a.balanceSatoshis = 105_340_200
-    wallet.addresses.append(a)
+            Text(wallet.name)
+                .font(.walletName)
+                .foregroundStyle(.label)
 
-    return WalletRow(wallet: wallet)
-        .background(Color.appBackground)
-}
-
-#Preview("Two rows") {
-    let w1 = Wallet(name: "Family saving")
-    let a1 = BitcoinAddress(address: "bc1q")
-    a1.balanceSatoshis = 12_221_303
-    w1.addresses.append(a1)
-
-    let w2 = Wallet(name: "Anna")
-    let a2 = BitcoinAddress(address: "bc1q2")
-    a2.balanceSatoshis = 1_221_303
-    w2.addresses.append(a2)
-
-    return VStack(spacing: 0) {
-        WalletRow(wallet: w1)
-        Rectangle().fill(Color.divider).frame(height: 0.5)
-        WalletRow(wallet: w2)
+            Spacer(minLength: 0)
+        }
     }
-    .background(Color.appBackground)
+
+    private var balancePanel: some View {
+        VStack(alignment: .leading, spacing: 3) {
+            // ₿ and ≡ are literal characters rather than SF Symbols so they sit
+            // on the text baseline and pick up the rounded design.
+            HStack(spacing: 6) {
+                Text("\u{20BF}")
+                    .font(.walletBalance)
+                    .foregroundStyle(.secondaryLabel)
+
+                Text(wallet.totalBTC.btcDigits)
+                    .font(.walletBalance)
+                    .foregroundStyle(.label)
+            }
+
+            if viewModel.showsFiatValues {
+                HStack(spacing: 6) {
+                    Text("\u{2261}")
+                        .font(.walletFiat)
+                        .foregroundStyle(.tertiaryLabel)
+
+                    Text(viewModel.formattedFiatWhole(viewModel.fiatValue(btc: wallet.totalBTC)))
+                        .font(.walletFiat)
+                        .foregroundStyle(.secondaryLabel)
+                        .lineLimit(1)
+                        .minimumScaleFactor(0.6)
+                }
+            }
+
+            if balance.hasPending {
+                Text("\(viewModel.formattedPending(balance.pendingSatoshis)) pending")
+                    .font(.caption)
+                    .foregroundStyle(.brand)
+            }
+        }
+        .frame(maxWidth: .infinity, alignment: .leading)
+        .padding(.horizontal, 12)
+        .padding(.vertical, 10)
+        .background(
+            RoundedRectangle(cornerRadius: .rowRadius, style: .continuous)
+                .fill(.cardInsetBackground)
+        )
+    }
 }

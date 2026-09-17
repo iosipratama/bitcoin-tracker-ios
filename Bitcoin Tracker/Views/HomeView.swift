@@ -9,6 +9,7 @@ struct HomeView: View {
     @State private var showAddWallet = false
     @State private var showSettings = false
     @State private var walletToDelete: Wallet? = nil
+    @State private var selectedWallet: Wallet? = nil
 
     /// The oldest successful fetch across the portfolio — the honest answer to
     /// "how current is this number?"
@@ -25,8 +26,9 @@ struct HomeView: View {
                     walletList
                 }
             }
+            .safeAreaInset(edge: .bottom) { quoteFooter }
             .background(.appBackground)
-            .navigationTitle("Wallets")
+            .navigationTitle("Wallet")
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
                 ToolbarItem(placement: .topBarLeading) {
@@ -45,7 +47,7 @@ struct HomeView: View {
                     }
                 }
             }
-            .navigationDestination(for: Wallet.self) { wallet in
+            .navigationDestination(item: $selectedWallet) { wallet in
                 WalletDetailView(wallet: wallet)
             }
             .sheet(isPresented: $showAddWallet) { AddWalletView() }
@@ -75,18 +77,21 @@ struct HomeView: View {
         List {
             if viewModel.balanceError != nil || oldestUpdate != nil {
                 statusLine
-                    .listRowInsets(EdgeInsets(top: 16, leading: 20, bottom: 18, trailing: 20))
-                    .listRowBackground(Color.appBackground)
+                    .listRowInsets(EdgeInsets(top: 12, leading: 20, bottom: 4, trailing: 20))
+                    .listRowBackground(Color.clear)
                     .listRowSeparator(.hidden)
             }
 
             ForEach(wallets) { wallet in
-                NavigationLink(value: wallet) {
+                Button {
+                    selectedWallet = wallet
+                } label: {
                     WalletRow(wallet: wallet)
                 }
-                .listRowInsets(EdgeInsets())
-                .listRowBackground(Color.appBackground)
-                .listRowSeparatorTint(Color.divider)
+                .buttonStyle(.plain)
+                .listRowInsets(EdgeInsets(top: 6, leading: 16, bottom: 6, trailing: 16))
+                .listRowBackground(Color.clear)
+                .listRowSeparator(.hidden)
                 .swipeActions(edge: .trailing, allowsFullSwipe: false) {
                     Button("Delete", systemImage: "trash", role: .destructive) {
                         walletToDelete = wallet
@@ -115,6 +120,34 @@ struct HomeView: View {
                 .font(.caption2)
                 .foregroundStyle(.tertiaryLabel)
         }
+    }
+
+    /// Pinned rather than scrolled: `safeAreaInset` also insets the list content,
+    /// so the last card can still be reached.
+    private var quoteFooter: some View {
+        VStack(spacing: 8) {
+            Image(systemName: "quote.opening")
+                .font(.system(size: 26, weight: .semibold))
+                .foregroundStyle(.tertiaryLabel)
+                .accessibilityHidden(true)
+
+            Text(Quotes.current.text)
+                .font(.system(size: 14))
+                .italic()
+                .multilineTextAlignment(.center)
+                .foregroundStyle(.tertiaryLabel)
+
+            if let attribution = Quotes.current.attribution {
+                Text(attribution)
+                    .font(.system(size: 12))
+                    .foregroundStyle(.tertiaryLabel.opacity(0.7))
+            }
+        }
+        .fontDesign(.rounded)
+        .frame(maxWidth: .infinity)
+        .padding(.horizontal, 36)
+        .padding(.bottom, 8)
+        .accessibilityElement(children: .combine)
     }
 
     private var emptyState: some View {
