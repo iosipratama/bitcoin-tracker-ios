@@ -64,16 +64,6 @@ final class PortfolioViewModel {
         value.btcDisplay
     }
 
-    func portfolioBalance(_ wallets: [Wallet]) -> AddressBalance {
-        wallets.reduce(.zero) { running, wallet in
-            let wallet = wallet.balance
-            return AddressBalance(
-                confirmedSatoshis: running.confirmedSatoshis + wallet.confirmedSatoshis,
-                pendingSatoshis: running.pendingSatoshis + wallet.pendingSatoshis
-            )
-        }
-    }
-
     /// Signed so an unconfirmed outgoing spend reads as "-0.0010 BTC pending".
     func formattedPending(_ satoshis: Int64) -> String {
         let sign = satoshis < 0 ? "-" : "+"

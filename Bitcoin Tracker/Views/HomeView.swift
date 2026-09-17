@@ -10,12 +10,6 @@ struct HomeView: View {
     @State private var showSettings = false
     @State private var walletToDelete: Wallet? = nil
 
-    private var portfolio: AddressBalance {
-        viewModel.portfolioBalance(wallets)
-    }
-
-    private var totalBTC: Double { portfolio.totalBTC }
-
     /// The oldest successful fetch across the portfolio — the honest answer to
     /// "how current is this number?"
     private var oldestUpdate: Date? {
@@ -79,10 +73,12 @@ struct HomeView: View {
     // Swipe actions only exist on List rows — in a LazyVStack the modifier is silently ignored.
     private var walletList: some View {
         List {
-            portfolioSummary
-                .listRowInsets(EdgeInsets(top: 28, leading: 20, bottom: 32, trailing: 20))
-                .listRowBackground(Color.appBackground)
-                .listRowSeparator(.hidden)
+            if viewModel.balanceError != nil || oldestUpdate != nil {
+                statusLine
+                    .listRowInsets(EdgeInsets(top: 16, leading: 20, bottom: 18, trailing: 20))
+                    .listRowBackground(Color.appBackground)
+                    .listRowSeparator(.hidden)
+            }
 
             ForEach(wallets) { wallet in
                 NavigationLink(value: wallet) {
@@ -105,60 +101,18 @@ struct HomeView: View {
         }
     }
 
-    private var portfolioSummary: some View {
-        VStack(alignment: .leading, spacing: 8) {
-            Text("Total")
-                .font(.caption)
-                .foregroundStyle(.secondaryLabel)
-                .kerning(1.5)
-                .textCase(.uppercase)
-
-            HStack(alignment: .lastTextBaseline, spacing: 6) {
-                Text(totalBTC.btcDigits)
-                    .font(.system(size: 40, weight: .semibold, design: .monospaced))
-                    .foregroundStyle(.label)
-
-                Text("BTC")
-                    .font(.system(size: 16))
-                    .foregroundStyle(.secondaryLabel)
-            }
-
-            if viewModel.showFiat {
-                fiatSubtitle
-            }
-
-            if portfolio.hasPending {
-                Text("\(viewModel.formattedPending(portfolio.pendingSatoshis)) pending confirmation")
-                    .font(.caption)
-                    .foregroundStyle(.brand)
-            }
-
-            if let error = viewModel.balanceError {
-                Text(error)
-                    .font(.caption)
-                    .foregroundStyle(.negative)
-                    .fixedSize(horizontal: false, vertical: true)
-            } else if let oldestUpdate {
-                Text("Updated \(oldestUpdate, format: .relative(presentation: .named))")
-                    .font(.caption2)
-                    .foregroundStyle(.tertiaryLabel)
-            }
-        }
-        .frame(maxWidth: .infinity, alignment: .leading)
-        .accessibilityElement(children: .combine)
-    }
-
+    /// What remains of the portfolio header. A failed refresh and a stale figure
+    /// are the two things a glance at the rows cannot reveal on its own.
     @ViewBuilder
-    private var fiatSubtitle: some View {
-        if viewModel.isFiatAvailable {
-            Text(viewModel.formattedFiat(viewModel.fiatValue(btc: totalBTC)))
-                .font(.system(size: 17))
-                .foregroundStyle(.secondaryLabel)
-                .lineLimit(1)
-                .minimumScaleFactor(0.6)
-        } else {
-            Text("Price unavailable")
-                .font(.system(size: 15))
+    private var statusLine: some View {
+        if let error = viewModel.balanceError {
+            Text(error)
+                .font(.caption)
+                .foregroundStyle(.negative)
+                .fixedSize(horizontal: false, vertical: true)
+        } else if let oldestUpdate {
+            Text("Updated \(oldestUpdate, format: .relative(presentation: .named))")
+                .font(.caption2)
                 .foregroundStyle(.tertiaryLabel)
         }
     }
