@@ -48,6 +48,22 @@ final class Wallet {
     var totalBTC: Double { balance.totalBTC }
 }
 
+// MARK: - Address lookup
+
+extension Wallet {
+    /// The wallet already tracking this address, if any. The same address in two
+    /// wallets would be counted twice in every total, so it may only live in one.
+    static func owner(of address: String, in wallets: [Wallet]) -> Wallet? {
+        let trimmed = address.trimmingCharacters(in: .whitespacesAndNewlines)
+        guard !trimmed.isEmpty else { return nil }
+        return wallets.first { wallet in
+            wallet.addresses.contains {
+                $0.address.caseInsensitiveCompare(trimmed) == .orderedSame
+            }
+        }
+    }
+}
+
 // MARK: - Derived defaults
 
 extension Wallet {

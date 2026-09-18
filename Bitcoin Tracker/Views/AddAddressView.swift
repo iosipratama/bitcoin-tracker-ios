@@ -22,15 +22,8 @@ struct AddAddressView: View {
         BitcoinAddress.isValidFormat(trimmedAddress)
     }
 
-    /// The same address in two places would be counted twice in every total,
-    /// so an address may only live in one wallet.
     private var duplicateOwner: Wallet? {
-        guard !trimmedAddress.isEmpty else { return nil }
-        return allWallets.first { candidate in
-            candidate.addresses.contains {
-                $0.address.caseInsensitiveCompare(trimmedAddress) == .orderedSame
-            }
-        }
+        Wallet.owner(of: trimmedAddress, in: allWallets)
     }
 
     private var duplicateMessage: String? {

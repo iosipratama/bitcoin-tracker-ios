@@ -20,19 +20,6 @@ private enum Palette {
     /// Sits on a saturated accent tile, so it is near-black rather than the page
     /// colour — the two happen to be close but mean different things.
     static let onAccent = Color(hex: 0x10100E)
-
-    /// The selectable wallet accents. Adding a case here is all a new colour
-    /// needs; `WalletAccent` enumerates them for the picker.
-    enum Accent {
-        static let green = Color(hex: 0x3DDC97)
-        static let pink = Color(hex: 0xE84FD0)
-        static let blue = Color(hex: 0x4A9DF7)
-        static let purple = Color(hex: 0x9B7BF0)
-        static let teal = Color(hex: 0x3FC9D4)
-        static let orange = Color(hex: 0xF2954A)
-        static let red = Color(hex: 0xF0605F)
-        static let yellow = Color(hex: 0xE8C04A)
-    }
 }
 
 // MARK: - Semantic roles
@@ -100,16 +87,6 @@ extension ShapeStyle where Self == Color {
     /// Hairline rule between rows.
     static var divider: Color { Palette.divider }
 
-    // Wallet accents. Chosen per wallet; see `WalletAccent`.
-
-    static var walletGreen: Color { Palette.Accent.green }
-    static var walletPink: Color { Palette.Accent.pink }
-    static var walletBlue: Color { Palette.Accent.blue }
-    static var walletPurple: Color { Palette.Accent.purple }
-    static var walletTeal: Color { Palette.Accent.teal }
-    static var walletOrange: Color { Palette.Accent.orange }
-    static var walletRed: Color { Palette.Accent.red }
-    static var walletYellow: Color { Palette.Accent.yellow }
 }
 
 extension Color {

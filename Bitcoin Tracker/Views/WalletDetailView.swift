@@ -7,6 +7,7 @@ struct WalletDetailView: View {
     @Environment(PortfolioViewModel.self) private var viewModel
 
     @State private var showAddAddress = false
+    @State private var showCustomize = false
 
     private var oldestUpdate: Date? {
         wallet.addresses.compactMap(\.lastUpdated).min()
@@ -25,12 +26,20 @@ struct WalletDetailView: View {
         .navigationBarTitleDisplayMode(.inline)
         .toolbar {
             ToolbarItem(placement: .topBarTrailing) {
-                Button("Add Address", systemImage: "plus") { showAddAddress = true }
-                    .tint(.brand)
+                Menu {
+                    Button("Add Address", systemImage: "plus") { showAddAddress = true }
+                    Button("Customize", systemImage: "paintbrush") { showCustomize = true }
+                } label: {
+                    Label("Wallet actions", systemImage: "ellipsis")
+                }
+                .tint(.brand)
             }
         }
         .sheet(isPresented: $showAddAddress) {
             AddAddressView(wallet: wallet)
+        }
+        .sheet(isPresented: $showCustomize) {
+            EditWalletView(wallet: wallet)
         }
     }
 
