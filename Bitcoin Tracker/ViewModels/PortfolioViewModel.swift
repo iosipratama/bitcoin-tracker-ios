@@ -108,8 +108,10 @@ final class PortfolioViewModel {
             : value.formatted(style)
     }
 
-    /// Whole currency units, for the wallet cards. A glanceable summary reads
-    /// better without cents; `formattedFiat` keeps them for the detail view.
+    /// Whole currency units, used wherever a balance is displayed. Cents are
+    /// noise on a glanceable figure, and more so on a rupiah or yen one.
+    /// `formattedFiat` keeps them for the add-address balance preview, where the
+    /// exact figure is being confirmed.
     func formattedFiatWhole(_ value: Double) -> String {
         value.formatted(
             FloatingPointFormatStyle<Double>.Currency(code: selectedCurrency.rawValue)

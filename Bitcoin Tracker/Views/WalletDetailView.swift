@@ -120,7 +120,7 @@ struct WalletDetailView: View {
                         .foregroundStyle(.tertiaryLabel)
 
                     AnimatingNumber(value: viewModel.fiatValue(btc: wallet.totalBTC)) { value in
-                        viewModel.formattedFiat(value)
+                        viewModel.formattedFiatWhole(value)
                     }
                     .font(.system(size: 17, weight: .semibold))
                     .foregroundStyle(.secondaryLabel)
