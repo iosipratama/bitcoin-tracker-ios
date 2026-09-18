@@ -107,7 +107,7 @@ struct AddAddressView: View {
 
                         if viewModel.showsFiatValues {
                             Text(viewModel.formattedFiat(viewModel.fiatValue(btc: btc)))
-                                .font(.balanceMedium)
+                                .font(.walletTotal)
                                 .foregroundStyle(.label)
                                 .lineLimit(1)
                                 .minimumScaleFactor(0.5)
@@ -118,7 +118,7 @@ struct AddAddressView: View {
                                 .foregroundStyle(.secondaryLabel)
                         } else {
                             Text(viewModel.formattedBTC(btc))
-                                .font(.balanceMedium)
+                                .font(.walletTotal)
                                 .foregroundStyle(.label)
                         }
 
@@ -155,6 +155,7 @@ struct AddAddressView: View {
             .padding(.horizontal, 24)
             .padding(.top, 28)
             .padding(.bottom, 16)
+            .fontDesign(.rounded)
             .background(.appBackground)
             .navigationTitle("Add Address")
             .navigationBarTitleDisplayMode(.inline)

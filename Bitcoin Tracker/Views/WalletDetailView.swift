@@ -21,6 +21,7 @@ struct WalletDetailView: View {
             }
             .padding(.bottom, 40)
         }
+        .fontDesign(.rounded)
         .background(.appBackground)
         .navigationTitle(wallet.name)
         .navigationBarTitleDisplayMode(.inline)
@@ -45,108 +46,139 @@ struct WalletDetailView: View {
 
     private var walletHeader: some View {
         ZStack {
+            // Tinted with the wallet's own accent rather than the app's, so the
+            // screen reads as a continuation of the card that opened it.
             RadialGradient(
-                colors: [Color.brand.opacity(0.06), .clear],
+                colors: [wallet.accent.color.opacity(0.10), .clear],
                 center: .center,
                 startRadius: 0,
-                endRadius: 160
+                endRadius: 180
             )
-            .frame(height: 240)
+            .frame(height: 260)
 
-            VStack(spacing: 10) {
-                if viewModel.showsFiatValues {
-                    AnimatingNumber(value: viewModel.fiatValue(btc: wallet.totalBTC)) { val in
-                        viewModel.formattedFiat(val)
+            VStack(spacing: 12) {
+                RoundedRectangle(cornerRadius: 12, style: .continuous)
+                    .fill(wallet.accent.color)
+                    .frame(width: 44, height: 44)
+                    .overlay {
+                        Image(systemName: wallet.symbol.systemName)
+                            .font(.system(size: 20, weight: .semibold))
+                            .foregroundStyle(.onAccent)
                     }
-                    .font(.balanceMedium)
-                    .foregroundStyle(.label)
-                    .lineLimit(1)
-                    .minimumScaleFactor(0.5)
-                    .padding(.horizontal, 24)
+                    .accessibilityHidden(true)
 
-                    Text(viewModel.formattedBTC(wallet.totalBTC))
-                        .font(.subheadline)
-                        .foregroundStyle(.secondaryLabel)
-                } else {
-                    Text(viewModel.formattedBTC(wallet.totalBTC))
-                        .font(.balanceMedium)
+                // Same prefix/suffix the card asks for, so BTC and satoshi modes
+                // are marked identically in both places.
+                HStack(alignment: .firstTextBaseline, spacing: 8) {
+                    if let prefix = viewModel.amountPrefix {
+                        Text(prefix)
+                            .font(.walletTotal)
+                            .foregroundStyle(.secondaryLabel)
+                    }
+
+                    Text(viewModel.formattedAmount(btc: wallet.totalBTC))
+                        .font(.walletTotal)
                         .foregroundStyle(.label)
 
-                    if viewModel.showFiat {
-                        Text("Price unavailable")
-                            .font(.subheadline)
-                            .foregroundStyle(.tertiaryLabel)
+                    if let suffix = viewModel.amountSuffix {
+                        Text(suffix)
+                            .font(.system(size: 17, weight: .semibold))
+                            .foregroundStyle(.secondaryLabel)
                     }
                 }
+                .lineLimit(1)
+                .minimumScaleFactor(0.5)
+                .padding(.horizontal, 24)
+
+                fiatLine
 
                 if wallet.balance.hasPending {
                     Text("\(viewModel.formattedPending(wallet.balance.pendingSatoshis)) pending confirmation")
-                        .font(.caption)
+                        .font(.system(size: 13))
                         .foregroundStyle(.brand)
-                        .padding(.top, 2)
                 }
             }
-            .padding(.vertical, 48)
+            .padding(.vertical, 40)
             .accessibilityElement(children: .combine)
+        }
+    }
+
+    /// Mirrors the card: the ≡ marker, and nothing at all when fiat is off.
+    @ViewBuilder
+    private var fiatLine: some View {
+        if viewModel.showFiat {
+            if viewModel.isFiatAvailable {
+                HStack(spacing: 6) {
+                    Text("\u{2261}")
+                        .font(.system(size: 15, weight: .semibold))
+                        .foregroundStyle(.tertiaryLabel)
+
+                    AnimatingNumber(value: viewModel.fiatValue(btc: wallet.totalBTC)) { value in
+                        viewModel.formattedFiat(value)
+                    }
+                    .font(.system(size: 17, weight: .semibold))
+                    .foregroundStyle(.secondaryLabel)
+                }
+                .lineLimit(1)
+                .minimumScaleFactor(0.6)
+                .padding(.horizontal, 24)
+            } else {
+                Text("Price unavailable")
+                    .font(.system(size: 15))
+                    .foregroundStyle(.tertiaryLabel)
+            }
         }
     }
 
     @ViewBuilder
     private var addressList: some View {
         if wallet.addresses.isEmpty {
-            VStack(spacing: 14) {
-                Text("No addresses yet.")
-                    .font(.custom("Georgia", size: 18))
+            VStack(spacing: 10) {
+                Text("No addresses yet")
+                    .font(.system(size: 17, weight: .semibold))
                     .foregroundStyle(.secondaryLabel)
 
                 Text("Add a Bitcoin address to start tracking.")
-                    .font(.subheadline)
+                    .font(.system(size: 15))
                     .foregroundStyle(.tertiaryLabel)
             }
-            .padding(.top, 56)
+            .frame(maxWidth: .infinity)
+            .padding(.top, 48)
         } else {
-            VStack(spacing: 0) {
-                HStack {
+            VStack(alignment: .leading, spacing: 10) {
+                HStack(alignment: .firstTextBaseline) {
                     Text("Addresses")
-                        .font(.caption)
+                        .font(.system(size: 17, weight: .semibold))
                         .foregroundStyle(.secondaryLabel)
-                        .kerning(1.5)
-                        .textCase(.uppercase)
+
                     Spacer()
+
                     if let updated = oldestUpdate {
                         Text("Updated \(updated, format: .relative(presentation: .named))")
-                            .font(.caption2)
+                            .font(.system(size: 12))
                             .foregroundStyle(.tertiaryLabel)
                     }
                 }
-                .padding(.horizontal, 24)
-                .padding(.bottom, 14)
+                .padding(.horizontal, 20)
 
-                Rectangle()
-                    .fill(.divider)
-                    .frame(height: 0.5)
-
-                ForEach(wallet.addresses) { address in
-                    AddressRow(address: address, viewModel: viewModel)
-                        .contextMenu {
-                            Button {
-                                UIPasteboard.general.string = address.address
-                            } label: {
-                                Label("Copy Address", systemImage: "doc.on.doc")
+                // Cards rather than full-bleed rows with hairlines, matching the
+                // wallet list and settings.
+                VStack(spacing: 10) {
+                    ForEach(wallet.addresses) { address in
+                        AddressRow(address: address, viewModel: viewModel)
+                            .contextMenu {
+                                Button("Copy Address", systemImage: "doc.on.doc") {
+                                    UIPasteboard.general.string = address.address
+                                }
+                                Button("Delete", systemImage: "trash", role: .destructive) {
+                                    deleteAddress(address)
+                                }
                             }
-                            Button(role: .destructive) {
-                                deleteAddress(address)
-                            } label: {
-                                Label("Delete", systemImage: "trash")
-                            }
-                        }
-
-                    Rectangle()
-                        .fill(.divider)
-                        .frame(height: 0.5)
+                    }
                 }
+                .padding(.horizontal, 16)
             }
-            .padding(.top, 36)
+            .padding(.top, 8)
         }
     }
 
@@ -169,23 +201,25 @@ struct AddressRow: View {
         } label: {
             HStack(alignment: .center, spacing: 0) {
                 VStack(alignment: .leading, spacing: 5) {
+                    // Monospaced on purpose: a truncated address is checked
+                    // character by character, which proportional digits hinder.
                     Text(address.shortAddress)
-                        .font(.subheadline.monospaced())
+                        .font(.system(size: 15, weight: .medium, design: .monospaced))
                         .foregroundStyle(.label)
 
                     if let error = address.fetchError {
                         Text(error)
-                            .font(.caption2)
+                            .font(.system(size: 12))
                             .foregroundStyle(.negative)
                     } else {
                         HStack(spacing: 6) {
                             Text(viewModel.formattedBTC(address.balance.totalBTC))
-                                .font(.caption)
+                                .font(.system(size: 13))
                                 .foregroundStyle(.secondaryLabel)
 
                             if address.balance.hasPending {
                                 Text("\(viewModel.formattedPending(address.pendingSatoshis)) pending")
-                                    .font(.caption2)
+                                    .font(.system(size: 12))
                                     .foregroundStyle(.brand)
                             }
                         }
@@ -197,21 +231,24 @@ struct AddressRow: View {
                 if didCopy {
                     Label("Copied", systemImage: "checkmark")
                         .labelStyle(.titleAndIcon)
-                        .font(.caption)
+                        .font(.system(size: 13, weight: .semibold))
                         .foregroundStyle(.brand)
                         .transition(.opacity)
                 } else if address.fetchError == nil, viewModel.showsFiatValues {
                     Text(viewModel.formattedFiat(viewModel.fiatValue(btc: address.balance.totalBTC)))
-                        .font(.subheadline.weight(.medium))
-                        .foregroundStyle(.label)
+                        .font(.system(size: 15, weight: .semibold))
+                        .foregroundStyle(.secondaryLabel)
                         .lineLimit(1)
                         .minimumScaleFactor(0.6)
                 }
             }
-            .padding(.horizontal, 24)
-            .padding(.vertical, 20)
+            .padding(.horizontal, 16)
+            .padding(.vertical, 14)
             .frame(maxWidth: .infinity)
-            .background(.appBackground)
+            .background(
+                RoundedRectangle(cornerRadius: .cardRadius, style: .continuous)
+                    .fill(.groupedBackground)
+            )
             .contentShape(Rectangle())
         }
         .buttonStyle(.plain)
