@@ -214,10 +214,25 @@ struct AddressRow: View {
                         .foregroundStyle(.label)
 
                     if hasEverLoaded {
-                        HStack(spacing: 6) {
-                            Text(viewModel.formattedBTC(address.balance.totalBTC))
+                        HStack(spacing: 5) {
+                            // Same prefix/suffix the card and the header ask
+                            // for, so the unit is marked identically wherever a
+                            // balance appears.
+                            if let prefix = viewModel.amountPrefix {
+                                Text(prefix)
+                                    .font(.system(size: 13))
+                                    .foregroundStyle(.tertiaryLabel)
+                            }
+
+                            Text(viewModel.formattedAmount(btc: address.balance.totalBTC))
                                 .font(.system(size: 13))
                                 .foregroundStyle(.secondaryLabel)
+
+                            if let suffix = viewModel.amountSuffix {
+                                Text(suffix)
+                                    .font(.system(size: 12))
+                                    .foregroundStyle(.tertiaryLabel)
+                            }
 
                             if address.balance.hasPending {
                                 Text("\(viewModel.formattedPending(address.pendingSatoshis)) pending")
@@ -244,7 +259,7 @@ struct AddressRow: View {
                         .foregroundStyle(.brand)
                         .transition(.opacity)
                 } else if hasEverLoaded, viewModel.showsFiatValues {
-                    Text(viewModel.formattedFiat(viewModel.fiatValue(btc: address.balance.totalBTC)))
+                    Text(viewModel.formattedFiatWhole(viewModel.fiatValue(btc: address.balance.totalBTC)))
                         .font(.system(size: 15, weight: .semibold))
                         .foregroundStyle(.secondaryLabel)
                         .lineLimit(1)
