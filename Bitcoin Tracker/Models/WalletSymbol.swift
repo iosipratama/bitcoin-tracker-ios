@@ -10,7 +10,7 @@ enum WalletSymbol: String, CaseIterable, Codable, Identifiable {
     case health, growth, savings, card, star, home
     case car, tools, devices, education, work, travel
     case luggage, food, shopping, clothes, medical, fitness
-    case gaming, gift, celebration, gratitude, night, energy
+    case gaming, gift, wallet, person, child, energy
 
     var id: String { rawValue }
 
@@ -42,9 +42,9 @@ enum WalletSymbol: String, CaseIterable, Codable, Identifiable {
         case .fitness: "dumbbell.fill"
         case .gaming: "gamecontroller.fill"
         case .gift: "gift.fill"
-        case .celebration: "party.popper.fill"
-        case .gratitude: "hands.and.sparkles.fill"
-        case .night: "moon.stars.fill"
+        case .wallet: "wallet.bifold"
+        case .person: "figure.stand.dress"
+        case .child: "figure.child"
         case .energy: "bolt.fill"
         }
     }
