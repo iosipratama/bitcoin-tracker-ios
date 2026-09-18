@@ -101,6 +101,9 @@ struct HomeView: View {
         }
         .listStyle(.plain)
         .scrollContentBackground(.hidden)
+        // A hard edge rather than the default: content was legible under the
+        // toolbar, and a soft fade still lets it read through.
+        .scrollEdgeEffectStyle(.hard, for: .top)
         .refreshable {
             await viewModel.refreshBalances(wallets: wallets)
         }
