@@ -130,7 +130,7 @@ struct SettingsView: View {
                         ForEach(0..<5, id: \.self) { _ in
                             Image(systemName: "star.fill")
                                 .font(.system(size: 15))
-                                .foregroundStyle(.walletYellow)
+                                .foregroundStyle(.yellow)
                         }
                     }
                     .accessibilityHidden(true)

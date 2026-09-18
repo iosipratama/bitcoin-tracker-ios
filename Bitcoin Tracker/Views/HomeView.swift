@@ -50,7 +50,7 @@ struct HomeView: View {
             .navigationDestination(item: $selectedWallet) { wallet in
                 WalletDetailView(wallet: wallet)
             }
-            .sheet(isPresented: $showAddWallet) { AddWalletView() }
+            .sheet(isPresented: $showAddWallet) { AddWalletFlow() }
             .sheet(isPresented: $showSettings) { SettingsView() }
             .task { await viewModel.refreshBalances(wallets: wallets) }
             .alert("Remove \(walletToDelete?.name ?? "wallet")?", isPresented: .init(

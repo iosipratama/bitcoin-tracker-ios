@@ -22,15 +22,8 @@ struct AddAddressView: View {
         BitcoinAddress.isValidFormat(trimmedAddress)
     }
 
-    /// The same address in two places would be counted twice in every total,
-    /// so an address may only live in one wallet.
     private var duplicateOwner: Wallet? {
-        guard !trimmedAddress.isEmpty else { return nil }
-        return allWallets.first { candidate in
-            candidate.addresses.contains {
-                $0.address.caseInsensitiveCompare(trimmedAddress) == .orderedSame
-            }
-        }
+        Wallet.owner(of: trimmedAddress, in: allWallets)
     }
 
     private var duplicateMessage: String? {
@@ -114,7 +107,7 @@ struct AddAddressView: View {
 
                         if viewModel.showsFiatValues {
                             Text(viewModel.formattedFiat(viewModel.fiatValue(btc: btc)))
-                                .font(.balanceMedium)
+                                .font(.walletTotal)
                                 .foregroundStyle(.label)
                                 .lineLimit(1)
                                 .minimumScaleFactor(0.5)
@@ -125,7 +118,7 @@ struct AddAddressView: View {
                                 .foregroundStyle(.secondaryLabel)
                         } else {
                             Text(viewModel.formattedBTC(btc))
-                                .font(.balanceMedium)
+                                .font(.walletTotal)
                                 .foregroundStyle(.label)
                         }
 
@@ -162,6 +155,7 @@ struct AddAddressView: View {
             .padding(.horizontal, 24)
             .padding(.top, 28)
             .padding(.bottom, 16)
+            .fontDesign(.rounded)
             .background(.appBackground)
             .navigationTitle("Add Address")
             .navigationBarTitleDisplayMode(.inline)

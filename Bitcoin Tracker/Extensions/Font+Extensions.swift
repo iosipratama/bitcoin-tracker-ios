@@ -1,9 +1,9 @@
 import SwiftUI
 
 extension Font {
-    // Georgia serif — used exclusively for balance figures
-    static let balanceLarge = Font.custom("Georgia", size: 44)
-    static let balanceMedium = Font.custom("Georgia", size: 32)
+    /// The headline balance on a wallet's own screen. Same size the Georgia
+    /// serif occupied, now in the rounded face the rest of the app uses.
+    static let walletTotal = Font.system(size: 32, weight: .bold)
 }
 
 extension Font {
