@@ -102,6 +102,10 @@ extension Color {
 }
 
 extension CGFloat {
+    /// Close and confirm in a sheet's top bar. 44 is the minimum comfortable
+    /// tap target, and keeping both on one constant keeps them balanced.
+    static let sheetButton: CGFloat = 44
+
     static let cardRadius: CGFloat = 18
     static let rowRadius: CGFloat = 12
 }

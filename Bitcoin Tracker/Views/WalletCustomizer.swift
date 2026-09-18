@@ -98,13 +98,80 @@ struct SheetCloseButton: View {
     var body: some View {
         Button(action: action) {
             Image(systemName: "xmark")
-                .font(.system(size: 15, weight: .semibold))
+                .font(.system(size: 17, weight: .semibold))
                 .foregroundStyle(.label)
-                .frame(width: 34, height: 34)
+                .frame(width: .sheetButton, height: .sheetButton)
                 .background(Circle().fill(.groupedBackground))
         }
         .buttonStyle(.plain)
         .accessibilityLabel("Close")
+    }
+}
+
+/// The primary action, mirroring `SheetCloseButton`'s metrics so the two balance
+/// across the bar. Carries the capsule's colour pairing so it still reads as the
+/// primary action at a fraction of the size.
+struct SheetConfirmButton: View {
+    var isEnabled = true
+    let action: () -> Void
+
+    var body: some View {
+        Button(action: action) {
+            Image(systemName: "checkmark")
+                .font(.system(size: 17, weight: .semibold))
+                .foregroundStyle(.onAccent)
+                .frame(width: .sheetButton, height: .sheetButton)
+                // The effect rather than .glassProminent: that button style adds
+                // its own padding around the label, so a 44pt label rendered
+                // closer to 60 and outgrew the close button beside it.
+                .glassEffect(
+                    .regular
+                        .tint(isEnabled ? Color.brand : Color.brandDisabled)
+                        .interactive(),
+                    in: .circle
+                )
+        }
+        .buttonStyle(.plain)
+        .disabled(!isEnabled)
+        .accessibilityLabel("Save")
+    }
+}
+
+/// The bar at the top of a sheet. Shared so the close button, title and confirm
+/// action stay aligned across every sheet that uses one.
+struct SheetHeader: View {
+    let title: String
+    var subtitle: String?
+    let onClose: () -> Void
+    var onConfirm: (() -> Void)?
+    var canConfirm = true
+
+    var body: some View {
+        ZStack {
+            VStack(spacing: 2) {
+                Text(title)
+                    .font(.system(size: 17, weight: .semibold))
+                    .foregroundStyle(.label)
+
+                if let subtitle {
+                    Text(subtitle)
+                        .font(.system(size: 14))
+                        .foregroundStyle(.secondaryLabel)
+                }
+            }
+
+            HStack {
+                SheetCloseButton(action: onClose)
+
+                Spacer()
+
+                if let onConfirm {
+                    SheetConfirmButton(isEnabled: canConfirm, action: onConfirm)
+                }
+            }
+        }
+        .padding(.horizontal, 16)
+        .padding(.top, 16)
     }
 }
 
