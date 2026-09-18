@@ -98,9 +98,9 @@ struct SheetCloseButton: View {
     var body: some View {
         Button(action: action) {
             Image(systemName: "xmark")
-                .font(.system(size: 15, weight: .semibold))
+                .font(.system(size: 17, weight: .semibold))
                 .foregroundStyle(.label)
-                .frame(width: 34, height: 34)
+                .frame(width: .sheetButton, height: .sheetButton)
                 .background(Circle().fill(.groupedBackground))
         }
         .buttonStyle(.plain)
@@ -118,12 +118,14 @@ struct SheetConfirmButton: View {
     var body: some View {
         Button(action: action) {
             Image(systemName: "checkmark")
-                .font(.system(size: 15, weight: .semibold))
-                .foregroundStyle(.onAccent)
-                .frame(width: 34, height: 34)
-                .background(Circle().fill(isEnabled ? Color.brand : Color.brandDisabled))
+                .font(.system(size: 17, weight: .semibold))
+                .frame(width: .sheetButton, height: .sheetButton)
         }
-        .buttonStyle(.plain)
+        // Prominent glass takes its fill from the tint, so the accent reads
+        // through the material rather than sitting flat on top of it.
+        .buttonStyle(.glassProminent)
+        .buttonBorderShape(.circle)
+        .tint(isEnabled ? Color.brand : Color.brandDisabled)
         .disabled(!isEnabled)
         .accessibilityLabel("Save")
     }

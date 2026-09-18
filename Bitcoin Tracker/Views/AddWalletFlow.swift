@@ -209,7 +209,7 @@ struct EditWalletView: View {
         }
         .fontDesign(.rounded)
         .background(.appBackground)
-        .presentationDetents([.fraction(0.96)])
+        .presentationSizing(.fitted)
         .presentationBackground(.appBackground)
         .task {
             // Seeded once on appear: reading straight from the model would make
