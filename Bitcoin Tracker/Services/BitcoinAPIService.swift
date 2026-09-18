@@ -18,7 +18,7 @@ nonisolated enum APIError: LocalizedError, Sendable {
         case .rateLimited:
             "Too many requests — try again shortly"
         case .unreachable:
-            "Can't reach a block explorer. Check your connection — some networks block them."
+            "Couldn’t reach a block explorer."
         case .networkError(let message):
             message
         case .decodingError:
