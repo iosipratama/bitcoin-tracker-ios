@@ -47,7 +47,7 @@ struct AddWalletFlow: View {
 
     private var pasteStep: some View {
         VStack(spacing: 0) {
-            header(title: "Add wallet")
+            SheetHeader(title: "Add wallet") { dismiss() }
 
             Spacer(minLength: 0)
 
@@ -98,44 +98,21 @@ struct AddWalletFlow: View {
 
     private var customizeStep: some View {
         VStack(spacing: 0) {
-            header(title: "Customize", subtitle: BitcoinAddress(address: trimmedAddress).shortAddress)
+            SheetHeader(
+                title: "Customize",
+                subtitle: BitcoinAddress(address: trimmedAddress).shortAddress,
+                onClose: { dismiss() },
+                onConfirm: save,
+                canConfirm: canSave
+            )
 
             ScrollView {
                 WalletCustomizer(name: $name, accent: $accent, symbol: $symbol)
                     .padding(.horizontal, 16)
                     .padding(.top, 8)
-                    .padding(.bottom, 24)
-            }
-
-            CapsuleActionButton(title: "Save", isEnabled: canSave, action: save)
-                .padding(.bottom, 28)
-                .padding(.top, 4)
-        }
-    }
-
-    // MARK: - Chrome
-
-    private func header(title: String, subtitle: String? = nil) -> some View {
-        ZStack {
-            VStack(spacing: 2) {
-                Text(title)
-                    .font(.system(size: 17, weight: .semibold))
-                    .foregroundStyle(.label)
-
-                if let subtitle {
-                    Text(subtitle)
-                        .font(.system(size: 14))
-                        .foregroundStyle(.secondaryLabel)
-                }
-            }
-
-            HStack {
-                SheetCloseButton { dismiss() }
-                Spacer()
+                    .padding(.bottom, 28)
             }
         }
-        .padding(.horizontal, 16)
-        .padding(.top, 16)
     }
 
     // MARK: - Actions
@@ -216,34 +193,19 @@ struct EditWalletView: View {
 
     var body: some View {
         VStack(spacing: 0) {
-            ZStack {
-                Text("Customize")
-                    .font(.system(size: 17, weight: .semibold))
-                    .foregroundStyle(.label)
-
-                HStack {
-                    SheetCloseButton { dismiss() }
-                    Spacer()
-                }
-            }
-            .padding(.horizontal, 16)
-            .padding(.top, 16)
+            SheetHeader(
+                title: "Customize",
+                onClose: { dismiss() },
+                onConfirm: save,
+                canConfirm: canSave
+            )
 
             ScrollView {
                 WalletCustomizer(name: $name, accent: $accent, symbol: $symbol)
                     .padding(.horizontal, 16)
                     .padding(.top, 8)
-                    .padding(.bottom, 24)
+                    .padding(.bottom, 28)
             }
-
-            CapsuleActionButton(title: "Save", isEnabled: canSave) {
-                wallet.name = name.trimmingCharacters(in: .whitespacesAndNewlines)
-                wallet.accent = accent
-                wallet.symbol = symbol
-                dismiss()
-            }
-            .padding(.bottom, 28)
-            .padding(.top, 4)
         }
         .fontDesign(.rounded)
         .background(.appBackground)
@@ -256,5 +218,13 @@ struct EditWalletView: View {
             accent = wallet.accent
             symbol = wallet.symbol
         }
+    }
+
+    private func save() {
+        guard canSave else { return }
+        wallet.name = name.trimmingCharacters(in: .whitespacesAndNewlines)
+        wallet.accent = accent
+        wallet.symbol = symbol
+        dismiss()
     }
 }

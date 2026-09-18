@@ -108,6 +108,65 @@ struct SheetCloseButton: View {
     }
 }
 
+/// The primary action, mirroring `SheetCloseButton`'s metrics so the two balance
+/// across the bar. Carries the capsule's colour pairing so it still reads as the
+/// primary action at a fraction of the size.
+struct SheetConfirmButton: View {
+    var isEnabled = true
+    let action: () -> Void
+
+    var body: some View {
+        Button(action: action) {
+            Image(systemName: "checkmark")
+                .font(.system(size: 15, weight: .semibold))
+                .foregroundStyle(.onAccent)
+                .frame(width: 34, height: 34)
+                .background(Circle().fill(isEnabled ? Color.brand : Color.brandDisabled))
+        }
+        .buttonStyle(.plain)
+        .disabled(!isEnabled)
+        .accessibilityLabel("Save")
+    }
+}
+
+/// The bar at the top of a sheet. Shared so the close button, title and confirm
+/// action stay aligned across every sheet that uses one.
+struct SheetHeader: View {
+    let title: String
+    var subtitle: String?
+    let onClose: () -> Void
+    var onConfirm: (() -> Void)?
+    var canConfirm = true
+
+    var body: some View {
+        ZStack {
+            VStack(spacing: 2) {
+                Text(title)
+                    .font(.system(size: 17, weight: .semibold))
+                    .foregroundStyle(.label)
+
+                if let subtitle {
+                    Text(subtitle)
+                        .font(.system(size: 14))
+                        .foregroundStyle(.secondaryLabel)
+                }
+            }
+
+            HStack {
+                SheetCloseButton(action: onClose)
+
+                Spacer()
+
+                if let onConfirm {
+                    SheetConfirmButton(isEnabled: canConfirm, action: onConfirm)
+                }
+            }
+        }
+        .padding(.horizontal, 16)
+        .padding(.top, 16)
+    }
+}
+
 /// The brand-orange capsule used for the primary action in these sheets.
 struct CapsuleActionButton: View {
     let title: String
