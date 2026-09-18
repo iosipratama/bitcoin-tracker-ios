@@ -9,6 +9,11 @@ struct WalletDetailView: View {
     @State private var showAddAddress = false
     @State private var showCustomize = false
 
+    /// The glow's frame is twice this, so the falloff reaches clear exactly at
+    /// the edges. A radius larger than the frame's half-height leaves the
+    /// gradient still coloured where it gets cut, which shows as a hard line.
+    private let glowRadius: CGFloat = 150
+
     private var oldestUpdate: Date? {
         wallet.addresses.compactMap(\.lastUpdated).min()
     }
@@ -49,12 +54,12 @@ struct WalletDetailView: View {
             // Tinted with the wallet's own accent rather than the app's, so the
             // screen reads as a continuation of the card that opened it.
             RadialGradient(
-                colors: [wallet.accent.color.opacity(0.10), .clear],
+                colors: [wallet.accent.color.opacity(0.12), .clear],
                 center: .center,
                 startRadius: 0,
-                endRadius: 180
+                endRadius: glowRadius
             )
-            .frame(height: 260)
+            .frame(height: glowRadius * 2)
 
             VStack(spacing: 12) {
                 RoundedRectangle(cornerRadius: 12, style: .continuous)
