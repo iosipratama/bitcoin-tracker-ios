@@ -75,7 +75,7 @@ struct HomeView: View {
     // Swipe actions only exist on List rows — in a LazyVStack the modifier is silently ignored.
     private var walletList: some View {
         List {
-            if viewModel.balanceError != nil || oldestUpdate != nil {
+            if oldestUpdate != nil || viewModel.lastRefreshFailed {
                 statusLine
                     .listRowInsets(EdgeInsets(top: 12, leading: 20, bottom: 4, trailing: 20))
                     .listRowBackground(Color.clear)
@@ -108,18 +108,8 @@ struct HomeView: View {
 
     /// What remains of the portfolio header. A failed refresh and a stale figure
     /// are the two things a glance at the rows cannot reveal on its own.
-    @ViewBuilder
     private var statusLine: some View {
-        if let error = viewModel.balanceError {
-            Text(error)
-                .font(.caption)
-                .foregroundStyle(.negative)
-                .fixedSize(horizontal: false, vertical: true)
-        } else if let oldestUpdate {
-            Text("Updated \(oldestUpdate, format: .relative(presentation: .named))")
-                .font(.caption2)
-                .foregroundStyle(.tertiaryLabel)
-        }
+        StaleStamp(updated: oldestUpdate, didFail: viewModel.lastRefreshFailed)
     }
 
     /// Pinned rather than scrolled: `safeAreaInset` also insets the list content,

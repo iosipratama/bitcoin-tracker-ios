@@ -17,9 +17,14 @@ final class PortfolioViewModel {
 
     var isLoading = false
     var priceError: String?
-    /// Set when every address in a refresh failed, so the UI can distinguish
-    /// "nothing is reachable" from a single address having trouble.
-    var balanceError: String?
+    /// True when the last refresh reached nothing. Drives a quiet staleness
+    /// marker beside the "Updated" stamp — the reason itself is not shown,
+    /// because a stale figure is still a true one.
+    var lastRefreshFailed = false
+
+    /// How long to wait before the one quiet retry. Most transport failures are
+    /// transient, so the calmest fix is the one nobody sees.
+    private static let retryDelay = Duration.seconds(3)
     var prices: [String: Double] = [:]
 
     var selectedCurrency: FiatCurrency {
@@ -129,40 +134,61 @@ final class PortfolioViewModel {
         await refreshPrices()
 
         let addresses = wallets.flatMap(\.addresses)
-        let unique = Array(Set(addresses.map(\.address)))
-        guard !unique.isEmpty else {
-            balanceError = nil
+        guard !addresses.isEmpty else {
+            lastRefreshFailed = false
             return
         }
 
+        let stillFailing = await apply(to: addresses)
+        lastRefreshFailed = stillFailing.count == addresses.count
+
+        guard !stillFailing.isEmpty else { return }
+
+        // Deliberately not awaited: `.refreshable` holds its spinner for as long
+        // as this call runs, so retrying inline would make every pull-to-refresh
+        // feel three seconds slower.
+        Task { [weak self] in
+            try? await Task.sleep(for: Self.retryDelay)
+            await self?.retryQuietly(stillFailing)
+        }
+    }
+
+    /// Fetches the given addresses and writes the results back, returning those
+    /// that still failed.
+    @discardableResult
+    private func apply(to addresses: [BitcoinAddress]) async -> [BitcoinAddress] {
+        let unique = Array(Set(addresses.map(\.address)))
+        guard !unique.isEmpty else { return [] }
+
         let results = await Self.fetchBalances(for: unique)
 
-        var failures = 0
+        var failed: [BitcoinAddress] = []
         for address in addresses {
             switch results[address.address] {
             case .balance(let balance):
                 address.apply(balance)
             case .failure(let message):
                 address.fetchError = message
-                failures += 1
+                failed.append(address)
             case nil:
                 break
             }
         }
+        return failed
+    }
 
-        balanceError = failures == addresses.count
-            ? results.values.compactMap(\.failureMessage).first
-            : nil
+    /// A single second attempt. On success it clears the error; on failure it
+    /// changes nothing, so a failed retry adds no further noise.
+    private func retryQuietly(_ addresses: [BitcoinAddress]) async {
+        let stillFailing = await apply(to: addresses)
+        if stillFailing.isEmpty {
+            lastRefreshFailed = false
+        }
     }
 
     private enum BalanceFetch: Sendable {
         case balance(AddressBalance)
         case failure(String)
-
-        var failureMessage: String? {
-            if case .failure(let message) = self { return message }
-            return nil
-        }
     }
 
     private nonisolated static func fetchBalances(for addresses: [String]) async -> [String: BalanceFetch] {

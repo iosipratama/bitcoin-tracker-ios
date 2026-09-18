@@ -158,11 +158,7 @@ struct WalletDetailView: View {
 
                     Spacer()
 
-                    if let updated = oldestUpdate {
-                        Text("Updated \(updated, format: .relative(presentation: .named))")
-                            .font(.system(size: 12))
-                            .foregroundStyle(.tertiaryLabel)
-                    }
+                    StaleStamp(updated: oldestUpdate, didFail: viewModel.lastRefreshFailed)
                 }
                 .padding(.horizontal, 20)
 
@@ -199,6 +195,10 @@ struct AddressRow: View {
 
     @State private var didCopy = false
 
+    /// A stale figure is still a true one; only an address that has never
+    /// resolved has nothing to show.
+    private var hasEverLoaded: Bool { address.lastUpdated != nil }
+
     var body: some View {
         Button {
             UIPasteboard.general.string = address.address
@@ -212,11 +212,7 @@ struct AddressRow: View {
                         .font(.system(size: 15, weight: .medium, design: .monospaced))
                         .foregroundStyle(.label)
 
-                    if let error = address.fetchError {
-                        Text(error)
-                            .font(.system(size: 12))
-                            .foregroundStyle(.negative)
-                    } else {
+                    if hasEverLoaded {
                         HStack(spacing: 6) {
                             Text(viewModel.formattedBTC(address.balance.totalBTC))
                                 .font(.system(size: 13))
@@ -228,6 +224,13 @@ struct AddressRow: View {
                                     .foregroundStyle(.brand)
                             }
                         }
+                    } else if let error = address.fetchError {
+                        // Nothing has ever loaded for this address, so there is
+                        // genuinely nothing true to show and the reason earns
+                        // its place. Muted, not alarming.
+                        Text(error)
+                            .font(.system(size: 12))
+                            .foregroundStyle(.tertiaryLabel)
                     }
                 }
 
@@ -239,7 +242,7 @@ struct AddressRow: View {
                         .font(.system(size: 13, weight: .semibold))
                         .foregroundStyle(.brand)
                         .transition(.opacity)
-                } else if address.fetchError == nil, viewModel.showsFiatValues {
+                } else if hasEverLoaded, viewModel.showsFiatValues {
                     Text(viewModel.formattedFiat(viewModel.fiatValue(btc: address.balance.totalBTC)))
                         .font(.system(size: 15, weight: .semibold))
                         .foregroundStyle(.secondaryLabel)
@@ -264,7 +267,9 @@ struct AddressRow: View {
             withAnimation(.smooth) { didCopy = false }
         }
         .accessibilityLabel("Address \(address.address)")
-        .accessibilityValue(address.fetchError ?? viewModel.formattedBTC(address.balance.totalBTC))
+        .accessibilityValue(hasEverLoaded
+            ? viewModel.formattedBTC(address.balance.totalBTC)
+            : (address.fetchError ?? "Not loaded"))
         .accessibilityHint("Copies the address")
     }
 }
