@@ -119,13 +119,19 @@ struct SheetConfirmButton: View {
         Button(action: action) {
             Image(systemName: "checkmark")
                 .font(.system(size: 17, weight: .semibold))
+                .foregroundStyle(.onAccent)
                 .frame(width: .sheetButton, height: .sheetButton)
+                // The effect rather than .glassProminent: that button style adds
+                // its own padding around the label, so a 44pt label rendered
+                // closer to 60 and outgrew the close button beside it.
+                .glassEffect(
+                    .regular
+                        .tint(isEnabled ? Color.brand : Color.brandDisabled)
+                        .interactive(),
+                    in: .circle
+                )
         }
-        // Prominent glass takes its fill from the tint, so the accent reads
-        // through the material rather than sitting flat on top of it.
-        .buttonStyle(.glassProminent)
-        .buttonBorderShape(.circle)
-        .tint(isEnabled ? Color.brand : Color.brandDisabled)
+        .buttonStyle(.plain)
         .disabled(!isEnabled)
         .accessibilityLabel("Save")
     }
