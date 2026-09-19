@@ -1,20 +1,33 @@
 #if DEBUG
 import SwiftUI
 
-/// A private testing surface, compiled out of release builds. Actions here
-/// re-arm state the app is otherwise meant to reach only once.
+/// A private testing surface, compiled out of release builds. Everything here
+/// re-arms or overrides state the app is otherwise meant to reach only by
+/// using it normally.
 struct DebugView: View {
     @AppStorage(AppStorageKey.hasCompletedWelcome) private var hasCompletedWelcome = false
+    @AppStorage(AppStorageKey.forcesEmptyState) private var forcesEmptyState = false
 
     var body: some View {
         ScrollView {
             VStack(alignment: .leading, spacing: 28) {
+                SettingsGroup(title: "Main view") {
+                    SettingsRow(systemImage: "tray", title: "Force empty state") {
+                        Toggle("Force empty state", isOn: $forcesEmptyState)
+                            .labelsHidden()
+                            .tint(.brand)
+                    }
+                }
+
                 SettingsGroup(title: "First launch") {
-                    Button("Show welcome screen", systemImage: "hand.wave") {
+                    Button {
                         withAnimation(.smooth) { hasCompletedWelcome = false }
+                    } label: {
+                        SettingsRow(systemImage: "hand.wave", title: "Show welcome screen") {
+                            EmptyView()
+                        }
                     }
                     .buttonStyle(.plain)
-                    .labelStyle(DebugRowLabelStyle())
                 }
             }
             .padding(.horizontal, 16)
@@ -24,37 +37,6 @@ struct DebugView: View {
         .background(.appBackground)
         .navigationTitle("Debug")
         .navigationBarTitleDisplayMode(.inline)
-    }
-}
-
-/// Renders a label as a settings row. `SettingsRow` takes a drawn asset for its
-/// glyph and there is no debug asset, so this is the SF Symbol equivalent —
-/// debug-only, which is why it doesn't live alongside `SettingsRow`.
-struct DebugRowLabelStyle: LabelStyle {
-    var showsChevron = false
-
-    func makeBody(configuration: Configuration) -> some View {
-        HStack(spacing: 14) {
-            configuration.icon
-                .font(.system(size: 17))
-                .frame(width: 22, height: 22)
-                .foregroundStyle(.secondaryLabel)
-
-            configuration.title
-                .font(.system(size: 17, weight: .semibold))
-                .foregroundStyle(.label)
-
-            Spacer(minLength: 8)
-
-            if showsChevron {
-                Image(systemName: "chevron.right")
-                    .font(.system(size: 14, weight: .semibold))
-                    .foregroundStyle(.tertiaryLabel)
-            }
-        }
-        .padding(.horizontal, 16)
-        .frame(minHeight: 52)
-        .contentShape(.rect)
     }
 }
 #endif

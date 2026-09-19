@@ -119,8 +119,11 @@ struct SettingsView: View {
             NavigationLink {
                 DebugView()
             } label: {
-                Label("Debug", systemImage: "ladybug.fill")
-                    .labelStyle(DebugRowLabelStyle(showsChevron: true))
+                SettingsRow(systemImage: "ladybug.fill", title: "Debug") {
+                    Image(systemName: "chevron.right")
+                        .font(.system(size: 14, weight: .semibold))
+                        .foregroundStyle(.tertiaryLabel)
+                }
             }
             .buttonStyle(.plain)
         }

@@ -30,16 +30,32 @@ struct SettingsGroup<Content: View>: View {
 /// side. The glyph is a template asset, so it tints from the colour roles
 /// rather than carrying its own colour.
 struct SettingsRow<Trailing: View>: View {
-    let icon: ImageResource
-    let title: String
-    @ViewBuilder var trailing: Trailing
+    private enum Glyph {
+        case asset(ImageResource)
+        case symbol(String)
+    }
+
+    private let glyph: Glyph
+    private let title: String
+    private let trailing: Trailing
+
+    init(icon: ImageResource, title: String, @ViewBuilder trailing: () -> Trailing) {
+        self.glyph = .asset(icon)
+        self.title = title
+        self.trailing = trailing()
+    }
+
+    /// For rows with no drawn asset of their own — the debug screen, which
+    /// isn't worth commissioning artwork for.
+    init(systemImage: String, title: String, @ViewBuilder trailing: () -> Trailing) {
+        self.glyph = .symbol(systemImage)
+        self.title = title
+        self.trailing = trailing()
+    }
 
     var body: some View {
         HStack(spacing: 14) {
-            Image(icon)
-                .renderingMode(.template)
-                .resizable()
-                .scaledToFit()
+            glyphView
                 .frame(width: 22, height: 22)
                 .foregroundStyle(.secondaryLabel)
                 .accessibilityHidden(true)
@@ -54,6 +70,19 @@ struct SettingsRow<Trailing: View>: View {
         }
         .padding(.horizontal, 16)
         .frame(minHeight: 52)
+    }
+
+    @ViewBuilder private var glyphView: some View {
+        switch glyph {
+        case .asset(let resource):
+            Image(resource)
+                .renderingMode(.template)
+                .resizable()
+                .scaledToFit()
+        case .symbol(let name):
+            Image(systemName: name)
+                .font(.system(size: 17))
+        }
     }
 }
 

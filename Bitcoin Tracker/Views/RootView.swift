@@ -28,4 +28,8 @@ struct RootView: View {
 /// resets it. `@AppStorage` matches on the raw string, so it can't be a typo.
 enum AppStorageKey {
     static let hasCompletedWelcome = "hasCompletedWelcome"
+
+    #if DEBUG
+    static let forcesEmptyState = "debugForcesEmptyState"
+    #endif
 }

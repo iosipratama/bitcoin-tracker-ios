@@ -11,6 +11,20 @@ struct HomeView: View {
     @State private var walletToDelete: Wallet? = nil
     @State private var selectedWallet: Wallet? = nil
 
+    #if DEBUG
+    @AppStorage(AppStorageKey.forcesEmptyState) private var forcesEmptyState = false
+    #endif
+
+    /// Debug builds can pin this on to inspect the empty state without having
+    /// to delete a wallet to get there.
+    private var showsEmptyState: Bool {
+        #if DEBUG
+        return forcesEmptyState || wallets.isEmpty
+        #else
+        return wallets.isEmpty
+        #endif
+    }
+
     /// The oldest successful fetch across the portfolio — the honest answer to
     /// "how current is this number?"
     private var oldestUpdate: Date? {
@@ -20,7 +34,7 @@ struct HomeView: View {
     var body: some View {
         NavigationStack {
             Group {
-                if wallets.isEmpty {
+                if showsEmptyState {
                     emptyState
                 } else {
                     walletList
