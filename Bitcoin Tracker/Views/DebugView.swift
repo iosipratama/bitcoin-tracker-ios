@@ -9,6 +9,8 @@ struct DebugView: View {
     @AppStorage(AppStorageKey.forcesEmptyState) private var forcesEmptyState = false
     @Environment(StoreManager.self) private var store
 
+    @State private var showPaywall = false
+
     var body: some View {
         @Bindable var store = store
 
@@ -23,13 +25,22 @@ struct DebugView: View {
                 }
 
                 SettingsGroup(title: "Purchases") {
+                    Button {
+                        showPaywall = true
+                    } label: {
+                        SettingsRow(systemImage: "creditcard", title: "Show paywall") {
+                            EmptyView()
+                        }
+                    }
+                    .buttonStyle(.plain)
+
                     SettingsRow(systemImage: "lock.open", title: "Fake unlock") {
                         Toggle("Fake unlock", isOn: $store.fakesUnlock)
                             .labelsHidden()
                             .tint(.brand)
                     }
 
-                    SettingsRow(systemImage: "creditcard", title: "Always show paywall") {
+                    SettingsRow(systemImage: "plus.circle", title: "Always show paywall") {
                         Toggle("Always show paywall", isOn: $store.forcesPaywall)
                             .labelsHidden()
                             .tint(.brand)
@@ -54,6 +65,7 @@ struct DebugView: View {
         .background(.appBackground)
         .navigationTitle("Debug")
         .navigationBarTitleDisplayMode(.inline)
+        .fullScreenCover(isPresented: $showPaywall) { PaywallView() }
     }
 }
 #endif
