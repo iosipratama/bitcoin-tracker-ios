@@ -5,15 +5,23 @@ struct HomeView: View {
     @Query(sort: \Wallet.createdAt) private var wallets: [Wallet]
     @Environment(\.modelContext) private var modelContext
     @Environment(PortfolioViewModel.self) private var viewModel
+    @Environment(StoreManager.self) private var store
 
     @State private var showAddWallet = false
     @State private var showSettings = false
     @State private var walletToDelete: Wallet? = nil
     @State private var selectedWallet: Wallet? = nil
+    @State private var showPaywall = false
 
     #if DEBUG
     @AppStorage(AppStorageKey.forcesEmptyState) private var forcesEmptyState = false
     #endif
+
+    /// Checked before the sheet opens rather than at save, so nobody pastes an
+    /// address and names a wallet only to be turned away at the end.
+    private var canAddWallet: Bool {
+        store.canAddWallet(existing: wallets.count)
+    }
 
     /// Debug builds can pin this on to inspect the empty state without having
     /// to delete a wallet to get there.
@@ -56,8 +64,10 @@ struct HomeView: View {
                             .scaleEffect(0.8)
                             .accessibilityLabel("Refreshing balances")
                     } else {
-                        Button("Add Wallet", systemImage: "plus") { showAddWallet = true }
-                            .tint(.brand)
+                        Button("Add Wallet", systemImage: "plus") {
+                            if canAddWallet { showAddWallet = true } else { showPaywall = true }
+                        }
+                        .tint(.brand)
                     }
                 }
             }
@@ -66,6 +76,7 @@ struct HomeView: View {
             }
             .sheet(isPresented: $showAddWallet) { AddWalletFlow() }
             .sheet(isPresented: $showSettings) { SettingsView() }
+            .fullScreenCover(isPresented: $showPaywall) { PaywallView() }
             .task { await viewModel.refreshBalances(wallets: wallets) }
             .alert("Remove \(walletToDelete?.name ?? "wallet")?", isPresented: .init(
                 get: { walletToDelete != nil },

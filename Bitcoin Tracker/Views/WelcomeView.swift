@@ -5,8 +5,6 @@ import SwiftUI
 struct WelcomeView: View {
     let onContinue: () -> Void
 
-    @State private var continueTaps = 0
-
     var body: some View {
         ScrollView {
             VStack(alignment: .leading, spacing: 20) {
@@ -31,26 +29,9 @@ struct WelcomeView: View {
         .background(Custom.backgroundBase)
     }
 
-    /// Deliberately taller and wider-set than any other button in the app — it
-    /// is the only thing to do on this screen.
     private var continueButton: some View {
-        Button {
-            continueTaps += 1
-            onContinue()
-        } label: {
-            Text("Continue")
-                .font(.system(size: 17, weight: .heavy).width(.expanded))
-                .tracking(-0.48)
-                .foregroundStyle(Custom.black)
-                .padding(.vertical, 12)
-                .frame(maxWidth: .infinity, minHeight: 94)
-                .background(Capsule().fill(Custom.accent))
-                .contentShape(.capsule)
-        }
-        .buttonStyle(.plain)
-        .padding(.horizontal, 50)
-        .padding(.bottom, 46)
-        .sensoryFeedback(.impact(weight: .medium, intensity: 1), trigger: continueTaps)
+        ProminentCapsuleButton(title: "Continue", action: onContinue)
+            .padding(.bottom, 46)
     }
 }
 

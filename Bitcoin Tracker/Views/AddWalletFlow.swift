@@ -5,6 +5,7 @@ struct AddWalletFlow: View {
     @Query private var allWallets: [Wallet]
     @Environment(\.modelContext) private var modelContext
     @Environment(\.dismiss) private var dismiss
+    @Environment(StoreManager.self) private var store
 
     private enum Step {
         case paste, customize
@@ -26,8 +27,11 @@ struct AddWalletFlow: View {
         address.trimmingCharacters(in: .whitespacesAndNewlines)
     }
 
+    /// The limit is part of `canSave` rather than a guard inside `save()`, so
+    /// the confirm button greys out instead of silently doing nothing.
     private var canSave: Bool {
         !name.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty
+            && store.canAddWallet(existing: allWallets.count)
     }
 
     var body: some View {
