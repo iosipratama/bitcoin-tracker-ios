@@ -56,7 +56,7 @@ struct PaywallView: View {
             Text("Own the app.")
                 .foregroundStyle(Custom.labelPrimary)
 
-            Text("Add as many as you like.")
+            Text("Add as many wallets as you like.")
                 .foregroundStyle(Custom.labelTertiary)
         }
         .font(.system(size: 48, weight: .medium))
