@@ -20,7 +20,7 @@ struct WalletRow: View {
         .frame(maxWidth: .infinity, alignment: .leading)
         .background(
             RoundedRectangle(cornerRadius: .cardRadius, style: .continuous)
-                .fill(.cardBackground)
+                .fill(FigmaPalette.fillPrimary)
         )
         // Applied once here; every Text below inherits the rounded design.
         .fontDesign(.rounded)
@@ -29,7 +29,7 @@ struct WalletRow: View {
     }
 
     private var header: some View {
-        HStack(spacing: 10) {
+        HStack(spacing: 9) {
             RoundedRectangle(cornerRadius: 8, style: .continuous)
                 .fill(wallet.accent.color)
                 .frame(width: 25, height: 25)
@@ -42,7 +42,7 @@ struct WalletRow: View {
 
             Text(wallet.name)
                 .font(.walletName)
-                .foregroundStyle(.label)
+                .foregroundStyle(FigmaPalette.labelSecondary)
 
             Spacer(minLength: 0)
         }
@@ -51,14 +51,14 @@ struct WalletRow: View {
     }
 
     private var balancePanel: some View {
-        VStack(alignment: .leading, spacing: 3) {
+        VStack(alignment: .leading, spacing: 4) {
             // ₿ and ≡ are literal characters rather than SF Symbols so they sit
             // on the text baseline and pick up the rounded design.
-            HStack(spacing: 6) {
+            HStack(spacing: 4) {
                 if let prefix = viewModel.amountPrefix {
                     Text(prefix)
-                        .font(.walletBalance)
-                        .foregroundStyle(.secondaryLabel)
+                        .font(.walletBalanceMark)
+                        .foregroundStyle(FigmaPalette.labelTertiary)
                 }
 
                 Text(viewModel.formattedAmount(btc: wallet.totalBTC))
@@ -68,19 +68,19 @@ struct WalletRow: View {
                 if let suffix = viewModel.amountSuffix {
                     Text(suffix)
                         .font(.walletFiat)
-                        .foregroundStyle(.secondaryLabel)
+                        .foregroundStyle(FigmaPalette.labelTertiary)
                 }
             }
 
             if viewModel.showsFiatValues {
-                HStack(spacing: 6) {
+                HStack(spacing: 2) {
                     Text("\u{2261}")
                         .font(.walletFiat)
-                        .foregroundStyle(.tertiaryLabel)
+                        .foregroundStyle(FigmaPalette.labelTertiary)
 
                     Text(viewModel.formattedFiatWhole(viewModel.fiatValue(btc: wallet.totalBTC)))
                         .font(.walletFiat)
-                        .foregroundStyle(.secondaryLabel)
+                        .foregroundStyle(FigmaPalette.labelTertiary)
                         .lineLimit(1)
                         .minimumScaleFactor(0.6)
                 }
@@ -93,11 +93,10 @@ struct WalletRow: View {
             }
         }
         .frame(maxWidth: .infinity, alignment: .leading)
-        .padding(.horizontal, panelInset)
-        .padding(.vertical, 10)
+        .padding(panelInset)
         .background(
-            RoundedRectangle(cornerRadius: .rowRadius, style: .continuous)
-                .fill(.cardInsetBackground)
+            RoundedRectangle(cornerRadius: .cardInsetRadius, style: .continuous)
+                .fill(FigmaPalette.backgroundBase)
         )
     }
 }

@@ -143,4 +143,8 @@ extension CGFloat {
 
     static let cardRadius: CGFloat = 18
     static let rowRadius: CGFloat = 12
+
+    /// The balance panel nested inside a card — a touch tighter than the card
+    /// that holds it, so the two curves don't read as one.
+    static let cardInsetRadius: CGFloat = 16
 }

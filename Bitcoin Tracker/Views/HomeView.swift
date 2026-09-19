@@ -47,7 +47,7 @@ struct HomeView: View {
             .toolbar {
                 ToolbarItem(placement: .topBarLeading) {
                     Button("Settings", systemImage: "gearshape") { showSettings = true }
-                        .tint(.brand)
+                        .tint(FigmaPalette.labelSecondary)
                 }
                 ToolbarItem(placement: .topBarTrailing) {
                     if viewModel.isLoading {
@@ -103,7 +103,7 @@ struct HomeView: View {
                     WalletRow(wallet: wallet)
                 }
                 .buttonStyle(.plain)
-                .listRowInsets(EdgeInsets(top: 8, leading: 16, bottom: 8, trailing: 16))
+                .listRowInsets(EdgeInsets(top: 8, leading: 20, bottom: 8, trailing: 20))
                 .listRowBackground(Color.clear)
                 .listRowSeparator(.hidden)
                 .swipeActions(edge: .trailing, allowsFullSwipe: false) {
@@ -143,9 +143,8 @@ struct HomeView: View {
                 .font(.system(size: 14))
                 .italic()
                 .multilineTextAlignment(.center)
-                .foregroundStyle(.tertiaryLabel)
+                .foregroundStyle(FigmaPalette.labelQuaternary)
         }
-        .fontDesign(.rounded)
         .frame(maxWidth: .infinity)
         .padding(.horizontal, 64)
         .padding(.bottom, 8)
