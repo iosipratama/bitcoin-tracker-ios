@@ -6,7 +6,6 @@ import SwiftUI
 /// instead, so call sites say what a colour is *for* rather than what it looks
 /// like — the same split the system makes between `label` and `white`.
 private enum Palette {
-    static let brand = Color(hex: 0xD4823B)
     static let brandDisabled = Color(hex: 0x7A4A0D)
     static let negative = Color(hex: 0xFF6B6B)
 
@@ -81,8 +80,9 @@ extension ShapeStyle where Self == Color {
 
     // Accent.
 
-    /// Interactive affordances, pending amounts, the app's tint.
-    static var brand: Color { Palette.brand }
+    /// Interactive affordances, pending amounts, the app's tint. Resolves to
+    /// the Figma accent, so the token and the role can't drift apart.
+    static var brand: Color { FigmaPalette.accent }
 
     /// The accent at rest — confirmation actions that aren't yet available.
     static var brandDisabled: Color { Palette.brandDisabled }

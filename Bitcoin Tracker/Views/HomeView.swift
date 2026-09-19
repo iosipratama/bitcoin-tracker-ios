@@ -103,7 +103,7 @@ struct HomeView: View {
                     WalletRow(wallet: wallet)
                 }
                 .buttonStyle(.plain)
-                .listRowInsets(EdgeInsets(top: 8, leading: 20, bottom: 8, trailing: 20))
+                .listRowInsets(EdgeInsets(top: 0, leading: 20, bottom: 16, trailing: 20))
                 .listRowBackground(Color.clear)
                 .listRowSeparator(.hidden)
                 .swipeActions(edge: .trailing, allowsFullSwipe: false) {
@@ -114,6 +114,7 @@ struct HomeView: View {
             }
         }
         .listStyle(.plain)
+        .contentMargins(.top, 16, for: .scrollContent)
         .scrollContentBackground(.hidden)
         .scrollEdgeEffectStyle(.soft, for: .top)
         .refreshable {
