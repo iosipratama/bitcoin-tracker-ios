@@ -177,7 +177,7 @@ struct SettingsView: View {
 
     private var rateCard: some View {
         Button {
-            UIApplication.shared.open(SupportLinks.writeReview)
+            openURL(SupportLinks.writeReview)
         } label: {
             HStack(alignment: .top, spacing: 12) {
                 VStack(alignment: .leading, spacing: 8) {
