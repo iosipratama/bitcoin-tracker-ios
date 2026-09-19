@@ -28,7 +28,7 @@ struct WalletCustomizer: View {
     private var namePrompt: Text {
         Text("Wallet name")
             .font(.system(size: 26, weight: .semibold))
-            .foregroundStyle(.tertiaryLabel)
+            .foregroundStyle(FigmaPalette.labelQuaternary)
     }
 
     private var accentGrid: some View {
