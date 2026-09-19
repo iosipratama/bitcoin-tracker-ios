@@ -1,4 +1,4 @@
-Sats Keeper is a read-only Bitcoin tracker. Adding a wallet needs only a
+Sato is a read-only Bitcoin tracker. Adding a wallet needs only a
 public Bitcoin address — no account, no sign-in, no private keys.
 
 The free app tracks one wallet. Tapping + to add a second opens this

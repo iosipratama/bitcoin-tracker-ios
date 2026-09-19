@@ -23,7 +23,7 @@ enum SupportLinks {
         components.scheme = "mailto"
         components.path = supportAddress
         components.queryItems = [
-            URLQueryItem(name: "subject", value: "Sats Keeper Feature Request"),
+            URLQueryItem(name: "subject", value: "Sato Feature Request"),
             URLQueryItem(name: "body", value: SupportEnvironment.mailSignature)
         ]
         return components.url ?? URL(string: "mailto:\(supportAddress)")!
