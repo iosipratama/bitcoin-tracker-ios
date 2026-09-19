@@ -706,6 +706,15 @@
         ]
       }
     },
+    "inAppPurchaseReviewScreenshots": {
+      "com.iosipratama.BitcoinTracker.plus": {
+        "fileName": "SOURCE",
+        "fileSize": 197532,
+        "id": "f7e82f70-f073-4896-9dfd-a004fe55ab77",
+        "renditionChecksum": "b03273f809cfca37a8e4f08579b467e4",
+        "sourceFileChecksum": "7b33c7bd48c675ed8bab6e14cd77fe5d"
+      }
+    },
     "pricing": {
       "automaticPrices": [
 
@@ -764,7 +773,7 @@
         "familySharable": false,
         "inAppPurchaseType": "NON_CONSUMABLE",
         "name": "Sats Keeper Plus",
-        "reviewNote": "Sats Keeper is a read-only Bitcoin tracker. Adding a wallet needs only a\npublic Bitcoin address — no account, no sign-in, no private keys.\n\nThe free app tracks two wallets. Tapping + to add a third opens this\npurchase, which is a one-time unlock for unlimited wallets. There is no\nsubscription.\n\nTo reach it: tap + in the top right, paste any public Bitcoin address,\nname the wallet, and save. Repeat once more. Tapping + a third time\nopens the purchase screen.\n\nA public address you can paste for testing:\n1A1zP1eP5QGefi2DMPTfTL5SLmv7DivfNa"
+        "reviewNote": "Sats Keeper is a read-only Bitcoin tracker. Adding a wallet needs only a\npublic Bitcoin address — no account, no sign-in, no private keys.\n\nThe free app tracks one wallet. Tapping + to add a second opens this\npurchase, which is a one-time unlock for unlimited wallets. There is no\nsubscription.\n\nTo reach it: tap + in the top right, paste any public Bitcoin address,\nname the wallet, and save. Tapping + a second time opens the purchase\nscreen.\n\nA public address you can paste for testing:\n1A1zP1eP5QGefi2DMPTfTL5SLmv7DivfNa"
       },
       "id": "6813851523",
       "type": "inAppPurchases"
@@ -789,6 +798,16 @@
       },
       "id": "6813851523",
       "type": "inAppPurchasePriceSchedules"
+    },
+    "inAppPurchaseReviewScreenshot:com.iosipratama.BitcoinTracker.plus": {
+      "fields": {
+        "screenshot": {
+          "fileSize": 197532,
+          "sourceFileChecksum": "7b33c7bd48c675ed8bab6e14cd77fe5d"
+        }
+      },
+      "id": "f7e82f70-f073-4896-9dfd-a004fe55ab77",
+      "type": "inAppPurchaseAppStoreReviewScreenshots"
     },
     "pricing": {
       "fields": {
