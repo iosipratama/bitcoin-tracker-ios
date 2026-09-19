@@ -10,6 +10,13 @@ private enum Palette {
     static let brandDisabled = Color(hex: 0x7A4A0D)
     static let negative = Color(hex: 0xFF6B6B)
 
+    /// Prose colours. `bitcoinWord` runs brighter than `brand` because it sits
+    /// inside a sentence rather than on a card, and the arrows are the system's
+    /// own green and red.
+    static let bitcoinWord = Color(hex: 0xFF8D28)
+    static let rising = Color(hex: 0x34C759)
+    static let falling = Color(hex: 0xFF383C)
+
     static let background = Color(hex: 0x141414)
     static let cardBackground = Color(hex: 0x262626)
     static let cardInsetBackground = Color(hex: 0x141414)
@@ -82,6 +89,14 @@ extension ShapeStyle where Self == Color {
 
     /// Errors, and amounts moving the wrong way.
     static var negative: Color { Palette.negative }
+
+    /// The word "bitcoin" wherever it appears in running copy.
+    static var bitcoinWord: Color { Palette.bitcoinWord }
+
+    /// Direction in prose — price moving up, and down. Distinct from
+    /// `negative`, which means something failed.
+    static var rising: Color { Palette.rising }
+    static var falling: Color { Palette.falling }
 
     // Surfaces, ordered by elevation.
 

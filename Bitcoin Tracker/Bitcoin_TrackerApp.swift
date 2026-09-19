@@ -7,7 +7,7 @@ struct Bitcoin_TrackerApp: App {
 
     var body: some Scene {
         WindowGroup {
-            HomeView()
+            RootView()
                 .environment(viewModel)
                 .preferredColorScheme(.dark)
         }
