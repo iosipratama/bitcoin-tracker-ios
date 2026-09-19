@@ -3,6 +3,11 @@ import SwiftData
 
 @Model
 final class Wallet {
+    /// How many wallets the app tracks before asking to be paid for. One is
+    /// enough to see the app work on your own coins, which is what the ask
+    /// rests on — anyone tracking a second is past deciding whether to trust it.
+    static let freeLimit = 1
+
     var name: String
     @Relationship(deleteRule: .cascade)
     var addresses: [BitcoinAddress]

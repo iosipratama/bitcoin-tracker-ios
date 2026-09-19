@@ -7,9 +7,14 @@ import SwiftUI
 struct DebugView: View {
     @AppStorage(AppStorageKey.hasCompletedWelcome) private var hasCompletedWelcome = false
     @AppStorage(AppStorageKey.forcesEmptyState) private var forcesEmptyState = false
+    @Environment(StoreManager.self) private var store
+
+    @State private var showPaywall = false
 
     var body: some View {
-        ScrollView {
+        @Bindable var store = store
+
+        return ScrollView {
             VStack(alignment: .leading, spacing: 28) {
                 SettingsGroup(title: "Main view") {
                     SettingsRow(systemImage: "tray", title: "Force empty state") {
@@ -19,11 +24,43 @@ struct DebugView: View {
                     }
                 }
 
-                SettingsGroup(title: "First launch") {
+                SettingsGroup(title: "Purchases") {
+                    Button {
+                        showPaywall = true
+                    } label: {
+                        SettingsRow(systemImage: "creditcard", title: "Show paywall") {
+                            EmptyView()
+                        }
+                    }
+                    .buttonStyle(.plain)
+
+                    SettingsRow(systemImage: "lock.open", title: "Fake unlock") {
+                        Toggle("Fake unlock", isOn: $store.fakesUnlock)
+                            .labelsHidden()
+                            .tint(.brand)
+                    }
+
+                    SettingsRow(systemImage: "plus.circle", title: "Always show paywall") {
+                        Toggle("Always show paywall", isOn: $store.forcesPaywall)
+                            .labelsHidden()
+                            .tint(.brand)
+                    }
+                }
+
+                SettingsGroup(title: "One-time prompts") {
                     Button {
                         withAnimation(.smooth) { hasCompletedWelcome = false }
                     } label: {
                         SettingsRow(systemImage: "hand.wave", title: "Show welcome screen") {
+                            EmptyView()
+                        }
+                    }
+                    .buttonStyle(.plain)
+
+                    Button {
+                        ReviewPrompt.reset()
+                    } label: {
+                        SettingsRow(systemImage: "star", title: "Re-arm review prompt") {
                             EmptyView()
                         }
                     }
@@ -37,6 +74,7 @@ struct DebugView: View {
         .background(.appBackground)
         .navigationTitle("Debug")
         .navigationBarTitleDisplayMode(.inline)
+        .fullScreenCover(isPresented: $showPaywall) { PaywallView() }
     }
 }
 #endif

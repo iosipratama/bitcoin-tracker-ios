@@ -11,5 +11,9 @@ extension Font {
     // cascades, so these deliberately don't carry a design of their own.
     static let walletName = Font.system(size: 16, weight: .semibold)
     static let walletBalance = Font.system(size: 17, weight: .bold)
+
+    /// The ₿ ahead of the balance. Heavier than the figure it introduces, so it
+    /// reads as a mark rather than a leading digit.
+    static let walletBalanceMark = Font.system(size: 17, weight: .heavy)
     static let walletFiat = Font.system(size: 15, weight: .semibold)
 }

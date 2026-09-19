@@ -6,7 +6,6 @@ import SwiftUI
 /// instead, so call sites say what a colour is *for* rather than what it looks
 /// like — the same split the system makes between `label` and `white`.
 private enum Palette {
-    static let brand = Color(hex: 0xD4823B)
     static let brandDisabled = Color(hex: 0x7A4A0D)
     static let negative = Color(hex: 0xFF6B6B)
 
@@ -29,13 +28,16 @@ private enum Palette {
     static let onAccent = Color(hex: 0x10100E)
 }
 
-// MARK: - Figma variables
+// MARK: - Design variables
 
-/// The palette as it stands in Figma, mirrored here name for name so a value
-/// can be checked against the design file without translating it first.
-/// Nothing reads these yet — `Palette` above is still what the app draws with,
-/// and the roles will move across one at a time.
-enum FigmaPalette {
+/// The design file's own variables, named to match it rather than to match the
+/// tool that draws it: `custom-label-quaternary` there is `Custom.labelQuaternary`
+/// here, so a value can be checked against Dev Mode without translating first.
+/// `accent` and `black` carry no prefix in the file and keep their bare names.
+///
+/// Views read these directly. `Palette` above still backs the semantic roles,
+/// which are moving across one at a time.
+enum Custom {
     static let backgroundBase = Color(hex: 0x141414)
 
     static let labelPrimary = Color(hex: 0xFFFFFF)
@@ -81,8 +83,9 @@ extension ShapeStyle where Self == Color {
 
     // Accent.
 
-    /// Interactive affordances, pending amounts, the app's tint.
-    static var brand: Color { Palette.brand }
+    /// Interactive affordances, pending amounts, the app's tint. Resolves to
+    /// the Figma accent, so the token and the role can't drift apart.
+    static var brand: Color { Custom.accent }
 
     /// The accent at rest — confirmation actions that aren't yet available.
     static var brandDisabled: Color { Palette.brandDisabled }
@@ -143,4 +146,8 @@ extension CGFloat {
 
     static let cardRadius: CGFloat = 18
     static let rowRadius: CGFloat = 12
+
+    /// The balance panel nested inside a card — a touch tighter than the card
+    /// that holds it, so the two curves don't read as one.
+    static let cardInsetRadius: CGFloat = 16
 }

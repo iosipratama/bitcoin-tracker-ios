@@ -37,6 +37,15 @@ struct AddAddressView: View {
         isValidFormat && duplicateMessage == nil
     }
 
+    /// A sample address rather than an instruction — it shows the shape of the
+    /// thing being asked for. Styled through `prompt` because the placeholder
+    /// SwiftUI draws for a plain title can't be coloured.
+    private var addressPrompt: Text {
+        Text(verbatim: "1A1zP1eP5QGefi2DMPTfTL5SLmv7DivfNa")
+            .font(.subheadline.monospaced())
+            .foregroundStyle(Custom.labelQuaternary)
+    }
+
     var body: some View {
         NavigationStack {
             VStack(alignment: .leading, spacing: 24) {
@@ -47,10 +56,11 @@ struct AddAddressView: View {
                         .kerning(1.2)
                         .textCase(.uppercase)
 
-                    TextField("1A1zP1eP5QGefi2DMPTfTL5SLmv7DivfNa", text: $addressText)
+                    TextField("", text: $addressText, prompt: addressPrompt)
                         .textFieldStyle(.plain)
                         .font(.subheadline.monospaced())
                         .foregroundStyle(.label)
+                        .accessibilityLabel("Bitcoin address")
                         .autocorrectionDisabled()
                         .textInputAutocapitalization(.never)
                         .padding(.vertical, 16)

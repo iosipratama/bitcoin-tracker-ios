@@ -1,19 +1,33 @@
 import SwiftUI
 import SwiftData
+import StoreKit
 
 struct HomeView: View {
     @Query(sort: \Wallet.createdAt) private var wallets: [Wallet]
     @Environment(\.modelContext) private var modelContext
     @Environment(PortfolioViewModel.self) private var viewModel
+    @Environment(StoreManager.self) private var store
+    @Environment(\.requestReview) private var requestReview
 
     @State private var showAddWallet = false
     @State private var showSettings = false
     @State private var walletToDelete: Wallet? = nil
     @State private var selectedWallet: Wallet? = nil
+    @State private var showPaywall = false
+
+    /// Seeded on first appearance so the query resolving on a cold launch
+    /// doesn't read as a wallet having just been created.
+    @State private var knownWalletCount: Int?
 
     #if DEBUG
     @AppStorage(AppStorageKey.forcesEmptyState) private var forcesEmptyState = false
     #endif
+
+    /// Checked before the sheet opens rather than at save, so nobody pastes an
+    /// address and names a wallet only to be turned away at the end.
+    private var canAddWallet: Bool {
+        store.canAddWallet(existing: wallets.count)
+    }
 
     /// Debug builds can pin this on to inspect the empty state without having
     /// to delete a wallet to get there.
@@ -47,7 +61,7 @@ struct HomeView: View {
             .toolbar {
                 ToolbarItem(placement: .topBarLeading) {
                     Button("Settings", systemImage: "gearshape") { showSettings = true }
-                        .tint(.brand)
+                        .tint(Custom.labelSecondary)
                 }
                 ToolbarItem(placement: .topBarTrailing) {
                     if viewModel.isLoading {
@@ -56,8 +70,10 @@ struct HomeView: View {
                             .scaleEffect(0.8)
                             .accessibilityLabel("Refreshing balances")
                     } else {
-                        Button("Add Wallet", systemImage: "plus") { showAddWallet = true }
-                            .tint(.brand)
+                        Button("Add Wallet", systemImage: "plus") {
+                            if canAddWallet { showAddWallet = true } else { showPaywall = true }
+                        }
+                        .tint(.brand)
                     }
                 }
             }
@@ -66,7 +82,13 @@ struct HomeView: View {
             }
             .sheet(isPresented: $showAddWallet) { AddWalletFlow() }
             .sheet(isPresented: $showSettings) { SettingsView() }
+            .fullScreenCover(isPresented: $showPaywall) { PaywallView() }
             .task { await viewModel.refreshBalances(wallets: wallets) }
+            .onChange(of: wallets.count, initial: true) { _, count in
+                defer { knownWalletCount = count }
+                guard let known = knownWalletCount, count > known else { return }
+                Task { await askForReviewIfEarned() }
+            }
             .alert("Remove \(walletToDelete?.name ?? "wallet")?", isPresented: .init(
                 get: { walletToDelete != nil },
                 set: { if !$0 { walletToDelete = nil } }
@@ -86,6 +108,20 @@ struct HomeView: View {
         }
     }
 
+    /// Asked once, after the app has shown a real balance for a wallet the
+    /// user just added. Marked before the call because the system decides
+    /// whether anything appears, and a swallowed prompt shouldn't leave this
+    /// armed to fire again on the next wallet.
+    private func askForReviewIfEarned() async {
+        guard ReviewPrompt.isEarned(wallets: wallets, refreshFailed: viewModel.lastRefreshFailed) else { return }
+
+        try? await Task.sleep(for: ReviewPrompt.delay)
+        guard !Task.isCancelled else { return }
+
+        ReviewPrompt.markAsked()
+        requestReview()
+    }
+
     // Swipe actions only exist on List rows — in a LazyVStack the modifier is silently ignored.
     private var walletList: some View {
         List {
@@ -103,7 +139,7 @@ struct HomeView: View {
                     WalletRow(wallet: wallet)
                 }
                 .buttonStyle(.plain)
-                .listRowInsets(EdgeInsets(top: 8, leading: 16, bottom: 8, trailing: 16))
+                .listRowInsets(EdgeInsets(top: 0, leading: 20, bottom: 16, trailing: 20))
                 .listRowBackground(Color.clear)
                 .listRowSeparator(.hidden)
                 .swipeActions(edge: .trailing, allowsFullSwipe: false) {
@@ -114,6 +150,7 @@ struct HomeView: View {
             }
         }
         .listStyle(.plain)
+        .contentMargins(.top, 16, for: .scrollContent)
         .scrollContentBackground(.hidden)
         .scrollEdgeEffectStyle(.soft, for: .top)
         .refreshable {
@@ -136,16 +173,16 @@ struct HomeView: View {
         VStack(spacing: 6) {
             Image(systemName: "quote.opening")
                 .font(.system(size: 40, weight: .regular))
-                .foregroundStyle(.tertiaryLabel)
                 .accessibilityHidden(true)
 
             Text(Quotes.current)
                 .font(.system(size: 14))
                 .italic()
                 .multilineTextAlignment(.center)
-                .foregroundStyle(.tertiaryLabel)
         }
-        .fontDesign(.rounded)
+        // Set once for the pair: the mark and the line it opens are one thing,
+        // and stating it twice is how they drift apart.
+        .foregroundStyle(Custom.labelQuaternary)
         .frame(maxWidth: .infinity)
         .padding(.horizontal, 64)
         .padding(.bottom, 8)
@@ -158,12 +195,12 @@ struct HomeView: View {
         VStack(spacing: 12) {
             Text("No wallets yet")
                 .font(.system(size: 19, weight: .semibold))
-                .foregroundStyle(FigmaPalette.labelPrimary)
+                .foregroundStyle(Custom.labelPrimary)
 
             Text("Tap + to add an address and name it.")
                 .font(.system(size: 16, weight: .light))
                 .tracking(0.34)
-                .foregroundStyle(FigmaPalette.labelSecondary)
+                .foregroundStyle(Custom.labelSecondary)
                 // A layer opacity in the design, on top of the already
                 // translucent label token.
                 .opacity(0.8)

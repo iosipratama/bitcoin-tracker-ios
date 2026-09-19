@@ -2,12 +2,13 @@ import SwiftUI
 
 struct SettingsView: View {
     @Environment(\.dismiss) private var dismiss
+    @Environment(\.openURL) private var openURL
     @Environment(PortfolioViewModel.self) private var viewModel
 
-    private var appVersion: String {
-        let version = Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String ?? "1.0"
-        return "v\(version)"
-    }
+    @State private var mailUnavailable = false
+    @State private var copiedAddress = 0
+
+    private var appVersion: String { "v\(SupportEnvironment.appVersion)" }
 
     var body: some View {
         @Bindable var bindable = viewModel
@@ -40,6 +41,16 @@ struct SettingsView: View {
         }
         .fontDesign(.rounded)
         .presentationBackground(.appBackground)
+        .alert("No Mail Account", isPresented: $mailUnavailable) {
+            Button("Copy Address") {
+                UIPasteboard.general.string = SupportLinks.supportAddress
+                copiedAddress += 1
+            }
+            Button("Cancel", role: .cancel) {}
+        } message: {
+            Text("There's no mail account set up on this device. Copy \(SupportLinks.supportAddress) and write from wherever you like.")
+        }
+        .sensoryFeedback(.success, trigger: copiedAddress)
     }
 
     // MARK: - Sections
@@ -89,7 +100,7 @@ struct SettingsView: View {
 
     private var supportSection: some View {
         SettingsGroup(title: "Support") {
-            SettingsLinkRow(icon: .iconRaiseHand, title: "Suggest a feature", url: SupportLinks.suggestFeature)
+            suggestFeatureRow
             ShareLink(item: SupportLinks.appStore) {
                 SettingsRow(icon: .iconShareRight, title: "Share with friends") {
                     Image(systemName: "chevron.right")
@@ -129,6 +140,24 @@ struct SettingsView: View {
         }
     }
     #endif
+
+    /// Not a `SettingsLinkRow`: a phone with no mail account set up opens
+    /// nothing at all, and a support row that silently does nothing is worse
+    /// than one that admits it.
+    private var suggestFeatureRow: some View {
+        Button {
+            openURL(SupportLinks.suggestFeature) { opened in
+                mailUnavailable = !opened
+            }
+        } label: {
+            SettingsRow(icon: .iconRaiseHand, title: "Suggest a feature") {
+                Image(systemName: "chevron.right")
+                    .font(.system(size: 14, weight: .semibold))
+                    .foregroundStyle(.tertiaryLabel)
+            }
+        }
+        .buttonStyle(.plain)
+    }
 
     private var rateCard: some View {
         Button {

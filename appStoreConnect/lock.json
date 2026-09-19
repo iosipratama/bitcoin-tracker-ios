@@ -1,0 +1,823 @@
+{
+  "appId": "6811720640",
+  "derived": {
+    "appStoreVersionScreenshotSets": {
+
+    },
+    "inAppPurchasePricing": {
+      "com.iosipratama.BitcoinTracker.plus": {
+        "automaticPrices": [
+          {
+            "customerPrice": "9.99",
+            "territory": "AFG"
+          },
+          {
+            "customerPrice": "9.99",
+            "territory": "AGO"
+          },
+          {
+            "customerPrice": "9.99",
+            "territory": "AIA"
+          },
+          {
+            "customerPrice": "11.99",
+            "territory": "ALB"
+          },
+          {
+            "customerPrice": "39.99",
+            "territory": "ARE"
+          },
+          {
+            "customerPrice": "9.99",
+            "territory": "ARG"
+          },
+          {
+            "customerPrice": "11.99",
+            "territory": "ARM"
+          },
+          {
+            "customerPrice": "9.99",
+            "territory": "ATG"
+          },
+          {
+            "customerPrice": "14.99",
+            "territory": "AUS"
+          },
+          {
+            "customerPrice": "9.99",
+            "territory": "AUT"
+          },
+          {
+            "customerPrice": "11.99",
+            "territory": "AZE"
+          },
+          {
+            "customerPrice": "9.99",
+            "territory": "BEL"
+          },
+          {
+            "customerPrice": "11.99",
+            "territory": "BEN"
+          },
+          {
+            "customerPrice": "9.99",
+            "territory": "BFA"
+          },
+          {
+            "customerPrice": "9.99",
+            "territory": "BGR"
+          },
+          {
+            "customerPrice": "9.99",
+            "territory": "BHR"
+          },
+          {
+            "customerPrice": "9.99",
+            "territory": "BHS"
+          },
+          {
+            "customerPrice": "9.99",
+            "territory": "BIH"
+          },
+          {
+            "customerPrice": "11.99",
+            "territory": "BLR"
+          },
+          {
+            "customerPrice": "9.99",
+            "territory": "BLZ"
+          },
+          {
+            "customerPrice": "9.99",
+            "territory": "BMU"
+          },
+          {
+            "customerPrice": "9.99",
+            "territory": "BOL"
+          },
+          {
+            "customerPrice": "59.9",
+            "territory": "BRA"
+          },
+          {
+            "customerPrice": "11.99",
+            "territory": "BRB"
+          },
+          {
+            "customerPrice": "9.99",
+            "territory": "BRN"
+          },
+          {
+            "customerPrice": "9.99",
+            "territory": "BTN"
+          },
+          {
+            "customerPrice": "9.99",
+            "territory": "BWA"
+          },
+          {
+            "customerPrice": "12.99",
+            "territory": "CAN"
+          },
+          {
+            "customerPrice": "9",
+            "territory": "CHE"
+          },
+          {
+            "customerPrice": "9990",
+            "territory": "CHL"
+          },
+          {
+            "customerPrice": "68",
+            "territory": "CHN"
+          },
+          {
+            "customerPrice": "11.99",
+            "territory": "CIV"
+          },
+          {
+            "customerPrice": "11.99",
+            "territory": "CMR"
+          },
+          {
+            "customerPrice": "9.99",
+            "territory": "COD"
+          },
+          {
+            "customerPrice": "11.99",
+            "territory": "COG"
+          },
+          {
+            "customerPrice": "49900",
+            "territory": "COL"
+          },
+          {
+            "customerPrice": "9.99",
+            "territory": "CPV"
+          },
+          {
+            "customerPrice": "9.99",
+            "territory": "CRI"
+          },
+          {
+            "customerPrice": "9.99",
+            "territory": "CYM"
+          },
+          {
+            "customerPrice": "9.99",
+            "territory": "CYP"
+          },
+          {
+            "customerPrice": "249",
+            "territory": "CZE"
+          },
+          {
+            "customerPrice": "9.99",
+            "territory": "DEU"
+          },
+          {
+            "customerPrice": "9.99",
+            "territory": "DMA"
+          },
+          {
+            "customerPrice": "89",
+            "territory": "DNK"
+          },
+          {
+            "customerPrice": "9.99",
+            "territory": "DOM"
+          },
+          {
+            "customerPrice": "9.99",
+            "territory": "DZA"
+          },
+          {
+            "customerPrice": "9.99",
+            "territory": "ECU"
+          },
+          {
+            "customerPrice": "499.99",
+            "territory": "EGY"
+          },
+          {
+            "customerPrice": "9.99",
+            "territory": "ESP"
+          },
+          {
+            "customerPrice": "9.99",
+            "territory": "EST"
+          },
+          {
+            "customerPrice": "9.99",
+            "territory": "FIN"
+          },
+          {
+            "customerPrice": "9.99",
+            "territory": "FJI"
+          },
+          {
+            "customerPrice": "9.99",
+            "territory": "FRA"
+          },
+          {
+            "customerPrice": "9.99",
+            "territory": "FSM"
+          },
+          {
+            "customerPrice": "9.99",
+            "territory": "GAB"
+          },
+          {
+            "customerPrice": "9.99",
+            "territory": "GBR"
+          },
+          {
+            "customerPrice": "11.99",
+            "territory": "GEO"
+          },
+          {
+            "customerPrice": "11.99",
+            "territory": "GHA"
+          },
+          {
+            "customerPrice": "9.99",
+            "territory": "GMB"
+          },
+          {
+            "customerPrice": "9.99",
+            "territory": "GNB"
+          },
+          {
+            "customerPrice": "9.99",
+            "territory": "GRC"
+          },
+          {
+            "customerPrice": "9.99",
+            "territory": "GRD"
+          },
+          {
+            "customerPrice": "9.99",
+            "territory": "GTM"
+          },
+          {
+            "customerPrice": "9.99",
+            "territory": "GUY"
+          },
+          {
+            "customerPrice": "88",
+            "territory": "HKG"
+          },
+          {
+            "customerPrice": "9.99",
+            "territory": "HND"
+          },
+          {
+            "customerPrice": "9.99",
+            "territory": "HRV"
+          },
+          {
+            "customerPrice": "4490",
+            "territory": "HUN"
+          },
+          {
+            "customerPrice": "199000",
+            "territory": "IDN"
+          },
+          {
+            "customerPrice": "999",
+            "territory": "IND"
+          },
+          {
+            "customerPrice": "9.99",
+            "territory": "IRL"
+          },
+          {
+            "customerPrice": "9.99",
+            "territory": "IRQ"
+          },
+          {
+            "customerPrice": "11.99",
+            "territory": "ISL"
+          },
+          {
+            "customerPrice": "29.9",
+            "territory": "ISR"
+          },
+          {
+            "customerPrice": "9.99",
+            "territory": "ITA"
+          },
+          {
+            "customerPrice": "9.99",
+            "territory": "JAM"
+          },
+          {
+            "customerPrice": "9.99",
+            "territory": "JOR"
+          },
+          {
+            "customerPrice": "1500",
+            "territory": "JPN"
+          },
+          {
+            "customerPrice": "5990",
+            "territory": "KAZ"
+          },
+          {
+            "customerPrice": "11.99",
+            "territory": "KEN"
+          },
+          {
+            "customerPrice": "9.99",
+            "territory": "KGZ"
+          },
+          {
+            "customerPrice": "9.99",
+            "territory": "KHM"
+          },
+          {
+            "customerPrice": "9.99",
+            "territory": "KNA"
+          },
+          {
+            "customerPrice": "17000",
+            "territory": "KOR"
+          },
+          {
+            "customerPrice": "9.99",
+            "territory": "KWT"
+          },
+          {
+            "customerPrice": "9.99",
+            "territory": "LAO"
+          },
+          {
+            "customerPrice": "9.99",
+            "territory": "LBN"
+          },
+          {
+            "customerPrice": "9.99",
+            "territory": "LBR"
+          },
+          {
+            "customerPrice": "9.99",
+            "territory": "LBY"
+          },
+          {
+            "customerPrice": "9.99",
+            "territory": "LCA"
+          },
+          {
+            "customerPrice": "9.99",
+            "territory": "LKA"
+          },
+          {
+            "customerPrice": "9.99",
+            "territory": "LTU"
+          },
+          {
+            "customerPrice": "9.99",
+            "territory": "LUX"
+          },
+          {
+            "customerPrice": "9.99",
+            "territory": "LVA"
+          },
+          {
+            "customerPrice": "9.99",
+            "territory": "MAC"
+          },
+          {
+            "customerPrice": "11.99",
+            "territory": "MAR"
+          },
+          {
+            "customerPrice": "11.99",
+            "territory": "MDA"
+          },
+          {
+            "customerPrice": "9.99",
+            "territory": "MDG"
+          },
+          {
+            "customerPrice": "9.99",
+            "territory": "MDV"
+          },
+          {
+            "customerPrice": "199",
+            "territory": "MEX"
+          },
+          {
+            "customerPrice": "9.99",
+            "territory": "MKD"
+          },
+          {
+            "customerPrice": "9.99",
+            "territory": "MLI"
+          },
+          {
+            "customerPrice": "9.99",
+            "territory": "MLT"
+          },
+          {
+            "customerPrice": "9.99",
+            "territory": "MMR"
+          },
+          {
+            "customerPrice": "9.99",
+            "territory": "MNE"
+          },
+          {
+            "customerPrice": "9.99",
+            "territory": "MNG"
+          },
+          {
+            "customerPrice": "9.99",
+            "territory": "MOZ"
+          },
+          {
+            "customerPrice": "9.99",
+            "territory": "MRT"
+          },
+          {
+            "customerPrice": "9.99",
+            "territory": "MSR"
+          },
+          {
+            "customerPrice": "11.99",
+            "territory": "MUS"
+          },
+          {
+            "customerPrice": "9.99",
+            "territory": "MWI"
+          },
+          {
+            "customerPrice": "49.9",
+            "territory": "MYS"
+          },
+          {
+            "customerPrice": "9.99",
+            "territory": "NAM"
+          },
+          {
+            "customerPrice": "9.99",
+            "territory": "NER"
+          },
+          {
+            "customerPrice": "14900",
+            "territory": "NGA"
+          },
+          {
+            "customerPrice": "9.99",
+            "territory": "NIC"
+          },
+          {
+            "customerPrice": "9.99",
+            "territory": "NLD"
+          },
+          {
+            "customerPrice": "129",
+            "territory": "NOR"
+          },
+          {
+            "customerPrice": "11.99",
+            "territory": "NPL"
+          },
+          {
+            "customerPrice": "9.99",
+            "territory": "NRU"
+          },
+          {
+            "customerPrice": "19.99",
+            "territory": "NZL"
+          },
+          {
+            "customerPrice": "9.99",
+            "territory": "OMN"
+          },
+          {
+            "customerPrice": "2900",
+            "territory": "PAK"
+          },
+          {
+            "customerPrice": "9.99",
+            "territory": "PAN"
+          },
+          {
+            "customerPrice": "44.9",
+            "territory": "PER"
+          },
+          {
+            "customerPrice": "599",
+            "territory": "PHL"
+          },
+          {
+            "customerPrice": "9.99",
+            "territory": "PLW"
+          },
+          {
+            "customerPrice": "9.99",
+            "territory": "PNG"
+          },
+          {
+            "customerPrice": "49.99",
+            "territory": "POL"
+          },
+          {
+            "customerPrice": "9.99",
+            "territory": "PRT"
+          },
+          {
+            "customerPrice": "9.99",
+            "territory": "PRY"
+          },
+          {
+            "customerPrice": "39.99",
+            "territory": "QAT"
+          },
+          {
+            "customerPrice": "49.99",
+            "territory": "ROU"
+          },
+          {
+            "customerPrice": "899",
+            "territory": "RUS"
+          },
+          {
+            "customerPrice": "9.99",
+            "territory": "RWA"
+          },
+          {
+            "customerPrice": "39.99",
+            "territory": "SAU"
+          },
+          {
+            "customerPrice": "11.99",
+            "territory": "SEN"
+          },
+          {
+            "customerPrice": "14.98",
+            "territory": "SGP"
+          },
+          {
+            "customerPrice": "9.99",
+            "territory": "SLB"
+          },
+          {
+            "customerPrice": "9.99",
+            "territory": "SLE"
+          },
+          {
+            "customerPrice": "9.99",
+            "territory": "SLV"
+          },
+          {
+            "customerPrice": "9.99",
+            "territory": "SRB"
+          },
+          {
+            "customerPrice": "9.99",
+            "territory": "STP"
+          },
+          {
+            "customerPrice": "9.99",
+            "territory": "SUR"
+          },
+          {
+            "customerPrice": "9.99",
+            "territory": "SVK"
+          },
+          {
+            "customerPrice": "9.99",
+            "territory": "SVN"
+          },
+          {
+            "customerPrice": "129",
+            "territory": "SWE"
+          },
+          {
+            "customerPrice": "9.99",
+            "territory": "SWZ"
+          },
+          {
+            "customerPrice": "9.99",
+            "territory": "SYC"
+          },
+          {
+            "customerPrice": "9.99",
+            "territory": "TCA"
+          },
+          {
+            "customerPrice": "9.99",
+            "territory": "TCD"
+          },
+          {
+            "customerPrice": "399",
+            "territory": "THA"
+          },
+          {
+            "customerPrice": "9.99",
+            "territory": "TJK"
+          },
+          {
+            "customerPrice": "9.99",
+            "territory": "TKM"
+          },
+          {
+            "customerPrice": "9.99",
+            "territory": "TON"
+          },
+          {
+            "customerPrice": "9.99",
+            "territory": "TTO"
+          },
+          {
+            "customerPrice": "9.99",
+            "territory": "TUN"
+          },
+          {
+            "customerPrice": "499.99",
+            "territory": "TUR"
+          },
+          {
+            "customerPrice": "320",
+            "territory": "TWN"
+          },
+          {
+            "customerPrice": "29900",
+            "territory": "TZA"
+          },
+          {
+            "customerPrice": "11.99",
+            "territory": "UGA"
+          },
+          {
+            "customerPrice": "11.99",
+            "territory": "UKR"
+          },
+          {
+            "customerPrice": "9.99",
+            "territory": "URY"
+          },
+          {
+            "customerPrice": "9.99",
+            "territory": "UZB"
+          },
+          {
+            "customerPrice": "9.99",
+            "territory": "VCT"
+          },
+          {
+            "customerPrice": "9.99",
+            "territory": "VEN"
+          },
+          {
+            "customerPrice": "9.99",
+            "territory": "VGB"
+          },
+          {
+            "customerPrice": "299000",
+            "territory": "VNM"
+          },
+          {
+            "customerPrice": "9.99",
+            "territory": "VUT"
+          },
+          {
+            "customerPrice": "9.99",
+            "territory": "XKS"
+          },
+          {
+            "customerPrice": "9.99",
+            "territory": "YEM"
+          },
+          {
+            "customerPrice": "199.99",
+            "territory": "ZAF"
+          },
+          {
+            "customerPrice": "11.99",
+            "territory": "ZMB"
+          },
+          {
+            "customerPrice": "11.99",
+            "territory": "ZWE"
+          }
+        ]
+      }
+    },
+    "inAppPurchaseReviewScreenshots": {
+      "com.iosipratama.BitcoinTracker.plus": {
+        "fileName": "SOURCE",
+        "fileSize": 197532,
+        "id": "f7e82f70-f073-4896-9dfd-a004fe55ab77",
+        "renditionChecksum": "b03273f809cfca37a8e4f08579b467e4",
+        "sourceFileChecksum": "7b33c7bd48c675ed8bab6e14cd77fe5d"
+      }
+    },
+    "pricing": {
+      "automaticPrices": [
+
+      ]
+    }
+  },
+  "formatVersion": 1,
+  "gitignore": "created",
+  "resources": {
+    "ageRatingDeclaration": {
+      "fields": {
+        "ageRatingOverrideV2": "NONE",
+        "koreaAgeRatingOverride": "NONE"
+      },
+      "id": "09d76ec7-9779-4756-a1d0-36be32405da0",
+      "type": "ageRatingDeclarations"
+    },
+    "app": {
+      "fields": {
+        "primaryLocale": "en-US"
+      },
+      "id": "6811720640",
+      "type": "apps"
+    },
+    "appInfo": {
+      "fields": {
+
+      },
+      "id": "09d76ec7-9779-4756-a1d0-36be32405da0",
+      "type": "appInfos"
+    },
+    "appInfoLocalization:en-US": {
+      "fields": {
+        "name": "Sats Keeper"
+      },
+      "id": "50e06c58-3b25-41ec-bad5-03a9df15fc6f",
+      "type": "appInfoLocalizations"
+    },
+    "appStoreVersion:IOS:1.0": {
+      "fields": {
+        "releaseType": "AFTER_APPROVAL",
+        "versionString": "1.0"
+      },
+      "id": "4f627bb0-e38c-44cd-8b73-868f723a478d",
+      "type": "appStoreVersions"
+    },
+    "appStoreVersionLocalization:IOS:1.0:en-US": {
+      "fields": {
+
+      },
+      "id": "3e16736a-a727-44b4-b57e-4a2c8d999073",
+      "type": "appStoreVersionLocalizations"
+    },
+    "inAppPurchase:com.iosipratama.BitcoinTracker.plus": {
+      "fields": {
+        "familySharable": false,
+        "inAppPurchaseType": "NON_CONSUMABLE",
+        "name": "Sats Keeper Plus",
+        "reviewNote": "Sats Keeper is a read-only Bitcoin tracker. Adding a wallet needs only a\npublic Bitcoin address — no account, no sign-in, no private keys.\n\nThe free app tracks one wallet. Tapping + to add a second opens this\npurchase, which is a one-time unlock for unlimited wallets. There is no\nsubscription.\n\nTo reach it: tap + in the top right, paste any public Bitcoin address,\nname the wallet, and save. Tapping + a second time opens the purchase\nscreen.\n\nA public address you can paste for testing:\n1A1zP1eP5QGefi2DMPTfTL5SLmv7DivfNa"
+      },
+      "id": "6813851523",
+      "type": "inAppPurchases"
+    },
+    "inAppPurchaseLocalization:com.iosipratama.BitcoinTracker.plus:en-US": {
+      "fields": {
+        "description": "Track more than two wallets. Pay once.",
+        "name": "Sats Keeper Plus"
+      },
+      "id": "cc4b5455-81b8-4857-be16-725db7a77c0a",
+      "type": "inAppPurchaseLocalizations"
+    },
+    "inAppPurchasePricing:com.iosipratama.BitcoinTracker.plus": {
+      "fields": {
+        "baseTerritory": "USA",
+        "manualPrices": [
+          {
+            "customerPrice": "9.99",
+            "territory": "USA"
+          }
+        ]
+      },
+      "id": "6813851523",
+      "type": "inAppPurchasePriceSchedules"
+    },
+    "inAppPurchaseReviewScreenshot:com.iosipratama.BitcoinTracker.plus": {
+      "fields": {
+        "screenshot": {
+          "fileSize": 197532,
+          "sourceFileChecksum": "7b33c7bd48c675ed8bab6e14cd77fe5d"
+        }
+      },
+      "id": "f7e82f70-f073-4896-9dfd-a004fe55ab77",
+      "type": "inAppPurchaseAppStoreReviewScreenshots"
+    },
+    "pricing": {
+      "fields": {
+        "baseTerritory": "USA",
+        "manualPrices": [
+
+        ]
+      },
+      "id": "6811720640",
+      "type": "appPriceSchedules"
+    }
+  }
+}

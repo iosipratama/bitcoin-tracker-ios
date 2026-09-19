@@ -12,7 +12,22 @@ enum SupportLinks {
     // and currently point at the repository.
     static let privacy = URL(string: "https://github.com/iosipratama/bitcoin-tracker-ios")!
     static let terms = URL(string: "https://github.com/iosipratama/bitcoin-tracker-ios")!
-    static let suggestFeature = URL(string: "https://github.com/iosipratama/bitcoin-tracker-ios/issues/new")!
+
+    static let supportAddress = "support@mekarya.studio"
+
+    /// Opens Mail with the subject filled in and the app and device details
+    /// appended, so support reads a sortable inbox and doesn't have to reply
+    /// asking which build this was.
+    static var suggestFeature: URL {
+        var components = URLComponents()
+        components.scheme = "mailto"
+        components.path = supportAddress
+        components.queryItems = [
+            URLQueryItem(name: "subject", value: "Sats Keeper Feature Request"),
+            URLQueryItem(name: "body", value: SupportEnvironment.mailSignature)
+        ]
+        return components.url ?? URL(string: "mailto:\(supportAddress)")!
+    }
 
     static let designer = URL(string: "https://mekarya.studio/")!
 
