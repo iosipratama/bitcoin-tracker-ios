@@ -1,0 +1,29 @@
+Sato is a calm, watch-only tracker for the bitcoin you’re not going to touch.
+
+Paste a public address and Sato shows you what’s there. No account to create, no seed phrase to hand over, no private keys anywhere near your phone. Sato can only ever look.
+
+WHY IT EXISTS
+
+Saving in bitcoin is not easy. It goes up and down in dollars, and most apps make sure you feel every bit of it — charts, alerts, red numbers everywhere. But bitcoin tends to reward the people who do nothing. Sato is built for exactly that: an app you open now and then, see where you stand, and close again.
+
+WHAT IT DOES
+
+• Watch-only wallets — group one or more public addresses under a name you choose
+• Live on-chain balances from public block explorers
+• Pending amounts shown separately, so unconfirmed activity is never a surprise
+• Optional fiat value in 29 currencies, including USD, EUR, GBP, JPY and IDR
+• Hide fiat entirely and keep your eyes on the sats
+• Show balances in BTC or in satoshis
+• Wallet symbols and colours, so your long-term stack doesn’t look like the gift you’re saving for the kids
+• Legacy, SegWit and Taproot addresses all supported
+• A quiet dark interface, built natively for iOS
+
+PRIVACY
+
+Sato has no account system, no backend of its own and no analytics. Your wallet names and addresses stay on your device. The only requests it makes are to public block explorers for balances and to a price service for the exchange rate. Nothing identifies you, because there is nothing to identify.
+
+SATO PLUS
+
+Sato is free to use with one wallet. A single one-time purchase — never a subscription — unlocks as many wallets as you like and helps keep the app maintained.
+
+Balance data from mempool.space. Price data from CoinGecko.
