@@ -70,6 +70,9 @@ struct SettingsRow<Trailing: View>: View {
         }
         .padding(.horizontal, 16)
         .frame(minHeight: 52)
+        // Without this the gap between the label and the trailing control isn't
+        // hit-testable, so rows wrapped in a button only respond to their text.
+        .contentShape(.rect)
     }
 
     @ViewBuilder private var glyphView: some View {

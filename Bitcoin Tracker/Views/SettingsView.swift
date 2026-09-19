@@ -4,9 +4,12 @@ struct SettingsView: View {
     @Environment(\.dismiss) private var dismiss
     @Environment(\.openURL) private var openURL
     @Environment(PortfolioViewModel.self) private var viewModel
+    @Environment(StoreManager.self) private var store
 
     @State private var mailUnavailable = false
     @State private var copiedAddress = 0
+    @State private var restoreOutcome: String?
+    @State private var restoreSucceeded = 0
 
     private var appVersion: String { "v\(SupportEnvironment.appVersion)" }
 
@@ -50,7 +53,19 @@ struct SettingsView: View {
         } message: {
             Text("There's no mail account set up on this device. Copy \(SupportLinks.supportAddress) and write from wherever you like.")
         }
+        .alert(
+            "Restore Purchase",
+            isPresented: Binding { restoreOutcome != nil } set: { presented in
+                if !presented { restoreOutcome = nil }
+            },
+            presenting: restoreOutcome
+        ) { _ in
+            Button("OK") {}
+        } message: { outcome in
+            Text(outcome)
+        }
         .sensoryFeedback(.success, trigger: copiedAddress)
+        .sensoryFeedback(.success, trigger: restoreSucceeded)
     }
 
     // MARK: - Sections
@@ -58,10 +73,11 @@ struct SettingsView: View {
     private func bitcoinSection(showSatoshi: Binding<Bool>) -> some View {
         SettingsGroup(title: "Bitcoin") {
             SettingsRow(icon: .iconSatoshi, title: "Show in Satoshi") {
-                Toggle("", isOn: showSatoshi)
+                Toggle("Show in Satoshi", isOn: showSatoshi)
                     .labelsHidden()
                     .tint(.brand)
             }
+            .onTapGesture { showSatoshi.wrappedValue.toggle() }
         }
     }
 
@@ -71,22 +87,37 @@ struct SettingsView: View {
                 icon: .iconCircleDollar,
                 title: "Show fiat"
             ) {
-                Toggle("", isOn: showFiat)
+                Toggle("Show fiat", isOn: showFiat)
                     .labelsHidden()
                     .tint(.brand)
             }
+            .onTapGesture { showFiat.wrappedValue.toggle() }
 
             if viewModel.showFiat {
-                SettingsRow(icon: .iconGlobe, title: "Select currency") {
+                // A bare menu-style Picker only reacts to taps on its own value,
+                // so the picker lives inside a Menu whose label is the row.
+                Menu {
                     Picker("Select currency", selection: currency) {
                         ForEach(FiatCurrency.allCases) { option in
                             Text(option.displayName).tag(option)
                         }
                     }
-                    .pickerStyle(.menu)
-                    .labelsHidden()
-                    .tint(.label)
+                } label: {
+                    SettingsRow(icon: .iconGlobe, title: "Select currency") {
+                        HStack(spacing: 5) {
+                            Text(currency.wrappedValue.displayName)
+                                .font(.system(size: 17))
+                                .foregroundStyle(.label)
+
+                            Image(systemName: "chevron.up.chevron.down")
+                                .font(.system(size: 12, weight: .semibold))
+                                .foregroundStyle(.tertiaryLabel)
+                        }
+                    }
                 }
+                .buttonStyle(.plain)
+                .accessibilityLabel("Select currency")
+                .accessibilityValue(currency.wrappedValue.displayName)
                 .transition(.opacity)
             }
         }
@@ -109,6 +140,7 @@ struct SettingsView: View {
                 }
             }
             .buttonStyle(.plain)
+            restorePurchaseRow
             SettingsLinkRow(icon: .iconPage, title: "Privacy", url: SupportLinks.privacy)
             SettingsLinkRow(icon: .iconPage, title: "Terms", url: SupportLinks.terms)
             NavigationLink {
@@ -159,9 +191,40 @@ struct SettingsView: View {
         .buttonStyle(.plain)
     }
 
+    /// The only way back to a purchase after a reinstall — the paywall itself
+    /// is only reachable by trying to add a wallet past the free limit.
+    private var restorePurchaseRow: some View {
+        Button {
+            Task {
+                await store.restore()
+
+                if store.isUnlocked {
+                    restoreSucceeded += 1
+                    restoreOutcome = "Sato Plus is unlocked on this Apple Account."
+                } else {
+                    restoreOutcome = store.message ?? "No purchase to restore on this Apple Account."
+                }
+            }
+        } label: {
+            SettingsRow(icon: .iconRestore, title: "Restore Purchase") {
+                if store.isRestoring {
+                    ProgressView()
+                        .controlSize(.small)
+                        .tint(.secondaryLabel)
+                } else {
+                    Image(systemName: "chevron.right")
+                        .font(.system(size: 14, weight: .semibold))
+                        .foregroundStyle(.tertiaryLabel)
+                }
+            }
+        }
+        .buttonStyle(.plain)
+        .disabled(store.isRestoring)
+    }
+
     private var rateCard: some View {
         Button {
-            UIApplication.shared.open(SupportLinks.writeReview)
+            openURL(SupportLinks.writeReview)
         } label: {
             HStack(alignment: .top, spacing: 12) {
                 VStack(alignment: .leading, spacing: 8) {
