@@ -47,11 +47,20 @@ struct DebugView: View {
                     }
                 }
 
-                SettingsGroup(title: "First launch") {
+                SettingsGroup(title: "One-time prompts") {
                     Button {
                         withAnimation(.smooth) { hasCompletedWelcome = false }
                     } label: {
                         SettingsRow(systemImage: "hand.wave", title: "Show welcome screen") {
+                            EmptyView()
+                        }
+                    }
+                    .buttonStyle(.plain)
+
+                    Button {
+                        ReviewPrompt.reset()
+                    } label: {
+                        SettingsRow(systemImage: "star", title: "Re-arm review prompt") {
                             EmptyView()
                         }
                     }
