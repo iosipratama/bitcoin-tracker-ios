@@ -22,6 +22,26 @@ private enum Palette {
     static let onAccent = Color(hex: 0x10100E)
 }
 
+// MARK: - Figma variables
+
+/// The palette as it stands in Figma, mirrored here name for name so a value
+/// can be checked against the design file without translating it first.
+/// Nothing reads these yet — `Palette` above is still what the app draws with,
+/// and the roles will move across one at a time.
+enum FigmaPalette {
+    static let backgroundBase = Color(hex: 0x141414)
+
+    static let labelPrimary = Color(hex: 0xFFFFFF)
+    static let labelSecondary = Color(hex: 0xFFFFFF, opacity: 0.80)
+    static let labelTertiary = Color(hex: 0xFFFFFF, opacity: 0.40)
+    static let labelQuaternary = Color(hex: 0xFFFFFF, opacity: 0.20)
+
+    static let accent = Color(hex: 0xF7931A)
+    static let black = Color(hex: 0x000000)
+
+    static let fillPrimary = Color(hex: 0x1F1F1F)
+}
+
 // MARK: - Semantic roles
 
 /// Declared on `ShapeStyle` rather than `Color` so they read with a leading dot
