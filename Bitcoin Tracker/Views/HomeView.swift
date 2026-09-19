@@ -11,6 +11,20 @@ struct HomeView: View {
     @State private var walletToDelete: Wallet? = nil
     @State private var selectedWallet: Wallet? = nil
 
+    #if DEBUG
+    @AppStorage(AppStorageKey.forcesEmptyState) private var forcesEmptyState = false
+    #endif
+
+    /// Debug builds can pin this on to inspect the empty state without having
+    /// to delete a wallet to get there.
+    private var showsEmptyState: Bool {
+        #if DEBUG
+        return forcesEmptyState || wallets.isEmpty
+        #else
+        return wallets.isEmpty
+        #endif
+    }
+
     /// The oldest successful fetch across the portfolio — the honest answer to
     /// "how current is this number?"
     private var oldestUpdate: Date? {
@@ -20,7 +34,7 @@ struct HomeView: View {
     var body: some View {
         NavigationStack {
             Group {
-                if wallets.isEmpty {
+                if showsEmptyState {
                     emptyState
                 } else {
                     walletList
@@ -138,31 +152,28 @@ struct HomeView: View {
         .accessibilityElement(children: .combine)
     }
 
+    /// No button of its own: the copy points at the toolbar's plus, which is
+    /// where adding a wallet lives everywhere else in the app.
     private var emptyState: some View {
-        VStack(spacing: 20) {
-            Text("Your stack begins\nwith one address.")
-                .font(.system(size: 22, weight: .semibold))
-                .foregroundStyle(.secondaryLabel)
-                .multilineTextAlignment(.center)
-                .lineSpacing(4)
+        VStack(spacing: 12) {
+            Text("No wallets yet")
+                .font(.system(size: 19, weight: .semibold))
+                .foregroundStyle(FigmaPalette.labelPrimary)
 
-            Button {
-                showAddWallet = true
-            } label: {
-                Text("Add Wallet")
-                    .font(.subheadline.weight(.medium))
-                    .foregroundStyle(.brand)
-                    .padding(.horizontal, 24)
-                    .padding(.vertical, 10)
-                    .overlay(
-                        Capsule()
-                            .strokeBorder(.brand.opacity(0.4), lineWidth: 1)
-                    )
-            }
-            .buttonStyle(.plain)
+            Text("Tap + to add an address and name it.")
+                .font(.system(size: 16, weight: .light))
+                .tracking(0.34)
+                .foregroundStyle(FigmaPalette.labelSecondary)
+                // A layer opacity in the design, on top of the already
+                // translucent label token.
+                .opacity(0.8)
         }
-        .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .top)
-        .padding(.top, 80)
+        .fontDesign(.rounded)
+        .multilineTextAlignment(.center)
+        .padding(.horizontal, 58)
+        .frame(maxWidth: .infinity, maxHeight: .infinity)
+        .accessibilityElement(children: .combine)
+        .accessibilityLabel("No wallets yet. Use the Add Wallet button to add an address and name it.")
     }
 }
 

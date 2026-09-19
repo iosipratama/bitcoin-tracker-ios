@@ -18,6 +18,9 @@ struct SettingsView: View {
                     bitcoinSection(showSatoshi: $bindable.showSatoshi)
                     fiatSection(showFiat: $bindable.showFiat, currency: $bindable.selectedCurrency)
                     supportSection
+                    #if DEBUG
+                    debugSection
+                    #endif
                     rateCard
                     footer
                 }
@@ -109,6 +112,23 @@ struct SettingsView: View {
             .buttonStyle(.plain)
         }
     }
+
+    #if DEBUG
+    private var debugSection: some View {
+        SettingsGroup(title: nil) {
+            NavigationLink {
+                DebugView()
+            } label: {
+                SettingsRow(systemImage: "ladybug.fill", title: "Debug") {
+                    Image(systemName: "chevron.right")
+                        .font(.system(size: 14, weight: .semibold))
+                        .foregroundStyle(.tertiaryLabel)
+                }
+            }
+            .buttonStyle(.plain)
+        }
+    }
+    #endif
 
     private var rateCard: some View {
         Button {
