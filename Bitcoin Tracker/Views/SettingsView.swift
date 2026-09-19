@@ -58,10 +58,11 @@ struct SettingsView: View {
     private func bitcoinSection(showSatoshi: Binding<Bool>) -> some View {
         SettingsGroup(title: "Bitcoin") {
             SettingsRow(icon: .iconSatoshi, title: "Show in Satoshi") {
-                Toggle("", isOn: showSatoshi)
+                Toggle("Show in Satoshi", isOn: showSatoshi)
                     .labelsHidden()
                     .tint(.brand)
             }
+            .onTapGesture { showSatoshi.wrappedValue.toggle() }
         }
     }
 
@@ -71,22 +72,37 @@ struct SettingsView: View {
                 icon: .iconCircleDollar,
                 title: "Show fiat"
             ) {
-                Toggle("", isOn: showFiat)
+                Toggle("Show fiat", isOn: showFiat)
                     .labelsHidden()
                     .tint(.brand)
             }
+            .onTapGesture { showFiat.wrappedValue.toggle() }
 
             if viewModel.showFiat {
-                SettingsRow(icon: .iconGlobe, title: "Select currency") {
+                // A bare menu-style Picker only reacts to taps on its own value,
+                // so the picker lives inside a Menu whose label is the row.
+                Menu {
                     Picker("Select currency", selection: currency) {
                         ForEach(FiatCurrency.allCases) { option in
                             Text(option.displayName).tag(option)
                         }
                     }
-                    .pickerStyle(.menu)
-                    .labelsHidden()
-                    .tint(.label)
+                } label: {
+                    SettingsRow(icon: .iconGlobe, title: "Select currency") {
+                        HStack(spacing: 5) {
+                            Text(currency.wrappedValue.displayName)
+                                .font(.system(size: 17))
+                                .foregroundStyle(.label)
+
+                            Image(systemName: "chevron.up.chevron.down")
+                                .font(.system(size: 12, weight: .semibold))
+                                .foregroundStyle(.tertiaryLabel)
+                        }
+                    }
                 }
+                .buttonStyle(.plain)
+                .accessibilityLabel("Select currency")
+                .accessibilityValue(currency.wrappedValue.displayName)
                 .transition(.opacity)
             }
         }

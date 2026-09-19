@@ -8,10 +8,8 @@ enum SupportLinks {
     static let appStore = URL(string: "https://apps.apple.com/app/id\(appStoreID)")!
     static let writeReview = URL(string: "https://apps.apple.com/app/id\(appStoreID)?action=write-review")!
 
-    // TODO: replace with the real pages before shipping — these are placeholders
-    // and currently point at the repository.
-    static let privacy = URL(string: "https://github.com/iosipratama/bitcoin-tracker-ios")!
-    static let terms = URL(string: "https://github.com/iosipratama/bitcoin-tracker-ios")!
+    static let privacy = URL(string: "https://mekarya.studio/privacy/sato")!
+    static let terms = URL(string: "https://mekarya.studio/terms/sato")!
 
     static let supportAddress = "support@mekarya.studio"
 
