@@ -148,15 +148,16 @@ struct HomeView: View {
         VStack(spacing: 6) {
             Image(systemName: "quote.opening")
                 .font(.system(size: 40, weight: .regular))
-                .foregroundStyle(.tertiaryLabel)
                 .accessibilityHidden(true)
 
             Text(Quotes.current)
                 .font(.system(size: 14))
                 .italic()
                 .multilineTextAlignment(.center)
-                .foregroundStyle(Custom.labelQuaternary)
         }
+        // Set once for the pair: the mark and the line it opens are one thing,
+        // and stating it twice is how they drift apart.
+        .foregroundStyle(Custom.labelQuaternary)
         .frame(maxWidth: .infinity)
         .padding(.horizontal, 64)
         .padding(.bottom, 8)
