@@ -42,7 +42,7 @@ struct PaywallView: View {
                 .fill(Custom.accent)
                 .frame(width: 12, height: 12)
 
-            Text("Sats Keeper Plus")
+            Text("Sato Plus")
                 .font(.system(size: 12, weight: .semibold))
                 .tracking(2.4)
                 .textCase(.uppercase)

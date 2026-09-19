@@ -165,7 +165,7 @@ struct SettingsView: View {
         } label: {
             HStack(alignment: .top, spacing: 12) {
                 VStack(alignment: .leading, spacing: 8) {
-                    Text("Rate Sats Keeper")
+                    Text("Rate Sato")
                         .font(.system(size: 17, weight: .bold))
                         .foregroundStyle(.label)
 
@@ -201,7 +201,7 @@ struct SettingsView: View {
             )
         }
         .buttonStyle(.plain)
-        .accessibilityLabel("Rate Sats Keeper on the App Store")
+        .accessibilityLabel("Rate Sato on the App Store")
     }
 
     private var footer: some View {
@@ -221,7 +221,7 @@ struct SettingsView: View {
                     .foregroundStyle(.label)
             }
 
-            Text("2026 Sats Keeper. \(appVersion)")
+            Text("2026 Sato. \(appVersion)")
                 .font(.system(size: 12))
                 .foregroundStyle(.tertiaryLabel)
                 .padding(.top, 8)
@@ -236,7 +236,7 @@ struct AboutView: View {
     var body: some View {
         ScrollView {
             VStack(alignment: .leading, spacing: 20) {
-                Text("Sats Keeper is a read-only Bitcoin wallet tracker. It stores no private keys and has no account.")
+                Text("Sato is a read-only Bitcoin wallet tracker. It stores no private keys and has no account.")
                     .font(.system(size: 15))
                     .foregroundStyle(.secondaryLabel)
                     .fixedSize(horizontal: false, vertical: true)

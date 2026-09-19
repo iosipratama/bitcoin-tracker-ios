@@ -119,7 +119,7 @@ private extension WelcomeLine {
             .plain(" rewards the people who do nothing 🧘")
         ]),
         WelcomeLine(id: 5, segments: [
-            .plain("and this app, sats keeper.")
+            .plain("and this app, sato.")
         ]),
         WelcomeLine(id: 6, segments: [
             .plain("is for the "),
@@ -130,7 +130,7 @@ private extension WelcomeLine {
             .plain("for your home 🏡. a year off ✈️. something for the kids 🎓.")
         ]),
         WelcomeLine(id: 8, segments: [
-            .plain("sats keeper is safe, no seed phrase, no account, just your address 🔐")
+            .plain("sato is safe, no seed phrase, no account, just your address 🔐")
         ])
     ]
 }

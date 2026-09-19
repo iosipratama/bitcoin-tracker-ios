@@ -39,7 +39,7 @@ enum SupportEnvironment {
 
 
         —
-        Sats Keeper \(appVersion) (\(build))
+        Sato \(appVersion) (\(build))
         \(deviceModel) · iOS \(systemVersion)
         """
     }
