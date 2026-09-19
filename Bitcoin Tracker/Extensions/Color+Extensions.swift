@@ -28,13 +28,16 @@ private enum Palette {
     static let onAccent = Color(hex: 0x10100E)
 }
 
-// MARK: - Figma variables
+// MARK: - Design variables
 
-/// The palette as it stands in Figma, mirrored here name for name so a value
-/// can be checked against the design file without translating it first.
-/// Nothing reads these yet — `Palette` above is still what the app draws with,
-/// and the roles will move across one at a time.
-enum FigmaPalette {
+/// The design file's own variables, named to match it rather than to match the
+/// tool that draws it: `custom-label-quaternary` there is `Custom.labelQuaternary`
+/// here, so a value can be checked against Dev Mode without translating first.
+/// `accent` and `black` carry no prefix in the file and keep their bare names.
+///
+/// Views read these directly. `Palette` above still backs the semantic roles,
+/// which are moving across one at a time.
+enum Custom {
     static let backgroundBase = Color(hex: 0x141414)
 
     static let labelPrimary = Color(hex: 0xFFFFFF)
@@ -82,7 +85,7 @@ extension ShapeStyle where Self == Color {
 
     /// Interactive affordances, pending amounts, the app's tint. Resolves to
     /// the Figma accent, so the token and the role can't drift apart.
-    static var brand: Color { FigmaPalette.accent }
+    static var brand: Color { Custom.accent }
 
     /// The accent at rest — confirmation actions that aren't yet available.
     static var brandDisabled: Color { Palette.brandDisabled }

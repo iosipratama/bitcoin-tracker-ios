@@ -43,7 +43,7 @@ struct AddAddressView: View {
     private var addressPrompt: Text {
         Text(verbatim: "1A1zP1eP5QGefi2DMPTfTL5SLmv7DivfNa")
             .font(.subheadline.monospaced())
-            .foregroundStyle(FigmaPalette.labelQuaternary)
+            .foregroundStyle(Custom.labelQuaternary)
     }
 
     var body: some View {

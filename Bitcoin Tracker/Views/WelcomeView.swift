@@ -20,7 +20,7 @@ struct WelcomeView: View {
             }
             .font(.system(size: 20, weight: .light))
             .fontDesign(.rounded)
-            .foregroundStyle(FigmaPalette.labelSecondary)
+            .foregroundStyle(Custom.labelSecondary)
             .padding(.horizontal, 32)
             .padding(.top, 36)
             .padding(.bottom, 16)
@@ -28,7 +28,7 @@ struct WelcomeView: View {
         .scrollBounceBehavior(.basedOnSize)
         .scrollEdgeEffectStyle(.soft, for: .bottom)
         .safeAreaInset(edge: .bottom) { continueButton }
-        .background(FigmaPalette.backgroundBase)
+        .background(Custom.backgroundBase)
     }
 
     /// Deliberately taller and wider-set than any other button in the app — it
@@ -41,10 +41,10 @@ struct WelcomeView: View {
             Text("Continue")
                 .font(.system(size: 17, weight: .heavy).width(.expanded))
                 .tracking(-0.48)
-                .foregroundStyle(FigmaPalette.black)
+                .foregroundStyle(Custom.black)
                 .padding(.vertical, 12)
                 .frame(maxWidth: .infinity, minHeight: 94)
-                .background(Capsule().fill(FigmaPalette.accent))
+                .background(Capsule().fill(Custom.accent))
                 .contentShape(.capsule)
         }
         .buttonStyle(.plain)

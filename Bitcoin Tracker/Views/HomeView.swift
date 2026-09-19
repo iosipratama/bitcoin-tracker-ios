@@ -47,7 +47,7 @@ struct HomeView: View {
             .toolbar {
                 ToolbarItem(placement: .topBarLeading) {
                     Button("Settings", systemImage: "gearshape") { showSettings = true }
-                        .tint(FigmaPalette.labelSecondary)
+                        .tint(Custom.labelSecondary)
                 }
                 ToolbarItem(placement: .topBarTrailing) {
                     if viewModel.isLoading {
@@ -144,7 +144,7 @@ struct HomeView: View {
                 .font(.system(size: 14))
                 .italic()
                 .multilineTextAlignment(.center)
-                .foregroundStyle(FigmaPalette.labelQuaternary)
+                .foregroundStyle(Custom.labelQuaternary)
         }
         .frame(maxWidth: .infinity)
         .padding(.horizontal, 64)
@@ -158,12 +158,12 @@ struct HomeView: View {
         VStack(spacing: 12) {
             Text("No wallets yet")
                 .font(.system(size: 19, weight: .semibold))
-                .foregroundStyle(FigmaPalette.labelPrimary)
+                .foregroundStyle(Custom.labelPrimary)
 
             Text("Tap + to add an address and name it.")
                 .font(.system(size: 16, weight: .light))
                 .tracking(0.34)
-                .foregroundStyle(FigmaPalette.labelSecondary)
+                .foregroundStyle(Custom.labelSecondary)
                 // A layer opacity in the design, on top of the already
                 // translucent label token.
                 .opacity(0.8)

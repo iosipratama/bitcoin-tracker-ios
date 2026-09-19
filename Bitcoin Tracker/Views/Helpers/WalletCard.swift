@@ -20,7 +20,7 @@ struct WalletRow: View {
         .frame(maxWidth: .infinity, alignment: .leading)
         .background(
             RoundedRectangle(cornerRadius: .cardRadius, style: .continuous)
-                .fill(FigmaPalette.fillPrimary)
+                .fill(Custom.fillPrimary)
         )
         // Applied once here; every Text below inherits the rounded design.
         .fontDesign(.rounded)
@@ -42,7 +42,7 @@ struct WalletRow: View {
 
             Text(wallet.name)
                 .font(.walletName)
-                .foregroundStyle(FigmaPalette.labelSecondary)
+                .foregroundStyle(Custom.labelSecondary)
 
             Spacer(minLength: 0)
         }
@@ -58,7 +58,7 @@ struct WalletRow: View {
                 if let prefix = viewModel.amountPrefix {
                     Text(prefix)
                         .font(.walletBalanceMark)
-                        .foregroundStyle(FigmaPalette.labelTertiary)
+                        .foregroundStyle(Custom.labelTertiary)
                 }
 
                 Text(viewModel.formattedAmount(btc: wallet.totalBTC))
@@ -68,7 +68,7 @@ struct WalletRow: View {
                 if let suffix = viewModel.amountSuffix {
                     Text(suffix)
                         .font(.walletFiat)
-                        .foregroundStyle(FigmaPalette.labelTertiary)
+                        .foregroundStyle(Custom.labelTertiary)
                 }
             }
 
@@ -76,11 +76,11 @@ struct WalletRow: View {
                 HStack(spacing: 2) {
                     Text("\u{2261}")
                         .font(.walletFiat)
-                        .foregroundStyle(FigmaPalette.labelTertiary)
+                        .foregroundStyle(Custom.labelTertiary)
 
                     Text(viewModel.formattedFiatWhole(viewModel.fiatValue(btc: wallet.totalBTC)))
                         .font(.walletFiat)
-                        .foregroundStyle(FigmaPalette.labelTertiary)
+                        .foregroundStyle(Custom.labelTertiary)
                         .lineLimit(1)
                         .minimumScaleFactor(0.6)
                 }
@@ -96,7 +96,7 @@ struct WalletRow: View {
         .padding(panelInset)
         .background(
             RoundedRectangle(cornerRadius: .cardInsetRadius, style: .continuous)
-                .fill(FigmaPalette.backgroundBase)
+                .fill(Custom.backgroundBase)
         )
     }
 }

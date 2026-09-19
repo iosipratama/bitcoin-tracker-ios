@@ -8,7 +8,7 @@ struct RootView: View {
 
     var body: some View {
         ZStack {
-            FigmaPalette.backgroundBase
+            Custom.backgroundBase
                 .ignoresSafeArea()
 
             if hasCompletedWelcome {

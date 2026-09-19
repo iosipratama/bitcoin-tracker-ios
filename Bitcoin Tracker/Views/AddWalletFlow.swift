@@ -54,7 +54,7 @@ struct AddWalletFlow: View {
             VStack(spacing: 12) {
                 Text(trimmedAddress.isEmpty ? "Paste an address to watch" : trimmedAddress)
                     .font(.system(size: 26, weight: .semibold))
-                    .foregroundStyle(trimmedAddress.isEmpty ? FigmaPalette.labelQuaternary : FigmaPalette.labelPrimary)
+                    .foregroundStyle(trimmedAddress.isEmpty ? Custom.labelQuaternary : Custom.labelPrimary)
                     .multilineTextAlignment(.center)
                     .lineLimit(3)
                     .minimumScaleFactor(0.7)
