@@ -3,10 +3,10 @@ import SwiftData
 
 @Model
 final class Wallet {
-    /// How many wallets the app tracks before asking to be paid for. Two is
-    /// enough to be genuinely useful — a stack and a gift, say — so the ask
-    /// lands after the app has proved itself rather than before.
-    static let freeLimit = 2
+    /// How many wallets the app tracks before asking to be paid for. One is
+    /// enough to see the app work on your own coins, which is what the ask
+    /// rests on — anyone tracking a second is past deciding whether to trust it.
+    static let freeLimit = 1
 
     var name: String
     @Relationship(deleteRule: .cascade)
