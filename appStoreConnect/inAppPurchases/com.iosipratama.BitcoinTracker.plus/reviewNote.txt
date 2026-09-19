@@ -1,0 +1,13 @@
+Sats Keeper is a read-only Bitcoin tracker. Adding a wallet needs only a
+public Bitcoin address — no account, no sign-in, no private keys.
+
+The free app tracks two wallets. Tapping + to add a third opens this
+purchase, which is a one-time unlock for unlimited wallets. There is no
+subscription.
+
+To reach it: tap + in the top right, paste any public Bitcoin address,
+name the wallet, and save. Repeat once more. Tapping + a third time
+opens the purchase screen.
+
+A public address you can paste for testing:
+1A1zP1eP5QGefi2DMPTfTL5SLmv7DivfNa
