@@ -2,7 +2,41 @@
   "appId": "6811720640",
   "derived": {
     "appStoreVersionScreenshotSets": {
-
+      "IOS:1.0:en-US:APP_IPHONE_67": {
+        "screenshots": [
+          {
+            "fileName": "01-track.png",
+            "fileSize": 527654,
+            "id": "62054d5c-2c95-4b09-9eb9-b3a995311539",
+            "sourceFileChecksum": "e75066e2d51972cd4ab2bb088ae02969"
+          },
+          {
+            "fileName": "02-paste.png",
+            "fileSize": 404310,
+            "id": "93579c8d-9d43-44a5-848e-3084853eb4d6",
+            "sourceFileChecksum": "685a243f6d486bb65bd9ef9a60b41ff1"
+          },
+          {
+            "fileName": "03-purpose.png",
+            "fileSize": 529153,
+            "id": "47a472d9-d337-4e14-b681-f7b59d9749ef",
+            "sourceFileChecksum": "7a204e16040c7fa05c394adccb69352a"
+          },
+          {
+            "fileName": "04-units.png",
+            "fileSize": 430328,
+            "id": "4c1c6302-6578-4c86-ad2e-18531ca25199",
+            "sourceFileChecksum": "bc466626cf4795a884e23b967cb7e169"
+          },
+          {
+            "fileName": "05-manifesto.png",
+            "fileSize": 233147,
+            "id": "013cf778-47a3-43aa-b1c0-db9d1cf50afd",
+            "sourceFileChecksum": "019a2183a32c0cb748d8e255d8474942"
+          }
+        ],
+        "setID": "f65705d3-463e-4656-a252-095fb839d13b"
+      }
     },
     "inAppPurchasePricing": {
       "com.iosipratama.BitcoinTracker.plus": {
@@ -1497,14 +1531,47 @@
     },
     "appStoreVersionLocalization:IOS:1.0:en-US": {
       "fields": {
-        "description": "Sato is a calm, watch-only tracker for the bitcoin you’re not going to touch.\n\nPaste a public address and Sato shows you what’s there. No account to create, no seed phrase to hand over, no private keys anywhere near your phone. Sato can only ever look.\n\nWHY IT EXISTS\n\nSaving in bitcoin is not easy. It goes up and down in dollars, and most apps make sure you feel every bit of it — charts, alerts, red numbers everywhere. But bitcoin tends to reward the people who do nothing. Sato is built for exactly that: an app you open now and then, see where you stand, and close again.\n\nWHAT IT DOES\n\n• Watch-only wallets — group one or more public addresses under a name you choose\n• Live on-chain balances from public block explorers\n• Pending amounts shown separately, so unconfirmed activity is never a surprise\n• Optional fiat value in 29 currencies, including USD, EUR, GBP, JPY and IDR\n• Hide fiat entirely and keep your eyes on the sats\n• Show balances in BTC or in satoshis\n• Wallet symbols and colours, so your long-term stack doesn’t look like the gift you’re saving for the kids\n• Legacy, SegWit and Taproot addresses all supported\n• A quiet dark interface, built natively for iOS\n\nPRIVACY\n\nSato has no account system, no backend of its own and no analytics. Your wallet names and addresses stay on your device. The only requests it makes are to public block explorers for balances and to a price service for the exchange rate. Nothing identifies you, because there is nothing to identify.\n\nSATO PLUS\n\nSato is free to use with one wallet. A single one-time purchase — never a subscription — unlocks as many wallets as you like and helps keep the app maintained.\n\nBalance data from mempool.space. Price data from CoinGecko.",
-        "keywords": "btc,sats,satoshi,hodl,watch only,cold storage,wallet,balance,address,portfolio,crypto,price,stack",
+        "description": "Sato is a calm, watch-only tracker for the bitcoin you’re not going to touch.\n\nPaste a public address and Sato shows you what’s there. No account to create, no seed phrase to hand over, no private keys anywhere near your phone. Sato can only ever look.\n\nWHY IT EXISTS\n\nSaving in bitcoin is not easy. It goes up and down in dollars, and most apps make sure you feel every bit of it — charts, alerts, red numbers everywhere. But bitcoin tends to reward the people who do nothing. Sato is built for exactly that: an app you open now and then, see where you stand, and close again.\n\nWHAT IT DOES\n\n• Watch-only wallets — group one or more public addresses under a name you choose\n• Live on-chain balances from public block explorers\n• Pending amounts shown separately, so unconfirmed activity is never a surprise\n• Optional fiat value in 29 currencies, including USD, EUR, GBP, JPY and IDR\n• Hide fiat entirely and keep your eyes on the sats\n• Show balances in BTC or in satoshis\n• Wallet symbols and colors, so your long-term stack doesn’t look like the gift you’re saving for the kids\n• Legacy, SegWit and Taproot addresses all supported\n• A quiet dark interface, built natively for iOS\n\nPRIVACY\n\nSato has no account system, no backend of its own and no analytics. Your wallet names and addresses stay on your device. The only requests it makes are to public block explorers for balances and to a price service for the exchange rate. Nothing identifies you, because there is nothing to identify.\n\nSATO PLUS\n\nSato is free to use with one wallet. A single one-time purchase — never a subscription — unlocks as many wallets as you like and helps keep the app maintained.\n\nBalance data from mempool.space. Price data from CoinGecko.",
+        "keywords": "sats,satoshi,hodl,cold,storage,hardware,address,portfolio,crypto,price,stack,savings,checker,monitor",
         "marketingUrl": "https://mekarya.studio/apps/sato",
         "promotionalText": "For the bitcoin you’re not going to touch. Paste a public address, see the balance, close the app. No account, no seed phrase, no charts shouting at you.",
         "supportUrl": "https://mekarya.studio/support/sato"
       },
       "id": "3e16736a-a727-44b4-b57e-4a2c8d999073",
       "type": "appStoreVersionLocalizations"
+    },
+    "appStoreVersionScreenshotSet:IOS:1.0:en-US:APP_IPHONE_67": {
+      "fields": {
+        "screenshots": [
+          {
+            "file": "01-track.png",
+            "fileSize": 527654,
+            "sourceFileChecksum": "e75066e2d51972cd4ab2bb088ae02969"
+          },
+          {
+            "file": "02-paste.png",
+            "fileSize": 404310,
+            "sourceFileChecksum": "685a243f6d486bb65bd9ef9a60b41ff1"
+          },
+          {
+            "file": "03-purpose.png",
+            "fileSize": 529153,
+            "sourceFileChecksum": "7a204e16040c7fa05c394adccb69352a"
+          },
+          {
+            "file": "04-units.png",
+            "fileSize": 430328,
+            "sourceFileChecksum": "bc466626cf4795a884e23b967cb7e169"
+          },
+          {
+            "file": "05-manifesto.png",
+            "fileSize": 233147,
+            "sourceFileChecksum": "019a2183a32c0cb748d8e255d8474942"
+          }
+        ]
+      },
+      "id": "f65705d3-463e-4656-a252-095fb839d13b",
+      "type": "appScreenshotSets"
     },
     "availability": {
       "fields": {

@@ -14,7 +14,7 @@ WHAT IT DOES
 • Optional fiat value in 29 currencies, including USD, EUR, GBP, JPY and IDR
 • Hide fiat entirely and keep your eyes on the sats
 • Show balances in BTC or in satoshis
-• Wallet symbols and colours, so your long-term stack doesn’t look like the gift you’re saving for the kids
+• Wallet symbols and colors, so your long-term stack doesn’t look like the gift you’re saving for the kids
 • Legacy, SegWit and Taproot addresses all supported
 • A quiet dark interface, built natively for iOS
 
