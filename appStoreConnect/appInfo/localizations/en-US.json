@@ -1,4 +1,5 @@
 {
   "name": "Sato - Bitcoin Tracker",
-  "subtitle": "Watch-only BTC wallet balance"
+  "privacyPolicyUrl": "https://mekarya.studio/privacy/sato",
+  "subtitle": "Watch BTC wallets without keys"
 }

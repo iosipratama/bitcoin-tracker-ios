@@ -2,7 +2,41 @@
   "appId": "6811720640",
   "derived": {
     "appStoreVersionScreenshotSets": {
-
+      "IOS:1.0:en-US:APP_IPHONE_67": {
+        "screenshots": [
+          {
+            "fileName": "01-track.png",
+            "fileSize": 527654,
+            "id": "62054d5c-2c95-4b09-9eb9-b3a995311539",
+            "sourceFileChecksum": "e75066e2d51972cd4ab2bb088ae02969"
+          },
+          {
+            "fileName": "02-paste.png",
+            "fileSize": 404310,
+            "id": "93579c8d-9d43-44a5-848e-3084853eb4d6",
+            "sourceFileChecksum": "685a243f6d486bb65bd9ef9a60b41ff1"
+          },
+          {
+            "fileName": "03-purpose.png",
+            "fileSize": 529153,
+            "id": "47a472d9-d337-4e14-b681-f7b59d9749ef",
+            "sourceFileChecksum": "7a204e16040c7fa05c394adccb69352a"
+          },
+          {
+            "fileName": "04-units.png",
+            "fileSize": 430328,
+            "id": "4c1c6302-6578-4c86-ad2e-18531ca25199",
+            "sourceFileChecksum": "bc466626cf4795a884e23b967cb7e169"
+          },
+          {
+            "fileName": "05-manifesto.png",
+            "fileSize": 232000,
+            "id": "5d3314e6-8983-4d1b-a02f-0116c8d5cfb1",
+            "sourceFileChecksum": "0aaf305832cafe7a0d4124dd293a03c1"
+          }
+        ],
+        "setID": "f65705d3-463e-4656-a252-095fb839d13b"
+      }
     },
     "inAppPurchasePricing": {
       "com.iosipratama.BitcoinTracker.plus": {
@@ -65,10 +99,6 @@
           },
           {
             "customerPrice": "9.99",
-            "territory": "BGR"
-          },
-          {
-            "customerPrice": "9.99",
             "territory": "BHR"
           },
           {
@@ -96,10 +126,6 @@
             "territory": "BOL"
           },
           {
-            "customerPrice": "59.9",
-            "territory": "BRA"
-          },
-          {
             "customerPrice": "11.99",
             "territory": "BRB"
           },
@@ -122,10 +148,6 @@
           {
             "customerPrice": "9",
             "territory": "CHE"
-          },
-          {
-            "customerPrice": "9990",
-            "territory": "CHL"
           },
           {
             "customerPrice": "68",
@@ -168,10 +190,6 @@
             "territory": "CYP"
           },
           {
-            "customerPrice": "249",
-            "territory": "CZE"
-          },
-          {
             "customerPrice": "9.99",
             "territory": "DEU"
           },
@@ -196,16 +214,8 @@
             "territory": "ECU"
           },
           {
-            "customerPrice": "499.99",
-            "territory": "EGY"
-          },
-          {
             "customerPrice": "9.99",
             "territory": "ESP"
-          },
-          {
-            "customerPrice": "9.99",
-            "territory": "EST"
           },
           {
             "customerPrice": "9.99",
@@ -273,22 +283,6 @@
           },
           {
             "customerPrice": "9.99",
-            "territory": "HRV"
-          },
-          {
-            "customerPrice": "4490",
-            "territory": "HUN"
-          },
-          {
-            "customerPrice": "199000",
-            "territory": "IDN"
-          },
-          {
-            "customerPrice": "999",
-            "territory": "IND"
-          },
-          {
-            "customerPrice": "9.99",
             "territory": "IRL"
           },
           {
@@ -324,10 +318,6 @@
             "territory": "KAZ"
           },
           {
-            "customerPrice": "11.99",
-            "territory": "KEN"
-          },
-          {
             "customerPrice": "9.99",
             "territory": "KGZ"
           },
@@ -338,10 +328,6 @@
           {
             "customerPrice": "9.99",
             "territory": "KNA"
-          },
-          {
-            "customerPrice": "17000",
-            "territory": "KOR"
           },
           {
             "customerPrice": "9.99",
@@ -373,15 +359,7 @@
           },
           {
             "customerPrice": "9.99",
-            "territory": "LTU"
-          },
-          {
-            "customerPrice": "9.99",
             "territory": "LUX"
-          },
-          {
-            "customerPrice": "9.99",
-            "territory": "LVA"
           },
           {
             "customerPrice": "9.99",
@@ -402,10 +380,6 @@
           {
             "customerPrice": "9.99",
             "territory": "MDV"
-          },
-          {
-            "customerPrice": "199",
-            "territory": "MEX"
           },
           {
             "customerPrice": "9.99",
@@ -464,10 +438,6 @@
             "territory": "NER"
           },
           {
-            "customerPrice": "14900",
-            "territory": "NGA"
-          },
-          {
             "customerPrice": "9.99",
             "territory": "NIC"
           },
@@ -496,10 +466,6 @@
             "territory": "OMN"
           },
           {
-            "customerPrice": "2900",
-            "territory": "PAK"
-          },
-          {
             "customerPrice": "9.99",
             "territory": "PAN"
           },
@@ -508,20 +474,12 @@
             "territory": "PER"
           },
           {
-            "customerPrice": "599",
-            "territory": "PHL"
-          },
-          {
             "customerPrice": "9.99",
             "territory": "PLW"
           },
           {
             "customerPrice": "9.99",
             "territory": "PNG"
-          },
-          {
-            "customerPrice": "49.99",
-            "territory": "POL"
           },
           {
             "customerPrice": "9.99",
@@ -534,10 +492,6 @@
           {
             "customerPrice": "39.99",
             "territory": "QAT"
-          },
-          {
-            "customerPrice": "49.99",
-            "territory": "ROU"
           },
           {
             "customerPrice": "899",
@@ -584,14 +538,6 @@
             "territory": "SUR"
           },
           {
-            "customerPrice": "9.99",
-            "territory": "SVK"
-          },
-          {
-            "customerPrice": "9.99",
-            "territory": "SVN"
-          },
-          {
             "customerPrice": "129",
             "territory": "SWE"
           },
@@ -636,10 +582,6 @@
             "territory": "TUN"
           },
           {
-            "customerPrice": "499.99",
-            "territory": "TUR"
-          },
-          {
             "customerPrice": "320",
             "territory": "TWN"
           },
@@ -650,10 +592,6 @@
           {
             "customerPrice": "11.99",
             "territory": "UGA"
-          },
-          {
-            "customerPrice": "11.99",
-            "territory": "UKR"
           },
           {
             "customerPrice": "9.99",
@@ -674,10 +612,6 @@
           {
             "customerPrice": "9.99",
             "territory": "VGB"
-          },
-          {
-            "customerPrice": "299000",
-            "territory": "VNM"
           },
           {
             "customerPrice": "9.99",
@@ -717,7 +651,702 @@
     },
     "pricing": {
       "automaticPrices": [
-
+        {
+          "customerPrice": "0",
+          "territory": "AFG"
+        },
+        {
+          "customerPrice": "0",
+          "territory": "AGO"
+        },
+        {
+          "customerPrice": "0",
+          "territory": "AIA"
+        },
+        {
+          "customerPrice": "0",
+          "territory": "ALB"
+        },
+        {
+          "customerPrice": "0",
+          "territory": "ARE"
+        },
+        {
+          "customerPrice": "0",
+          "territory": "ARG"
+        },
+        {
+          "customerPrice": "0",
+          "territory": "ARM"
+        },
+        {
+          "customerPrice": "0",
+          "territory": "ATG"
+        },
+        {
+          "customerPrice": "0",
+          "territory": "AUS"
+        },
+        {
+          "customerPrice": "0",
+          "territory": "AUT"
+        },
+        {
+          "customerPrice": "0",
+          "territory": "AZE"
+        },
+        {
+          "customerPrice": "0",
+          "territory": "BEL"
+        },
+        {
+          "customerPrice": "0",
+          "territory": "BEN"
+        },
+        {
+          "customerPrice": "0",
+          "territory": "BFA"
+        },
+        {
+          "customerPrice": "0",
+          "territory": "BGR"
+        },
+        {
+          "customerPrice": "0",
+          "territory": "BHR"
+        },
+        {
+          "customerPrice": "0",
+          "territory": "BHS"
+        },
+        {
+          "customerPrice": "0",
+          "territory": "BIH"
+        },
+        {
+          "customerPrice": "0",
+          "territory": "BLR"
+        },
+        {
+          "customerPrice": "0",
+          "territory": "BLZ"
+        },
+        {
+          "customerPrice": "0",
+          "territory": "BMU"
+        },
+        {
+          "customerPrice": "0",
+          "territory": "BOL"
+        },
+        {
+          "customerPrice": "0",
+          "territory": "BRA"
+        },
+        {
+          "customerPrice": "0",
+          "territory": "BRB"
+        },
+        {
+          "customerPrice": "0",
+          "territory": "BRN"
+        },
+        {
+          "customerPrice": "0",
+          "territory": "BTN"
+        },
+        {
+          "customerPrice": "0",
+          "territory": "BWA"
+        },
+        {
+          "customerPrice": "0",
+          "territory": "CAN"
+        },
+        {
+          "customerPrice": "0",
+          "territory": "CHE"
+        },
+        {
+          "customerPrice": "0",
+          "territory": "CHL"
+        },
+        {
+          "customerPrice": "0",
+          "territory": "CHN"
+        },
+        {
+          "customerPrice": "0",
+          "territory": "CIV"
+        },
+        {
+          "customerPrice": "0",
+          "territory": "CMR"
+        },
+        {
+          "customerPrice": "0",
+          "territory": "COD"
+        },
+        {
+          "customerPrice": "0",
+          "territory": "COG"
+        },
+        {
+          "customerPrice": "0",
+          "territory": "COL"
+        },
+        {
+          "customerPrice": "0",
+          "territory": "CPV"
+        },
+        {
+          "customerPrice": "0",
+          "territory": "CRI"
+        },
+        {
+          "customerPrice": "0",
+          "territory": "CYM"
+        },
+        {
+          "customerPrice": "0",
+          "territory": "CYP"
+        },
+        {
+          "customerPrice": "0",
+          "territory": "CZE"
+        },
+        {
+          "customerPrice": "0",
+          "territory": "DEU"
+        },
+        {
+          "customerPrice": "0",
+          "territory": "DMA"
+        },
+        {
+          "customerPrice": "0",
+          "territory": "DNK"
+        },
+        {
+          "customerPrice": "0",
+          "territory": "DOM"
+        },
+        {
+          "customerPrice": "0",
+          "territory": "DZA"
+        },
+        {
+          "customerPrice": "0",
+          "territory": "ECU"
+        },
+        {
+          "customerPrice": "0",
+          "territory": "EGY"
+        },
+        {
+          "customerPrice": "0",
+          "territory": "ESP"
+        },
+        {
+          "customerPrice": "0",
+          "territory": "EST"
+        },
+        {
+          "customerPrice": "0",
+          "territory": "FIN"
+        },
+        {
+          "customerPrice": "0",
+          "territory": "FJI"
+        },
+        {
+          "customerPrice": "0",
+          "territory": "FRA"
+        },
+        {
+          "customerPrice": "0",
+          "territory": "FSM"
+        },
+        {
+          "customerPrice": "0",
+          "territory": "GAB"
+        },
+        {
+          "customerPrice": "0",
+          "territory": "GBR"
+        },
+        {
+          "customerPrice": "0",
+          "territory": "GEO"
+        },
+        {
+          "customerPrice": "0",
+          "territory": "GHA"
+        },
+        {
+          "customerPrice": "0",
+          "territory": "GMB"
+        },
+        {
+          "customerPrice": "0",
+          "territory": "GNB"
+        },
+        {
+          "customerPrice": "0",
+          "territory": "GRC"
+        },
+        {
+          "customerPrice": "0",
+          "territory": "GRD"
+        },
+        {
+          "customerPrice": "0",
+          "territory": "GTM"
+        },
+        {
+          "customerPrice": "0",
+          "territory": "GUY"
+        },
+        {
+          "customerPrice": "0",
+          "territory": "HKG"
+        },
+        {
+          "customerPrice": "0",
+          "territory": "HND"
+        },
+        {
+          "customerPrice": "0",
+          "territory": "HRV"
+        },
+        {
+          "customerPrice": "0",
+          "territory": "HUN"
+        },
+        {
+          "customerPrice": "0",
+          "territory": "IDN"
+        },
+        {
+          "customerPrice": "0",
+          "territory": "IND"
+        },
+        {
+          "customerPrice": "0",
+          "territory": "IRL"
+        },
+        {
+          "customerPrice": "0",
+          "territory": "IRQ"
+        },
+        {
+          "customerPrice": "0",
+          "territory": "ISL"
+        },
+        {
+          "customerPrice": "0",
+          "territory": "ISR"
+        },
+        {
+          "customerPrice": "0",
+          "territory": "ITA"
+        },
+        {
+          "customerPrice": "0",
+          "territory": "JAM"
+        },
+        {
+          "customerPrice": "0",
+          "territory": "JOR"
+        },
+        {
+          "customerPrice": "0",
+          "territory": "JPN"
+        },
+        {
+          "customerPrice": "0",
+          "territory": "KAZ"
+        },
+        {
+          "customerPrice": "0",
+          "territory": "KEN"
+        },
+        {
+          "customerPrice": "0",
+          "territory": "KGZ"
+        },
+        {
+          "customerPrice": "0",
+          "territory": "KHM"
+        },
+        {
+          "customerPrice": "0",
+          "territory": "KNA"
+        },
+        {
+          "customerPrice": "0",
+          "territory": "KOR"
+        },
+        {
+          "customerPrice": "0",
+          "territory": "KWT"
+        },
+        {
+          "customerPrice": "0",
+          "territory": "LAO"
+        },
+        {
+          "customerPrice": "0",
+          "territory": "LBN"
+        },
+        {
+          "customerPrice": "0",
+          "territory": "LBR"
+        },
+        {
+          "customerPrice": "0",
+          "territory": "LBY"
+        },
+        {
+          "customerPrice": "0",
+          "territory": "LCA"
+        },
+        {
+          "customerPrice": "0",
+          "territory": "LKA"
+        },
+        {
+          "customerPrice": "0",
+          "territory": "LTU"
+        },
+        {
+          "customerPrice": "0",
+          "territory": "LUX"
+        },
+        {
+          "customerPrice": "0",
+          "territory": "LVA"
+        },
+        {
+          "customerPrice": "0",
+          "territory": "MAC"
+        },
+        {
+          "customerPrice": "0",
+          "territory": "MAR"
+        },
+        {
+          "customerPrice": "0",
+          "territory": "MDA"
+        },
+        {
+          "customerPrice": "0",
+          "territory": "MDG"
+        },
+        {
+          "customerPrice": "0",
+          "territory": "MDV"
+        },
+        {
+          "customerPrice": "0",
+          "territory": "MEX"
+        },
+        {
+          "customerPrice": "0",
+          "territory": "MKD"
+        },
+        {
+          "customerPrice": "0",
+          "territory": "MLI"
+        },
+        {
+          "customerPrice": "0",
+          "territory": "MLT"
+        },
+        {
+          "customerPrice": "0",
+          "territory": "MMR"
+        },
+        {
+          "customerPrice": "0",
+          "territory": "MNE"
+        },
+        {
+          "customerPrice": "0",
+          "territory": "MNG"
+        },
+        {
+          "customerPrice": "0",
+          "territory": "MOZ"
+        },
+        {
+          "customerPrice": "0",
+          "territory": "MRT"
+        },
+        {
+          "customerPrice": "0",
+          "territory": "MSR"
+        },
+        {
+          "customerPrice": "0",
+          "territory": "MUS"
+        },
+        {
+          "customerPrice": "0",
+          "territory": "MWI"
+        },
+        {
+          "customerPrice": "0",
+          "territory": "MYS"
+        },
+        {
+          "customerPrice": "0",
+          "territory": "NAM"
+        },
+        {
+          "customerPrice": "0",
+          "territory": "NER"
+        },
+        {
+          "customerPrice": "0",
+          "territory": "NGA"
+        },
+        {
+          "customerPrice": "0",
+          "territory": "NIC"
+        },
+        {
+          "customerPrice": "0",
+          "territory": "NLD"
+        },
+        {
+          "customerPrice": "0",
+          "territory": "NOR"
+        },
+        {
+          "customerPrice": "0",
+          "territory": "NPL"
+        },
+        {
+          "customerPrice": "0",
+          "territory": "NRU"
+        },
+        {
+          "customerPrice": "0",
+          "territory": "NZL"
+        },
+        {
+          "customerPrice": "0",
+          "territory": "OMN"
+        },
+        {
+          "customerPrice": "0",
+          "territory": "PAK"
+        },
+        {
+          "customerPrice": "0",
+          "territory": "PAN"
+        },
+        {
+          "customerPrice": "0",
+          "territory": "PER"
+        },
+        {
+          "customerPrice": "0",
+          "territory": "PHL"
+        },
+        {
+          "customerPrice": "0",
+          "territory": "PLW"
+        },
+        {
+          "customerPrice": "0",
+          "territory": "PNG"
+        },
+        {
+          "customerPrice": "0",
+          "territory": "POL"
+        },
+        {
+          "customerPrice": "0",
+          "territory": "PRT"
+        },
+        {
+          "customerPrice": "0",
+          "territory": "PRY"
+        },
+        {
+          "customerPrice": "0",
+          "territory": "QAT"
+        },
+        {
+          "customerPrice": "0",
+          "territory": "ROU"
+        },
+        {
+          "customerPrice": "0",
+          "territory": "RUS"
+        },
+        {
+          "customerPrice": "0",
+          "territory": "RWA"
+        },
+        {
+          "customerPrice": "0",
+          "territory": "SAU"
+        },
+        {
+          "customerPrice": "0",
+          "territory": "SEN"
+        },
+        {
+          "customerPrice": "0",
+          "territory": "SGP"
+        },
+        {
+          "customerPrice": "0",
+          "territory": "SLB"
+        },
+        {
+          "customerPrice": "0",
+          "territory": "SLE"
+        },
+        {
+          "customerPrice": "0",
+          "territory": "SLV"
+        },
+        {
+          "customerPrice": "0",
+          "territory": "SRB"
+        },
+        {
+          "customerPrice": "0",
+          "territory": "STP"
+        },
+        {
+          "customerPrice": "0",
+          "territory": "SUR"
+        },
+        {
+          "customerPrice": "0",
+          "territory": "SVK"
+        },
+        {
+          "customerPrice": "0",
+          "territory": "SVN"
+        },
+        {
+          "customerPrice": "0",
+          "territory": "SWE"
+        },
+        {
+          "customerPrice": "0",
+          "territory": "SWZ"
+        },
+        {
+          "customerPrice": "0",
+          "territory": "SYC"
+        },
+        {
+          "customerPrice": "0",
+          "territory": "TCA"
+        },
+        {
+          "customerPrice": "0",
+          "territory": "TCD"
+        },
+        {
+          "customerPrice": "0",
+          "territory": "THA"
+        },
+        {
+          "customerPrice": "0",
+          "territory": "TJK"
+        },
+        {
+          "customerPrice": "0",
+          "territory": "TKM"
+        },
+        {
+          "customerPrice": "0",
+          "territory": "TON"
+        },
+        {
+          "customerPrice": "0",
+          "territory": "TTO"
+        },
+        {
+          "customerPrice": "0",
+          "territory": "TUN"
+        },
+        {
+          "customerPrice": "0",
+          "territory": "TUR"
+        },
+        {
+          "customerPrice": "0",
+          "territory": "TWN"
+        },
+        {
+          "customerPrice": "0",
+          "territory": "TZA"
+        },
+        {
+          "customerPrice": "0",
+          "territory": "UGA"
+        },
+        {
+          "customerPrice": "0",
+          "territory": "UKR"
+        },
+        {
+          "customerPrice": "0",
+          "territory": "URY"
+        },
+        {
+          "customerPrice": "0",
+          "territory": "UZB"
+        },
+        {
+          "customerPrice": "0",
+          "territory": "VCT"
+        },
+        {
+          "customerPrice": "0",
+          "territory": "VEN"
+        },
+        {
+          "customerPrice": "0",
+          "territory": "VGB"
+        },
+        {
+          "customerPrice": "0",
+          "territory": "VNM"
+        },
+        {
+          "customerPrice": "0",
+          "territory": "VUT"
+        },
+        {
+          "customerPrice": "0",
+          "territory": "XKS"
+        },
+        {
+          "customerPrice": "0",
+          "territory": "YEM"
+        },
+        {
+          "customerPrice": "0",
+          "territory": "ZAF"
+        },
+        {
+          "customerPrice": "0",
+          "territory": "ZMB"
+        },
+        {
+          "customerPrice": "0",
+          "territory": "ZWE"
+        }
       ]
     }
   },
@@ -726,14 +1355,37 @@
   "resources": {
     "ageRatingDeclaration": {
       "fields": {
+        "advertising": false,
+        "ageAssurance": false,
         "ageRatingOverrideV2": "NONE",
-        "koreaAgeRatingOverride": "NONE"
+        "alcoholTobaccoOrDrugUseOrReferences": "NONE",
+        "contests": "NONE",
+        "gambling": false,
+        "gamblingSimulated": "NONE",
+        "gunsOrOtherWeapons": "NONE",
+        "healthOrWellnessTopics": false,
+        "horrorOrFearThemes": "NONE",
+        "koreaAgeRatingOverride": "NONE",
+        "lootBox": false,
+        "matureOrSuggestiveThemes": "NONE",
+        "medicalOrTreatmentInformation": "NONE",
+        "messagingAndChat": false,
+        "parentalControls": false,
+        "profanityOrCrudeHumor": "NONE",
+        "sexualContentGraphicAndNudity": "NONE",
+        "sexualContentOrNudity": "NONE",
+        "unrestrictedWebAccess": false,
+        "userGeneratedContent": false,
+        "violenceCartoonOrFantasy": "NONE",
+        "violenceRealistic": "NONE",
+        "violenceRealisticProlongedGraphicOrSadistic": "NONE"
       },
       "id": "09d76ec7-9779-4756-a1d0-36be32405da0",
       "type": "ageRatingDeclarations"
     },
     "app": {
       "fields": {
+        "contentRightsDeclaration": "DOES_NOT_USE_THIRD_PARTY_CONTENT",
         "primaryLocale": "en-US"
       },
       "id": "6811720640",
@@ -741,7 +1393,8 @@
     },
     "appInfo": {
       "fields": {
-
+        "primaryCategory": "FINANCE",
+        "secondaryCategory": "UTILITIES"
       },
       "id": "09d76ec7-9779-4756-a1d0-36be32405da0",
       "type": "appInfos"
@@ -749,13 +1402,27 @@
     "appInfoLocalization:en-US": {
       "fields": {
         "name": "Sato - Bitcoin Tracker",
-        "subtitle": "Watch-only BTC wallet balance"
+        "privacyPolicyUrl": "https://mekarya.studio/privacy/sato",
+        "subtitle": "Watch BTC wallets without keys"
       },
       "id": "50e06c58-3b25-41ec-bad5-03a9df15fc6f",
       "type": "appInfoLocalizations"
     },
+    "appStoreReviewDetail:IOS:1.0": {
+      "fields": {
+        "contactEmail": "pratamaiosi@gmail.com",
+        "contactFirstName": "Iosi",
+        "contactLastName": "Pratama Putra",
+        "contactPhone": "+6285121965123",
+        "demoAccountRequired": false,
+        "notes": "Sato is a read-only (\"watch-only\") Bitcoin tracker. It holds no private keys, cannot send or receive funds, and has no trading, exchange or custody features. There is no account system and no sign-in, so no demo account is needed.\n\nTo try the app:\n1. Tap Continue on the welcome screen, then create a wallet and give it any name.\n2. Paste any public Bitcoin address to see its balance. A well-known public address with a balance you can use for testing: 1A1zP1eP5QGefi2DMPTfTL5SLmv7DivfNa\n3. Pull to refresh to re-fetch the balance and price.\n4. Settings lets you switch the fiat currency, hide fiat, and show amounts in satoshis.\n\nData sources: on-chain balances come from public Esplora block explorers (mempool.space and mirrors); the BTC price comes from CoinGecko. Both are public, unauthenticated endpoints. Wallet names and addresses are stored only on the device.\n\nIn-app purchase: Sato Plus is a one-time non-consumable that lifts the one-wallet limit. The paywall appears when adding a second wallet, and can also be reached from Settings, where Restore Purchase is available."
+      },
+      "id": "4db0648c-f258-42c8-ab1e-fd6a67530d77",
+      "type": "appStoreReviewDetails"
+    },
     "appStoreVersion:IOS:1.0": {
       "fields": {
+        "copyright": "2026 Iosi Pratama Putra",
         "releaseType": "AFTER_APPROVAL",
         "versionString": "1.0"
       },
@@ -764,10 +1431,56 @@
     },
     "appStoreVersionLocalization:IOS:1.0:en-US": {
       "fields": {
-
+        "description": "Sato is a calm, watch-only bitcoin tracker. See what you've saved without the noise.\n\nPaste a public address and see your balance. No account. No seed phrase. No keys. Sato can only look. It can never move your bitcoin.\n\nWHY SATO\n\nBitcoin goes up and down in dollars, and most apps make you feel every swing: charts, alerts, red numbers. But bitcoin tends to reward the people who do nothing. Sato is made for that. Open it now and then, see where you stand, close it again.\n\nWHAT YOU CAN DO\n\n- Track several wallets, each with one or more addresses\n- Organize by goal, like a house, college, or retirement, with your own icon and color\n- See balances in BTC or sats\n- Show value in 29 currencies, or hide fiat completely\n- See pending amounts separately, so nothing surprises you\n- Use Legacy, SegWit, and Taproot addresses\n\nPRIVATE BY DESIGN\n\nNo account, no analytics, no servers of our own. Your wallets stay on your phone. Sato only asks public block explorers for balances and a price service for exchange rates. Nothing identifies you, because there's nothing to identify.\n\nSATO PLUS\n\nSato is free with one wallet. A single one-time purchase — never a subscription — unlocks as many wallets as you like.",
+        "keywords": "sats,satoshi,hodl,cold,storage,hardware,address,portfolio,crypto,price,stack,savings,balance,monitor",
+        "marketingUrl": "https://mekarya.studio/apps/sato",
+        "promotionalText": "For long-term bitcoin holders saving for the future, Sato gives you peace, not price alerts or meme coins.",
+        "supportUrl": "https://mekarya.studio/support/sato"
       },
       "id": "3e16736a-a727-44b4-b57e-4a2c8d999073",
       "type": "appStoreVersionLocalizations"
+    },
+    "appStoreVersionScreenshotSet:IOS:1.0:en-US:APP_IPHONE_67": {
+      "fields": {
+        "screenshots": [
+          {
+            "file": "01-track.png",
+            "fileSize": 527654,
+            "sourceFileChecksum": "e75066e2d51972cd4ab2bb088ae02969"
+          },
+          {
+            "file": "02-paste.png",
+            "fileSize": 404310,
+            "sourceFileChecksum": "685a243f6d486bb65bd9ef9a60b41ff1"
+          },
+          {
+            "file": "03-purpose.png",
+            "fileSize": 529153,
+            "sourceFileChecksum": "7a204e16040c7fa05c394adccb69352a"
+          },
+          {
+            "file": "04-units.png",
+            "fileSize": 430328,
+            "sourceFileChecksum": "bc466626cf4795a884e23b967cb7e169"
+          },
+          {
+            "file": "05-manifesto.png",
+            "fileSize": 232000,
+            "sourceFileChecksum": "0aaf305832cafe7a0d4124dd293a03c1"
+          }
+        ]
+      },
+      "id": "f65705d3-463e-4656-a252-095fb839d13b",
+      "type": "appScreenshotSets"
+    },
+    "availability": {
+      "fields": {
+        "territories": [
+
+        ]
+      },
+      "id": "6811720640",
+      "type": "appAvailabilities"
     },
     "inAppPurchase:com.iosipratama.BitcoinTracker.plus": {
       "fields": {
@@ -779,9 +1492,193 @@
       "id": "6813851523",
       "type": "inAppPurchases"
     },
+    "inAppPurchaseAvailability:com.iosipratama.BitcoinTracker.plus": {
+      "fields": {
+        "availableInNewTerritories": true,
+        "availableTerritories": [
+          "AFG",
+          "AGO",
+          "AIA",
+          "ALB",
+          "ARE",
+          "ARG",
+          "ARM",
+          "ATG",
+          "AUS",
+          "AUT",
+          "AZE",
+          "BEL",
+          "BEN",
+          "BFA",
+          "BGR",
+          "BHR",
+          "BHS",
+          "BIH",
+          "BLR",
+          "BLZ",
+          "BMU",
+          "BOL",
+          "BRA",
+          "BRB",
+          "BRN",
+          "BTN",
+          "BWA",
+          "CAN",
+          "CHE",
+          "CHL",
+          "CHN",
+          "CIV",
+          "CMR",
+          "COD",
+          "COG",
+          "COL",
+          "CPV",
+          "CRI",
+          "CYM",
+          "CYP",
+          "CZE",
+          "DEU",
+          "DMA",
+          "DNK",
+          "DOM",
+          "DZA",
+          "ECU",
+          "EGY",
+          "ESP",
+          "EST",
+          "FIN",
+          "FJI",
+          "FRA",
+          "FSM",
+          "GAB",
+          "GBR",
+          "GEO",
+          "GHA",
+          "GMB",
+          "GNB",
+          "GRC",
+          "GRD",
+          "GTM",
+          "GUY",
+          "HKG",
+          "HND",
+          "HRV",
+          "HUN",
+          "IDN",
+          "IND",
+          "IRL",
+          "IRQ",
+          "ISL",
+          "ISR",
+          "ITA",
+          "JAM",
+          "JOR",
+          "JPN",
+          "KAZ",
+          "KEN",
+          "KGZ",
+          "KHM",
+          "KNA",
+          "KOR",
+          "KWT",
+          "LAO",
+          "LBN",
+          "LBR",
+          "LBY",
+          "LCA",
+          "LKA",
+          "LTU",
+          "LUX",
+          "LVA",
+          "MAC",
+          "MAR",
+          "MDA",
+          "MDG",
+          "MDV",
+          "MEX",
+          "MKD",
+          "MLI",
+          "MLT",
+          "MMR",
+          "MNE",
+          "MNG",
+          "MOZ",
+          "MRT",
+          "MSR",
+          "MUS",
+          "MWI",
+          "MYS",
+          "NAM",
+          "NER",
+          "NGA",
+          "NIC",
+          "NLD",
+          "NOR",
+          "NPL",
+          "NRU",
+          "NZL",
+          "OMN",
+          "PAK",
+          "PAN",
+          "PER",
+          "PHL",
+          "PLW",
+          "PNG",
+          "POL",
+          "PRT",
+          "PRY",
+          "QAT",
+          "ROU",
+          "RUS",
+          "RWA",
+          "SAU",
+          "SEN",
+          "SGP",
+          "SLB",
+          "SLE",
+          "SLV",
+          "SRB",
+          "STP",
+          "SUR",
+          "SVK",
+          "SVN",
+          "SWE",
+          "SWZ",
+          "SYC",
+          "TCA",
+          "TCD",
+          "THA",
+          "TJK",
+          "TKM",
+          "TON",
+          "TTO",
+          "TUN",
+          "TUR",
+          "TWN",
+          "TZA",
+          "UGA",
+          "UKR",
+          "URY",
+          "USA",
+          "UZB",
+          "VCT",
+          "VEN",
+          "VGB",
+          "VNM",
+          "VUT",
+          "XKS",
+          "YEM",
+          "ZAF",
+          "ZMB",
+          "ZWE"
+        ]
+      },
+      "id": "6813851523",
+      "type": "inAppPurchaseAvailabilities"
+    },
     "inAppPurchaseLocalization:com.iosipratama.BitcoinTracker.plus:en-US": {
       "fields": {
-        "description": "Track more than two wallets. Pay once.",
+        "description": "Track more than one wallet. Pay once.",
         "name": "Sato Plus"
       },
       "id": "cc4b5455-81b8-4857-be16-725db7a77c0a",
@@ -794,6 +1691,106 @@
           {
             "customerPrice": "9.99",
             "territory": "USA"
+          },
+          {
+            "customerPrice": "6.49",
+            "territory": "BGR"
+          },
+          {
+            "customerPrice": "20.99",
+            "territory": "BRA"
+          },
+          {
+            "customerPrice": "6490",
+            "territory": "CHL"
+          },
+          {
+            "customerPrice": "160",
+            "territory": "CZE"
+          },
+          {
+            "customerPrice": "175",
+            "territory": "EGY"
+          },
+          {
+            "customerPrice": "6.49",
+            "territory": "EST"
+          },
+          {
+            "customerPrice": "6.49",
+            "territory": "HRV"
+          },
+          {
+            "customerPrice": "2900",
+            "territory": "HUN"
+          },
+          {
+            "customerPrice": "70000",
+            "territory": "IDN"
+          },
+          {
+            "customerPrice": "350",
+            "territory": "IND"
+          },
+          {
+            "customerPrice": "4.19",
+            "territory": "KEN"
+          },
+          {
+            "customerPrice": "11000",
+            "territory": "KOR"
+          },
+          {
+            "customerPrice": "6.49",
+            "territory": "LTU"
+          },
+          {
+            "customerPrice": "6.49",
+            "territory": "LVA"
+          },
+          {
+            "customerPrice": "129",
+            "territory": "MEX"
+          },
+          {
+            "customerPrice": "5200",
+            "territory": "NGA"
+          },
+          {
+            "customerPrice": "1000",
+            "territory": "PAK"
+          },
+          {
+            "customerPrice": "210",
+            "territory": "PHL"
+          },
+          {
+            "customerPrice": "32.49",
+            "territory": "POL"
+          },
+          {
+            "customerPrice": "32.49",
+            "territory": "ROU"
+          },
+          {
+            "customerPrice": "6.49",
+            "territory": "SVK"
+          },
+          {
+            "customerPrice": "6.49",
+            "territory": "SVN"
+          },
+          {
+            "customerPrice": "175",
+            "territory": "TUR"
+          },
+          {
+            "customerPrice": "7.79",
+            "territory": "UKR"
+          },
+          {
+            "customerPrice": "105000",
+            "territory": "VNM"
           }
         ]
       },
@@ -814,7 +1811,10 @@
       "fields": {
         "baseTerritory": "USA",
         "manualPrices": [
-
+          {
+            "customerPrice": "0",
+            "territory": "USA"
+          }
         ]
       },
       "id": "6811720640",
