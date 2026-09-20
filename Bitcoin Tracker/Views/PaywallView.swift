@@ -74,10 +74,9 @@ struct PaywallView: View {
                 .foregroundStyle(Custom.labelPrimary)
                 .opacity(0.8)
 
-            Text("Thanks for helping me keep improving this app 🫶")
+            Text("Thanks for the support 🫶")
                 .font(.system(size: 14))
                 .foregroundStyle(Custom.labelTertiary)
-                .frame(maxWidth: 170, alignment: .leading)
 
             if let message = store.message {
                 Text(message)

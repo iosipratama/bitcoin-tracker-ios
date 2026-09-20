@@ -93,9 +93,9 @@ final class StoreManager {
     /// most storefronts. With no product there is no price to quote.
     var priceLine: String {
         if let product {
-            "\(product.displayPrice) · pay once,\nno subscription, ever."
+            "\(product.displayPrice) · Pay once.\nFree updates, forever.\nNo subscription."
         } else {
-            "Pay once, no subscription, ever."
+            "Pay once.\nFree updates, forever.\nNo subscription."
         }
     }
 
