@@ -5,6 +5,8 @@ import SwiftUI
 /// re-arming the flag from Debug tears the settings sheet down with it.
 struct RootView: View {
     @AppStorage(AppStorageKey.hasCompletedWelcome) private var hasCompletedWelcome = false
+    @Environment(PortfolioViewModel.self) private var viewModel
+    @Environment(\.scenePhase) private var scenePhase
 
     var body: some View {
         ZStack {
@@ -19,6 +21,16 @@ struct RootView: View {
                     withAnimation(.smooth) { hasCompletedWelcome = true }
                 }
                 .transition(.opacity.combined(with: .offset(y: -24)))
+            }
+        }
+        // One modifier at the root, so the flip is confirmed from whichever
+        // screen — or sheet — happens to be open.
+        .sensoryFeedback(.impact(weight: .medium), trigger: viewModel.hidesBalances)
+        .onChange(of: scenePhase, initial: true) { _, phase in
+            if phase == .active {
+                viewModel.startFlipMonitoring()
+            } else {
+                viewModel.stopFlipMonitoring()
             }
         }
     }

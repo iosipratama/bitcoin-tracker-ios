@@ -21,6 +21,7 @@ struct SettingsView: View {
                 VStack(alignment: .leading, spacing: 28) {
                     bitcoinSection(showSatoshi: $bindable.showSatoshi)
                     fiatSection(showFiat: $bindable.showFiat, currency: $bindable.selectedCurrency)
+                    appSection(flipToHide: $bindable.flipToHideBalance)
                     supportSection
                     #if DEBUG
                     debugSection
@@ -126,6 +127,20 @@ struct SettingsView: View {
             // The cached response carries every currency, so this only matters
             // when the first fetch failed.
             Task { await viewModel.refreshPrices() }
+        }
+    }
+
+    private func appSection(flipToHide: Binding<Bool>) -> some View {
+        SettingsGroup(
+            title: "App",
+            footer: "Flip your device down to quickly hide and show balances"
+        ) {
+            SettingsRow(icon: .iconEyeClosed, title: "Flip-to-Hide Balance") {
+                Toggle("Flip-to-Hide Balance", isOn: flipToHide)
+                    .labelsHidden()
+                    .tint(.brand)
+            }
+            .onTapGesture { flipToHide.wrappedValue.toggle() }
         }
     }
 

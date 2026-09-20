@@ -9,7 +9,14 @@ final class PortfolioViewModel {
         static let currency = "selectedCurrency"
         static let showFiat = "showFiat"
         static let showSatoshi = "showSatoshi"
+        static let flipToHide = "flipToHideBalance"
     }
+
+    /// Asterisks stand in for the digits while balances are hidden. Six for
+    /// bitcoin and four for fiat: enough to read as a covered figure without
+    /// suggesting how many digits are underneath.
+    private static let bitcoinMask = 6
+    private static let fiatMask = 4
 
     /// Public explorer APIs throttle aggressive clients, and a throttled response
     /// surfaces as an error badge on a wallet row. Stay well under.
@@ -50,12 +57,85 @@ final class PortfolioViewModel {
         }
     }
 
+    /// Turn the phone face down and the figures become asterisks; turn it face
+    /// down again to bring them back. Off by default: a balance that vanishes
+    /// unasked reads as a bug.
+    var flipToHideBalance: Bool {
+        didSet {
+            guard flipToHideBalance != oldValue else { return }
+            UserDefaults.standard.set(flipToHideBalance, forKey: Key.flipToHide)
+
+            if flipToHideBalance {
+                flipDetector.start()
+            } else {
+                flipDetector.stop()
+                balancesHidden = false
+            }
+        }
+    }
+
+    /// Latched by the flip rather than mirroring the orientation, so a covered
+    /// balance stays covered once the phone is picked back up. Never persisted:
+    /// a launch always starts with the figures showing.
+    private(set) var balancesHidden = false
+
+    #if DEBUG
+    /// Wins over the real thing, so the masking can be checked on a simulator,
+    /// which has no orientation to report.
+    var forcesHiddenBalances = false
+
+    /// The latest gravity sample and what the detector made of it, live, for
+    /// the debug screen.
+    private(set) var flipReadout = "not monitoring"
+    #endif
+
+    /// The one question the formatters ask.
+    var hidesBalances: Bool {
+        #if DEBUG
+        if forcesHiddenBalances { return true }
+        #endif
+        return balancesHidden
+    }
+
+    var isMonitoringFlip: Bool { flipDetector.isMonitoring }
+
+    private let flipDetector = FlipDetector()
+
     init() {
         let defaults = UserDefaults.standard
         selectedCurrency = defaults.string(forKey: Key.currency)
             .flatMap(FiatCurrency.init(rawValue:)) ?? .usd
         showFiat = defaults.object(forKey: Key.showFiat) as? Bool ?? true
         showSatoshi = defaults.object(forKey: Key.showSatoshi) as? Bool ?? false
+        flipToHideBalance = defaults.bool(forKey: Key.flipToHide)
+
+        flipDetector.onFlip = { [weak self] in
+            self?.balancesHidden.toggle()
+        }
+
+        #if DEBUG
+        flipDetector.onSample = { [weak self] gravityZ, isFaceDown in
+            let z = gravityZ.formatted(.number.precision(.fractionLength(2)).sign(strategy: .always()))
+            self?.flipReadout = "z \(z) · \(isFaceDown ? "face down" : "not face down")"
+        }
+        #endif
+    }
+
+    // MARK: - Flip to hide
+
+    /// Driven by the scene phase: nothing reads the accelerometer while the app
+    /// is in the background or behind a locked screen.
+    func startFlipMonitoring() {
+        guard flipToHideBalance else { return }
+        flipDetector.start()
+    }
+
+    func stopFlipMonitoring() {
+        flipDetector.stop()
+
+        #if DEBUG
+        flipReadout = "not monitoring"
+        #endif
     }
 
     var currentPrice: Double {
@@ -77,13 +157,17 @@ final class PortfolioViewModel {
     }
 
     func formattedBTC(_ value: Double) -> String {
-        showSatoshi ? "\(Int64((value * .satoshisPerBTC).rounded()).satsDigits) sats" : value.btcDisplay
+        let figure = showSatoshi
+            ? "\(Int64((value * .satoshisPerBTC).rounded()).satsDigits) sats"
+            : value.btcDisplay
+        return hidesBalances ? masked(figure, digits: Self.bitcoinMask) : figure
     }
 
     /// The bare figure, without a unit. The card draws the unit itself so it can
     /// style it separately.
     func formattedAmount(btc: Double) -> String {
-        showSatoshi ? Int64((btc * .satoshisPerBTC).rounded()).satsDigits : btc.btcDigits
+        guard !hidesBalances else { return String(repeating: "*", count: Self.bitcoinMask) }
+        return showSatoshi ? Int64((btc * .satoshisPerBTC).rounded()).satsDigits : btc.btcDigits
     }
 
     /// ₿ leads a BTC figure; a sats figure is trailed by its unit instead, since
@@ -94,7 +178,8 @@ final class PortfolioViewModel {
     /// Signed so an unconfirmed outgoing spend reads as "-0.0010 BTC pending".
     func formattedPending(_ satoshis: Int64) -> String {
         let sign = satoshis < 0 ? "-" : "+"
-        return "\(sign)\(abs(Double(satoshis) / .satoshisPerBTC).btcDisplay)"
+        let figure = "\(sign)\(abs(Double(satoshis) / .satoshisPerBTC).btcDisplay)"
+        return hidesBalances ? masked(figure, digits: Self.bitcoinMask) : figure
     }
 
     /// Delegates fraction digits to the currency itself — JPY, KRW and VND have
@@ -103,9 +188,10 @@ final class PortfolioViewModel {
     /// only noise.
     func formattedFiat(_ value: Double) -> String {
         let style = FloatingPointFormatStyle<Double>.Currency(code: selectedCurrency.rawValue)
-        return abs(value) >= 10_000
+        let figure = abs(value) >= 10_000
             ? value.formatted(style.precision(.fractionLength(0)))
             : value.formatted(style)
+        return hidesBalances ? masked(figure, digits: Self.fiatMask) : figure
     }
 
     /// Whole currency units, used wherever a balance is displayed. Cents are
@@ -113,9 +199,24 @@ final class PortfolioViewModel {
     /// `formattedFiat` keeps them for the add-address balance preview, where the
     /// exact figure is being confirmed.
     func formattedFiatWhole(_ value: Double) -> String {
-        value.formatted(
+        let figure = value.formatted(
             FloatingPointFormatStyle<Double>.Currency(code: selectedCurrency.rawValue)
                 .precision(.fractionLength(0))
+        )
+        return hidesBalances ? masked(figure, digits: Self.fiatMask) : figure
+    }
+
+    /// Replaces the run of digits in an already-formatted figure rather than
+    /// building a masked one from scratch, so the currency symbol, the sign and
+    /// the unit all survive wherever the locale happens to put them: "$1,234"
+    /// masks to "$****" and "1 234 kr" to "**** kr".
+    private func masked(_ figure: String, digits: Int) -> String {
+        guard let first = figure.firstIndex(where: \.isNumber),
+              let last = figure.lastIndex(where: \.isNumber) else { return figure }
+
+        return figure.replacingCharacters(
+            in: first...last,
+            with: String(repeating: "*", count: digits)
         )
     }
 
