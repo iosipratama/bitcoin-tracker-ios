@@ -1503,7 +1503,7 @@
       "fields": {
         "name": "Sato - Bitcoin Tracker",
         "privacyPolicyUrl": "https://mekarya.studio/privacy/sato",
-        "subtitle": "Watch-only BTC wallet balance"
+        "subtitle": "Watch BTC wallets without keys"
       },
       "id": "50e06c58-3b25-41ec-bad5-03a9df15fc6f",
       "type": "appInfoLocalizations"
@@ -1531,10 +1531,10 @@
     },
     "appStoreVersionLocalization:IOS:1.0:en-US": {
       "fields": {
-        "description": "Sato is a calm, watch-only tracker for the bitcoin you’re not going to touch.\n\nPaste a public address and Sato shows you what’s there. No account to create, no seed phrase to hand over, no private keys anywhere near your phone. Sato can only ever look.\n\nWHY IT EXISTS\n\nSaving in bitcoin is not easy. It goes up and down in dollars, and most apps make sure you feel every bit of it — charts, alerts, red numbers everywhere. But bitcoin tends to reward the people who do nothing. Sato is built for exactly that: an app you open now and then, see where you stand, and close again.\n\nWHAT IT DOES\n\n• Watch-only wallets — group one or more public addresses under a name you choose\n• Live on-chain balances from public block explorers\n• Pending amounts shown separately, so unconfirmed activity is never a surprise\n• Optional fiat value in 29 currencies, including USD, EUR, GBP, JPY and IDR\n• Hide fiat entirely and keep your eyes on the sats\n• Show balances in BTC or in satoshis\n• Wallet symbols and colors, so your long-term stack doesn’t look like the gift you’re saving for the kids\n• Legacy, SegWit and Taproot addresses all supported\n• A quiet dark interface, built natively for iOS\n\nPRIVACY\n\nSato has no account system, no backend of its own and no analytics. Your wallet names and addresses stay on your device. The only requests it makes are to public block explorers for balances and to a price service for the exchange rate. Nothing identifies you, because there is nothing to identify.\n\nSATO PLUS\n\nSato is free to use with one wallet. A single one-time purchase — never a subscription — unlocks as many wallets as you like and helps keep the app maintained.\n\nBalance data from mempool.space. Price data from CoinGecko.",
+        "description": "Sato is a calm, watch-only bitcoin tracker. See what you've saved without the noise.\n\nPaste a public address and see your balance. No account. No seed phrase. No keys. Sato can only look. It can never move your bitcoin.\n\nWHY SATO\n\nBitcoin goes up and down in dollars, and most apps make you feel every swing: charts, alerts, red numbers. But bitcoin tends to reward the people who do nothing. Sato is made for that. Open it now and then, see where you stand, close it again.\n\nWHAT YOU CAN DO\n\n- Track several wallets, each with one or more addresses\n- Organize by goal, like a house, college, or retirement, with your own icon and color\n- See balances in BTC or sats\n- Show value in 29 currencies, or hide fiat completely\n- See pending amounts separately, so nothing surprises you\n- Use Legacy, SegWit, and Taproot addresses\n\nPRIVATE BY DESIGN\n\nNo account, no analytics, no servers of our own. Your wallets stay on your phone. Sato only asks public block explorers for balances and a price service for exchange rates. Nothing identifies you, because there's nothing to identify.",
         "keywords": "sats,satoshi,hodl,cold,storage,hardware,address,portfolio,crypto,price,stack,savings,checker,monitor",
         "marketingUrl": "https://mekarya.studio/apps/sato",
-        "promotionalText": "For the bitcoin you’re not going to touch. Paste a public address, see the balance, close the app. No account, no seed phrase, no charts shouting at you.",
+        "promotionalText": "For long-term bitcoin holders saving for the future, Sato gives you peace, not price alerts or meme coins.",
         "supportUrl": "https://mekarya.studio/support/sato"
       },
       "id": "3e16736a-a727-44b4-b57e-4a2c8d999073",
@@ -1565,8 +1565,8 @@
           },
           {
             "file": "05-manifesto.png",
-            "fileSize": 233147,
-            "sourceFileChecksum": "019a2183a32c0cb748d8e255d8474942"
+            "fileSize": 232000,
+            "sourceFileChecksum": "0aaf305832cafe7a0d4124dd293a03c1"
           }
         ]
       },
