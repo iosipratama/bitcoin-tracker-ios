@@ -2,10 +2,6 @@
   "baseTerritory": "USA",
   "manualPrices": [
     {
-      "customerPrice": "9.99",
-      "territory": "USA"
-    },
-    {
       "customerPrice": "6.49",
       "territory": "BGR"
     },
@@ -18,11 +14,11 @@
       "territory": "CHL"
     },
     {
-      "customerPrice": "160.0",
+      "customerPrice": "160",
       "territory": "CZE"
     },
     {
-      "customerPrice": "175.0",
+      "customerPrice": "175",
       "territory": "EGY"
     },
     {
@@ -42,8 +38,12 @@
       "territory": "IDN"
     },
     {
-      "customerPrice": "350.0",
+      "customerPrice": "350",
       "territory": "IND"
+    },
+    {
+      "customerPrice": "4.19",
+      "territory": "KEN"
     },
     {
       "customerPrice": "11000",
@@ -58,11 +58,19 @@
       "territory": "LVA"
     },
     {
-      "customerPrice": "129.0",
+      "customerPrice": "129",
       "territory": "MEX"
     },
     {
-      "customerPrice": "210.0",
+      "customerPrice": "5200",
+      "territory": "NGA"
+    },
+    {
+      "customerPrice": "1000",
+      "territory": "PAK"
+    },
+    {
+      "customerPrice": "210",
       "territory": "PHL"
     },
     {
@@ -82,12 +90,16 @@
       "territory": "SVN"
     },
     {
-      "customerPrice": "175.0",
+      "customerPrice": "175",
       "territory": "TUR"
     },
     {
       "customerPrice": "7.79",
       "territory": "UKR"
+    },
+    {
+      "customerPrice": "9.99",
+      "territory": "USA"
     },
     {
       "customerPrice": "105000",
