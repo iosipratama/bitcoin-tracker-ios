@@ -1,27 +1,42 @@
 import SwiftUI
 
 /// A titled group of settings rows on a single rounded surface. Rows are
-/// separated by spacing alone — no hairlines.
+/// separated by spacing alone — no hairlines. An optional footer explains the
+/// group below the surface, the way the system's own grouped lists do.
 struct SettingsGroup<Content: View>: View {
     let title: String?
+    var footer: String?
     @ViewBuilder var content: Content
 
     var body: some View {
-        VStack(alignment: .leading, spacing: 8) {
-            if let title {
-                Text(title)
-                    .font(.system(size: 17, weight: .semibold))
-                    .foregroundStyle(.secondaryLabel)
-                    .padding(.horizontal, 4)
+        // Two stacks rather than one: the footer sits 12 below the surface,
+        // which a shared spacing of 8 would turn into 20.
+        VStack(alignment: .leading, spacing: 0) {
+            VStack(alignment: .leading, spacing: 8) {
+                if let title {
+                    Text(title)
+                        .font(.system(size: 17, weight: .semibold))
+                        .foregroundStyle(.secondaryLabel)
+                        .padding(.horizontal, 4)
+                }
+
+                VStack(spacing: 0) {
+                    content
+                }
+                .background(
+                    RoundedRectangle(cornerRadius: .cardRadius, style: .continuous)
+                        .fill(.groupedBackground)
+                )
             }
 
-            VStack(spacing: 0) {
-                content
+            if let footer {
+                Text(footer)
+                    .font(.system(size: 15))
+                    .foregroundStyle(Custom.labelSecondary)
+                    .fixedSize(horizontal: false, vertical: true)
+                    .padding(.horizontal, 4)
+                    .padding(.top, 12)
             }
-            .background(
-                RoundedRectangle(cornerRadius: .cardRadius, style: .continuous)
-                    .fill(.groupedBackground)
-            )
         }
     }
 }
