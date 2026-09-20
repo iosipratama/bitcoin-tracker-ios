@@ -4,6 +4,94 @@
     {
       "customerPrice": "9.99",
       "territory": "USA"
+    },
+    {
+      "customerPrice": "6.49",
+      "territory": "BGR"
+    },
+    {
+      "customerPrice": "20.99",
+      "territory": "BRA"
+    },
+    {
+      "customerPrice": "6490",
+      "territory": "CHL"
+    },
+    {
+      "customerPrice": "160.0",
+      "territory": "CZE"
+    },
+    {
+      "customerPrice": "175.0",
+      "territory": "EGY"
+    },
+    {
+      "customerPrice": "6.49",
+      "territory": "EST"
+    },
+    {
+      "customerPrice": "6.49",
+      "territory": "HRV"
+    },
+    {
+      "customerPrice": "2900",
+      "territory": "HUN"
+    },
+    {
+      "customerPrice": "70000",
+      "territory": "IDN"
+    },
+    {
+      "customerPrice": "350.0",
+      "territory": "IND"
+    },
+    {
+      "customerPrice": "11000",
+      "territory": "KOR"
+    },
+    {
+      "customerPrice": "6.49",
+      "territory": "LTU"
+    },
+    {
+      "customerPrice": "6.49",
+      "territory": "LVA"
+    },
+    {
+      "customerPrice": "129.0",
+      "territory": "MEX"
+    },
+    {
+      "customerPrice": "210.0",
+      "territory": "PHL"
+    },
+    {
+      "customerPrice": "32.49",
+      "territory": "POL"
+    },
+    {
+      "customerPrice": "32.49",
+      "territory": "ROU"
+    },
+    {
+      "customerPrice": "6.49",
+      "territory": "SVK"
+    },
+    {
+      "customerPrice": "6.49",
+      "territory": "SVN"
+    },
+    {
+      "customerPrice": "175.0",
+      "territory": "TUR"
+    },
+    {
+      "customerPrice": "7.79",
+      "territory": "UKR"
+    },
+    {
+      "customerPrice": "105000",
+      "territory": "VNM"
     }
   ]
 }
