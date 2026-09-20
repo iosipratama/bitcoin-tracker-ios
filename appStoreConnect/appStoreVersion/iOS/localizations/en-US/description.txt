@@ -18,3 +18,7 @@ WHAT YOU CAN DO
 PRIVATE BY DESIGN
 
 No account, no analytics, no servers of our own. Your wallets stay on your phone. Sato only asks public block explorers for balances and a price service for exchange rates. Nothing identifies you, because there's nothing to identify.
+
+SATO PLUS
+
+Sato is free with one wallet. A single one-time purchase — never a subscription — unlocks as many wallets as you like.

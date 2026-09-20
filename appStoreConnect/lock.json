@@ -30,9 +30,9 @@
           },
           {
             "fileName": "05-manifesto.png",
-            "fileSize": 233147,
-            "id": "013cf778-47a3-43aa-b1c0-db9d1cf50afd",
-            "sourceFileChecksum": "019a2183a32c0cb748d8e255d8474942"
+            "fileSize": 232000,
+            "id": "5d3314e6-8983-4d1b-a02f-0116c8d5cfb1",
+            "sourceFileChecksum": "0aaf305832cafe7a0d4124dd293a03c1"
           }
         ],
         "setID": "f65705d3-463e-4656-a252-095fb839d13b"
@@ -1531,8 +1531,8 @@
     },
     "appStoreVersionLocalization:IOS:1.0:en-US": {
       "fields": {
-        "description": "Sato is a calm, watch-only bitcoin tracker. See what you've saved without the noise.\n\nPaste a public address and see your balance. No account. No seed phrase. No keys. Sato can only look. It can never move your bitcoin.\n\nWHY SATO\n\nBitcoin goes up and down in dollars, and most apps make you feel every swing: charts, alerts, red numbers. But bitcoin tends to reward the people who do nothing. Sato is made for that. Open it now and then, see where you stand, close it again.\n\nWHAT YOU CAN DO\n\n- Track several wallets, each with one or more addresses\n- Organize by goal, like a house, college, or retirement, with your own icon and color\n- See balances in BTC or sats\n- Show value in 29 currencies, or hide fiat completely\n- See pending amounts separately, so nothing surprises you\n- Use Legacy, SegWit, and Taproot addresses\n\nPRIVATE BY DESIGN\n\nNo account, no analytics, no servers of our own. Your wallets stay on your phone. Sato only asks public block explorers for balances and a price service for exchange rates. Nothing identifies you, because there's nothing to identify.",
-        "keywords": "sats,satoshi,hodl,cold,storage,hardware,address,portfolio,crypto,price,stack,savings,checker,monitor",
+        "description": "Sato is a calm, watch-only bitcoin tracker. See what you've saved without the noise.\n\nPaste a public address and see your balance. No account. No seed phrase. No keys. Sato can only look. It can never move your bitcoin.\n\nWHY SATO\n\nBitcoin goes up and down in dollars, and most apps make you feel every swing: charts, alerts, red numbers. But bitcoin tends to reward the people who do nothing. Sato is made for that. Open it now and then, see where you stand, close it again.\n\nWHAT YOU CAN DO\n\n- Track several wallets, each with one or more addresses\n- Organize by goal, like a house, college, or retirement, with your own icon and color\n- See balances in BTC or sats\n- Show value in 29 currencies, or hide fiat completely\n- See pending amounts separately, so nothing surprises you\n- Use Legacy, SegWit, and Taproot addresses\n\nPRIVATE BY DESIGN\n\nNo account, no analytics, no servers of our own. Your wallets stay on your phone. Sato only asks public block explorers for balances and a price service for exchange rates. Nothing identifies you, because there's nothing to identify.\n\nSATO PLUS\n\nSato is free with one wallet. A single one-time purchase — never a subscription — unlocks as many wallets as you like.",
+        "keywords": "sats,satoshi,hodl,cold,storage,hardware,address,portfolio,crypto,price,stack,savings,balance,monitor",
         "marketingUrl": "https://mekarya.studio/apps/sato",
         "promotionalText": "For long-term bitcoin holders saving for the future, Sato gives you peace, not price alerts or meme coins.",
         "supportUrl": "https://mekarya.studio/support/sato"
@@ -1778,7 +1778,7 @@
     },
     "inAppPurchaseLocalization:com.iosipratama.BitcoinTracker.plus:en-US": {
       "fields": {
-        "description": "Track more than two wallets. Pay once.",
+        "description": "Track more than one wallet. Pay once.",
         "name": "Sato Plus"
       },
       "id": "cc4b5455-81b8-4857-be16-725db7a77c0a",
