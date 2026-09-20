@@ -1,84 +1,79 @@
-import UIKit
+import CoreMotion
 
-/// Reports each time the device is turned face down.
+/// Reports each time the device is turned face down. The only file that
+/// touches CoreMotion, the way `StoreManager` is the only file that touches
+/// StoreKit.
 ///
-/// Asks UIKit for its own face-down classification rather than reading gravity
-/// off the accelerometer: there is no threshold to tune, no axis sign to get
-/// wrong, and nothing samples while the phone sits still.
+/// Reads gravity rather than asking UIKit for its orientation: on a real phone
+/// `UIDevice` never reported `.faceDown` for this app, while the gravity vector
+/// did exactly what the documentation says.
 @MainActor
 final class FlipDetector {
+    /// Gravity along the device's z axis, which points out of the screen: face
+    /// down reads near +1, face up near -1. The two thresholds are deliberately
+    /// apart — one value would flicker whenever a phone came to rest near it.
+    private static let facingDown = 0.8
+    private static let facingUp = 0.5
+
+    /// Ten times a second. Fast enough that the flip feels like the cause of the
+    /// change rather than something that happened afterwards.
+    private static let updateInterval = 0.1
+
     /// Fires once per flip, on the way down only. Turning the phone back over
     /// is deliberately not an event — a balance that uncovered itself the
     /// moment you picked the phone up would never have been covered at all.
     var onFlip: (() -> Void)?
 
     #if DEBUG
-    /// Every orientation the device reports, including the ones that don't move
-    /// the needle. Only the debug screen reads this.
-    var onOrientation: ((UIDeviceOrientation) -> Void)?
+    /// Every sample, for the debug screen.
+    var onSample: ((Double, Bool) -> Void)?
     #endif
 
-    private var observer: (any NSObjectProtocol)?
+    private let motion = CMMotionManager()
     private var isFaceDown = false
+    private var isSeeded = false
 
-    var isMonitoring: Bool { observer != nil }
+    var isMonitoring: Bool { motion.isDeviceMotionActive }
 
     func start() {
-        guard observer == nil else { return }
+        guard motion.isDeviceMotionAvailable, !motion.isDeviceMotionActive else { return }
 
-        UIDevice.current.beginGeneratingDeviceOrientationNotifications()
-
-        // Seeded without reporting: a phone that was already face down was
-        // never showing anything to cover.
-        isFaceDown = UIDevice.current.orientation == .faceDown
-
-        observer = NotificationCenter.default.addObserver(
-            forName: UIDevice.orientationDidChangeNotification,
-            object: nil,
-            queue: .main
-        ) { [weak self] _ in
-            MainActor.assumeIsolated {
-                self?.readOrientation()
-            }
+        isSeeded = false
+        motion.deviceMotionUpdateInterval = Self.updateInterval
+        motion.startDeviceMotionUpdates(to: .main) { [weak self] data, _ in
+            guard let self, let data else { return }
+            self.apply(gravityZ: data.gravity.z)
         }
     }
 
     func stop() {
-        guard let observer else { return }
-
-        NotificationCenter.default.removeObserver(observer)
-        self.observer = nil
-        UIDevice.current.endGeneratingDeviceOrientationNotifications()
+        motion.stopDeviceMotionUpdates()
     }
 
-    private func readOrientation() {
-        let orientation = UIDevice.current.orientation
-
-        #if DEBUG
-        onOrientation?(orientation)
-        #endif
-
-        let faceDown = orientation == .faceDown
-        guard faceDown != isFaceDown else { return }
-
-        isFaceDown = faceDown
-        if faceDown { onFlip?() }
-    }
-}
-
-#if DEBUG
-extension UIDeviceOrientation {
-    /// For the debug readout, since the raw value is an integer.
-    var name: String {
-        switch self {
-        case .portrait: "portrait"
-        case .portraitUpsideDown: "upside down"
-        case .landscapeLeft: "landscape left"
-        case .landscapeRight: "landscape right"
-        case .faceUp: "face up"
-        case .faceDown: "face down"
-        default: "unknown"
+    private func apply(gravityZ: Double) {
+        // The first sample only establishes where the phone already is. A phone
+        // that was face down before we started listening was never showing
+        // anything to cover.
+        guard isSeeded else {
+            isFaceDown = gravityZ > Self.facingDown
+            isSeeded = true
+            report(gravityZ)
+            return
         }
+
+        if gravityZ > Self.facingDown, !isFaceDown {
+            isFaceDown = true
+            onFlip?()
+        } else if gravityZ < Self.facingUp, isFaceDown {
+            isFaceDown = false
+        }
+
+        report(gravityZ)
+    }
+
+    private func report(_ gravityZ: Double) {
+        #if DEBUG
+        onSample?(gravityZ, isFaceDown)
+        #endif
     }
 }
-#endif

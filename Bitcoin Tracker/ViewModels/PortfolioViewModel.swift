@@ -84,8 +84,9 @@ final class PortfolioViewModel {
     /// which has no orientation to report.
     var forcesHiddenBalances = false
 
-    /// The last orientation the device reported, live, for the debug screen.
-    private(set) var reportedOrientation = "not monitoring"
+    /// The latest gravity sample and what the detector made of it, live, for
+    /// the debug screen.
+    private(set) var flipReadout = "not monitoring"
     #endif
 
     /// The one question the formatters ask.
@@ -113,8 +114,9 @@ final class PortfolioViewModel {
         }
 
         #if DEBUG
-        flipDetector.onOrientation = { [weak self] orientation in
-            self?.reportedOrientation = orientation.name
+        flipDetector.onSample = { [weak self] gravityZ, isFaceDown in
+            let z = gravityZ.formatted(.number.precision(.fractionLength(2)).sign(strategy: .always()))
+            self?.flipReadout = "z \(z) · \(isFaceDown ? "face down" : "not face down")"
         }
         #endif
     }
@@ -132,7 +134,7 @@ final class PortfolioViewModel {
         flipDetector.stop()
 
         #if DEBUG
-        reportedOrientation = "not monitoring"
+        flipReadout = "not monitoring"
         #endif
     }
 

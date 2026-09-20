@@ -20,7 +20,7 @@ struct DebugView: View {
             VStack(alignment: .leading, spacing: 28) {
                 SettingsGroup(
                     title: "Flip to hide",
-                    footer: "The simulator reports no device orientation, so the override is the only way to see the masking there."
+                    footer: "The simulator has no accelerometer, so the override is the only way to see the masking there."
                 ) {
                     SettingsRow(systemImage: "eye.slash", title: "Force hidden balances") {
                         Toggle("Force hidden balances", isOn: $viewModel.forcesHiddenBalances)
@@ -28,8 +28,8 @@ struct DebugView: View {
                             .tint(.brand)
                     }
 
-                    SettingsRow(systemImage: "iphone.gen3", title: "Device reports") {
-                        Text(viewModel.reportedOrientation)
+                    SettingsRow(systemImage: "iphone.gen3", title: "Gravity") {
+                        Text(viewModel.flipReadout)
                             .font(.system(size: 15))
                             .foregroundStyle(.secondaryLabel)
                     }
