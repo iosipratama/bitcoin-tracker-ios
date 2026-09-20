@@ -769,6 +769,15 @@
       "id": "3e16736a-a727-44b4-b57e-4a2c8d999073",
       "type": "appStoreVersionLocalizations"
     },
+    "availability": {
+      "fields": {
+        "territories": [
+
+        ]
+      },
+      "id": "6811720640",
+      "type": "appAvailabilities"
+    },
     "inAppPurchase:com.iosipratama.BitcoinTracker.plus": {
       "fields": {
         "familySharable": false,
