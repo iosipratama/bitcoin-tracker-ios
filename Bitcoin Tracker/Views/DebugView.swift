@@ -8,14 +8,39 @@ struct DebugView: View {
     @AppStorage(AppStorageKey.hasCompletedWelcome) private var hasCompletedWelcome = false
     @AppStorage(AppStorageKey.forcesEmptyState) private var forcesEmptyState = false
     @Environment(StoreManager.self) private var store
+    @Environment(PortfolioViewModel.self) private var viewModel
 
     @State private var showPaywall = false
 
     var body: some View {
         @Bindable var store = store
+        @Bindable var viewModel = viewModel
 
         return ScrollView {
             VStack(alignment: .leading, spacing: 28) {
+                SettingsGroup(
+                    title: "Flip to hide",
+                    footer: "The simulator reports no device orientation, so the override is the only way to see the masking there."
+                ) {
+                    SettingsRow(systemImage: "eye.slash", title: "Force hidden balances") {
+                        Toggle("Force hidden balances", isOn: $viewModel.forcesHiddenBalances)
+                            .labelsHidden()
+                            .tint(.brand)
+                    }
+
+                    SettingsRow(systemImage: "iphone.gen3", title: "Device reports") {
+                        Text(viewModel.reportedOrientation)
+                            .font(.system(size: 15))
+                            .foregroundStyle(.secondaryLabel)
+                    }
+
+                    SettingsRow(systemImage: "dot.radiowaves.left.and.right", title: "Monitoring") {
+                        Text(viewModel.isMonitoringFlip ? "yes" : "no")
+                            .font(.system(size: 15))
+                            .foregroundStyle(.secondaryLabel)
+                    }
+                }
+
                 SettingsGroup(title: "Main view") {
                     SettingsRow(systemImage: "tray", title: "Force empty state") {
                         Toggle("Force empty state", isOn: $forcesEmptyState)

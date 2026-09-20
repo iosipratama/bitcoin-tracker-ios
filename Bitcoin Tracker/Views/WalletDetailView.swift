@@ -122,7 +122,7 @@ struct WalletDetailView: View {
                     Group {
                         // A masked figure is no longer a number, and the
                         // numeric content transition has nothing to roll.
-                        if viewModel.balancesHidden {
+                        if viewModel.hidesBalances {
                             Text(viewModel.formattedFiatWhole(viewModel.fiatValue(btc: wallet.totalBTC)))
                         } else {
                             AnimatingNumber(value: viewModel.fiatValue(btc: wallet.totalBTC)) { value in

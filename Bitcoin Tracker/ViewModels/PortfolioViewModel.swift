@@ -57,8 +57,9 @@ final class PortfolioViewModel {
         }
     }
 
-    /// Turn the phone face down and the figures become asterisks. Off by
-    /// default: a balance that vanishes unasked reads as a bug.
+    /// Turn the phone face down and the figures become asterisks; turn it face
+    /// down again to bring them back. Off by default: a balance that vanishes
+    /// unasked reads as a bug.
     var flipToHideBalance: Bool {
         didSet {
             guard flipToHideBalance != oldValue else { return }
@@ -73,9 +74,29 @@ final class PortfolioViewModel {
         }
     }
 
-    /// Never persisted — it describes how the phone is lying right now, and a
-    /// launch always starts with the figures showing.
+    /// Latched by the flip rather than mirroring the orientation, so a covered
+    /// balance stays covered once the phone is picked back up. Never persisted:
+    /// a launch always starts with the figures showing.
     private(set) var balancesHidden = false
+
+    #if DEBUG
+    /// Wins over the real thing, so the masking can be checked on a simulator,
+    /// which has no orientation to report.
+    var forcesHiddenBalances = false
+
+    /// The last orientation the device reported, live, for the debug screen.
+    private(set) var reportedOrientation = "not monitoring"
+    #endif
+
+    /// The one question the formatters ask.
+    var hidesBalances: Bool {
+        #if DEBUG
+        if forcesHiddenBalances { return true }
+        #endif
+        return balancesHidden
+    }
+
+    var isMonitoringFlip: Bool { flipDetector.isMonitoring }
 
     private let flipDetector = FlipDetector()
 
@@ -87,9 +108,15 @@ final class PortfolioViewModel {
         showSatoshi = defaults.object(forKey: Key.showSatoshi) as? Bool ?? false
         flipToHideBalance = defaults.bool(forKey: Key.flipToHide)
 
-        flipDetector.onChange = { [weak self] isFaceDown in
-            self?.balancesHidden = isFaceDown
+        flipDetector.onFlip = { [weak self] in
+            self?.balancesHidden.toggle()
         }
+
+        #if DEBUG
+        flipDetector.onOrientation = { [weak self] orientation in
+            self?.reportedOrientation = orientation.name
+        }
+        #endif
     }
 
     // MARK: - Flip to hide
@@ -103,6 +130,10 @@ final class PortfolioViewModel {
 
     func stopFlipMonitoring() {
         flipDetector.stop()
+
+        #if DEBUG
+        reportedOrientation = "not monitoring"
+        #endif
     }
 
     var currentPrice: Double {
@@ -127,13 +158,13 @@ final class PortfolioViewModel {
         let figure = showSatoshi
             ? "\(Int64((value * .satoshisPerBTC).rounded()).satsDigits) sats"
             : value.btcDisplay
-        return balancesHidden ? masked(figure, digits: Self.bitcoinMask) : figure
+        return hidesBalances ? masked(figure, digits: Self.bitcoinMask) : figure
     }
 
     /// The bare figure, without a unit. The card draws the unit itself so it can
     /// style it separately.
     func formattedAmount(btc: Double) -> String {
-        guard !balancesHidden else { return String(repeating: "*", count: Self.bitcoinMask) }
+        guard !hidesBalances else { return String(repeating: "*", count: Self.bitcoinMask) }
         return showSatoshi ? Int64((btc * .satoshisPerBTC).rounded()).satsDigits : btc.btcDigits
     }
 
@@ -146,7 +177,7 @@ final class PortfolioViewModel {
     func formattedPending(_ satoshis: Int64) -> String {
         let sign = satoshis < 0 ? "-" : "+"
         let figure = "\(sign)\(abs(Double(satoshis) / .satoshisPerBTC).btcDisplay)"
-        return balancesHidden ? masked(figure, digits: Self.bitcoinMask) : figure
+        return hidesBalances ? masked(figure, digits: Self.bitcoinMask) : figure
     }
 
     /// Delegates fraction digits to the currency itself — JPY, KRW and VND have
@@ -158,7 +189,7 @@ final class PortfolioViewModel {
         let figure = abs(value) >= 10_000
             ? value.formatted(style.precision(.fractionLength(0)))
             : value.formatted(style)
-        return balancesHidden ? masked(figure, digits: Self.fiatMask) : figure
+        return hidesBalances ? masked(figure, digits: Self.fiatMask) : figure
     }
 
     /// Whole currency units, used wherever a balance is displayed. Cents are
@@ -170,7 +201,7 @@ final class PortfolioViewModel {
             FloatingPointFormatStyle<Double>.Currency(code: selectedCurrency.rawValue)
                 .precision(.fractionLength(0))
         )
-        return balancesHidden ? masked(figure, digits: Self.fiatMask) : figure
+        return hidesBalances ? masked(figure, digits: Self.fiatMask) : figure
     }
 
     /// Replaces the run of digits in an already-formatted figure rather than

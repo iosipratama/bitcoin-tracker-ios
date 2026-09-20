@@ -25,7 +25,7 @@ struct RootView: View {
         }
         // One modifier at the root, so the flip is confirmed from whichever
         // screen — or sheet — happens to be open.
-        .sensoryFeedback(.impact(weight: .medium), trigger: viewModel.balancesHidden)
+        .sensoryFeedback(.impact(weight: .medium), trigger: viewModel.hidesBalances)
         .onChange(of: scenePhase, initial: true) { _, phase in
             if phase == .active {
                 viewModel.startFlipMonitoring()
