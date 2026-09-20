@@ -1,4 +1,4 @@
-Sato is a calm bitcoin tracker for the stack you're not going to touch.
+Sato is a calm, watch-only bitcoin tracker. See what you've saved without the noise.
 
 Paste a public address and see your balance. No account. No seed phrase. No keys. Sato can only look. It can never move your bitcoin.
 
@@ -8,12 +8,12 @@ Bitcoin goes up and down in dollars, and most apps make you feel every swing: ch
 
 WHAT YOU CAN DO
 
-Track several wallets, each with one or more addresses
-Organize by goal, like a house, college, or retirement, with your own icon and color
-See balances in BTC or sats
-Show value in 29 currencies, or hide fiat completely
-See pending amounts separately, so nothing surprises you
-Use Legacy, SegWit, and Taproot addresses
+- Track several wallets, each with one or more addresses
+- Organize by goal, like a house, college, or retirement, with your own icon and color
+- See balances in BTC or sats
+- Show value in 29 currencies, or hide fiat completely
+- See pending amounts separately, so nothing surprises you
+- Use Legacy, SegWit, and Taproot addresses
 
 PRIVATE BY DESIGN
 
