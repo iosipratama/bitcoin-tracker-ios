@@ -55,7 +55,7 @@ final class BitcoinAddress {
 
 extension BitcoinAddress {
     /// Structural checks only — length and character set. A malformed address that
-    /// passes here is still rejected by Blockstream when its balance is fetched.
+    /// passes here is still rejected by the explorer when its balance is fetched.
     static func isValidFormat(_ raw: String) -> Bool {
         let trimmed = raw.trimmingCharacters(in: .whitespacesAndNewlines)
         return isValidBech32(trimmed) || isValidBase58(trimmed)

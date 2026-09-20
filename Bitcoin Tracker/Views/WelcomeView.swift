@@ -124,7 +124,7 @@ private extension WelcomeLine {
         WelcomeLine(id: 6, segments: [
             .plain("is for the "),
             .bitcoin,
-            .plain(" you’re not going to touch 🔒")
+            .plain(" you’re holding long-term 🌱")
         ]),
         WelcomeLine(id: 7, segments: [
             .plain("for your home 🏡. a year off ✈️. something for the kids 🎓.")

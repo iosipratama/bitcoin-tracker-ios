@@ -1,12 +1,14 @@
-# Bitcoin Tracker — Claude Context
+# Sato — Claude Context
 
 ## What this app is
 
-A minimalist, read-only Bitcoin wallet tracker for iOS. Users create named wallets, add public Bitcoin addresses, and track BTC balance and optional fiat equivalent. Each wallet holding one or more on-chain addresses. No private keys. No transactions. No trading. 
+A minimalist, read-only Bitcoin wallet tracker for iPhone. Users create named wallets, add public Bitcoin addresses, and track BTC balance and optional fiat equivalent. Each wallet holds one or more on-chain addresses. No private keys. No transactions. No trading.
 
-The app fetches live balances and price and displays them — nothing else. 
+The app fetches live balances and price and displays them — nothing else.
 
 **Core philosophy:** help people stack sats and *not* get shaken by volatility. The UI should feel calm, grounded, and intentional — not like a trading terminal.
+
+The App Store name is "Sato - Bitcoin Tracker"; the display name is Sato. The Xcode target, project folder, and bundle ID (`com.iosipratama.BitcoinTracker`) all still say Bitcoin Tracker. The bundle ID is registered with App Store Connect and must never change.
 
 
 ### ideal users
@@ -19,23 +21,37 @@ long-term Bitcoin holder. someone who bought and isn't selling. They don't want 
 
 
 ### Screens
-- Main View — list of wallets
-- Wallet Detail — wallet name, aggregated balance, list of addresses with individual balances, last transactions. 
-- Add Wallet — simple text field for wallet name
-- Add Address — paste or type address, validate format, preview balance, save
-- Settings — popular fiat currency selector, fiat show/hide toggle, about/API attribution
+- Welcome — nine lines of copy shown once, before any balance appears
+- Home — list of wallets
+- Wallet Detail — wallet name, aggregated balance, list of addresses with individual balances
+- Add Wallet — a single flow covering the name, the first address, and its preview
+- Wallet Customizer — symbol and accent colour for a wallet
+- Settings — fiat currency selector, fiat show/hide, satoshi toggle, support links, API attribution, restore purchase
+- Paywall — the one purchase, reachable when adding a second wallet and from Settings
+- Debug — DEBUG-only toggles (fake unlock, force paywall, force empty state)
 
 ## Architecture
 
 - **SwiftUI + SwiftData** (no UIKit, no third-party dependencies)
-- **Models:** `Wallet` (name, cascade → addresses) and `BitcoinAddress` (address string, balance in satoshis, lastUpdated, fetchError)
-- **Services:** both are Swift `actor` singletons
-  - `BitcoinAPIService` — fetches on-chain balance via Blockstream API (`blockstream.info/api`)
-  - `PriceService` — fetches BTC/USD/EUR/GBP price via CoinGecko, 1-minute in-memory cache
+- **Platform:** iPhone only (`TARGETED_DEVICE_FAMILY = 1`). There is no iPad adaptation anywhere — no size classes, no width clamps — so adding iPad means real layout work, not just a build setting.
+- **Models:** `Wallet` (name, createdAt, optional symbol/accent raw strings, cascade → addresses, `freeLimit`) and `BitcoinAddress` (address, `balanceSatoshis`, `pendingSatoshis`, lastUpdated, fetchError). Supporting value types: `AddressBalance`, `Quote`, `FiatCurrency` (29 currencies), `WalletSymbol`, `WalletAccent`, `SupportLinks`, `SupportEnvironment`
+- **Services:**
+  - `BitcoinAPIService` — `actor`; fetches on-chain balance from Esplora-compatible explorers, mempool.space first, then mempool.emzy.de and blockstream.info as fallbacks
+  - `PriceService` — `actor`; fetches BTC price via CoinGecko, 60-second in-memory cache
+  - `StoreManager` — `@Observable @MainActor`; the only file that imports StoreKit. One non-consumable (`…​.plus`) lifts the wallet limit
+  - `ReviewPrompt` — decides whether the app has earned the right to ask for a review
 - **ViewModel:** `PortfolioViewModel` drives the home screen
-- **Views:** `HomeView`, `WalletDetailView`, `AddWalletView`, `AddAddressView`, `SettingsView`
-- **Helpers:** `WalletCard`, `AnimatingNumber`
-- **Extensions:** `Color+Extensions` (custom palette + `cardRadius`/`rowRadius`), `Font+Extensions`
+- **Views:** `RootView`, `WelcomeView`, `HomeView`, `WalletDetailView`, `AddWalletFlow`, `AddAddressView`, `WalletCustomizer`, `SettingsView`, `PaywallView`, `DebugView`
+- **Helpers:** `WalletCard`, `AnimatingNumber`, `ProminentCapsuleButton`, `SettingsRow`, `StaleStamp`
+- **Extensions:** `Color+Extensions` (custom palette + `cardRadius`/`rowRadius`), `Font+Extensions`, `Double+Bitcoin`
+
+## Purchases
+
+One non-consumable, "Sato Plus". `Wallet.freeLimit` is 1, so the paywall appears when adding a second wallet. Keep `StoreManager` as the only StoreKit surface: everything else asks `isUnlocked` or `canAddWallet(existing:)`. Any claim about how many wallets are free appears in three places that must agree — `Wallet.freeLimit`, the App Store description, and the in-app purchase description in `appStoreConnect/`.
+
+## App Store Connect
+
+The listing lives in `appStoreConnect/` and syncs through Bitrig. Edit those files, never the App Store Connect website — web edits surface as conflicts. Screenshot images under `assets/` are gitignored; only the manifests are committed. Sato Plus is manually priced in 26 territories by purchasing power, so the amounts don't track exchange rates and want a review once a year.
 
 
 ## Key conventions
@@ -47,7 +63,5 @@ long-term Bitcoin holder. someone who bought and isn't selling. They don't want 
 - No third-party packages — keep it dependency-free
 
 
-### Design principles 
-- Dark only. 
-
-
+### Design principles
+- Dark only.
