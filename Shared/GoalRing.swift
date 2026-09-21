@@ -7,11 +7,14 @@ struct GoalRing: View {
     let progress: Double
     var size: CGFloat = 22
 
-    private let trackWidth: CGFloat = 3
+    /// Proportional to `size` rather than fixed, so the same ring reads
+    /// correctly beside a wallet name at 22pt and filling a widget at 72pt.
+    /// The ratios are the original 3 and 5 at the original 22.
+    private var trackWidth: CGFloat { size * 3 / 22 }
 
     /// Heavier than the track it runs on, so the distance already covered
     /// carries more weight than the distance left.
-    private let progressWidth: CGFloat = 5
+    private var progressWidth: CGFloat { size * 5 / 22 }
 
     var body: some View {
         ZStack {

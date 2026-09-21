@@ -83,7 +83,7 @@ struct HomeView: View {
             .sheet(isPresented: $showAddWallet) { AddWalletFlow() }
             .sheet(isPresented: $showSettings) { SettingsView() }
             .fullScreenCover(isPresented: $showPaywall) { PaywallView() }
-            .task { await viewModel.refreshBalances(wallets: wallets) }
+            .task { await refresh() }
             .onChange(of: wallets.count, initial: true) { _, count in
                 defer { knownWalletCount = count }
                 guard let known = knownWalletCount, count > known else { return }
@@ -106,6 +106,14 @@ struct HomeView: View {
                 Text("This removes the wallet from your tracker. Your bitcoin on-chain is not affected.")
             }
         }
+    }
+
+    /// Publishing after the fetch rather than before it: the snapshot is what
+    /// the Home Screen reads, and there is no point handing it the same figures
+    /// it already has.
+    private func refresh() async {
+        await viewModel.refreshBalances(wallets: wallets)
+        WidgetBridge.publish(context: modelContext, formatter: viewModel.formatter)
     }
 
     /// Asked once, after the app has shown a real balance for a wallet the
@@ -154,7 +162,7 @@ struct HomeView: View {
         .scrollContentBackground(.hidden)
         .scrollEdgeEffectStyle(.soft, for: .top)
         .refreshable {
-            await viewModel.refreshBalances(wallets: wallets)
+            await refresh()
         }
     }
 

@@ -16,6 +16,11 @@
 			path = "Bitcoin Tracker";
 			sourceTree = "<group>";
 		};
+		4EC1FA102F484800002D5D0D /* Shared */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = Shared;
+			sourceTree = "<group>";
+		};
 /* End PBXFileSystemSynchronizedRootGroup section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -33,6 +38,7 @@
 			isa = PBXGroup;
 			children = (
 				4EC1F98D2F484800002D5D0D /* Bitcoin Tracker */,
+				4EC1FA102F484800002D5D0D /* Shared */,
 				4EC1F98C2F484800002D5D0D /* Products */,
 			);
 			sourceTree = "<group>";
@@ -62,6 +68,7 @@
 			);
 			fileSystemSynchronizedGroups = (
 				4EC1F98D2F484800002D5D0D /* Bitcoin Tracker */,
+				4EC1FA102F484800002D5D0D /* Shared */,
 			);
 			name = "Bitcoin Tracker";
 			packageProductDependencies = (
@@ -249,6 +256,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = "Bitcoin Tracker.entitlements";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 10;
 				DEVELOPMENT_TEAM = 37QG5KMDZA;
@@ -284,6 +292,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = "Bitcoin Tracker.entitlements";
 				CODE_SIGN_IDENTITY = "iPhone Distribution";
 				CODE_SIGN_STYLE = Manual;
 				PROVISIONING_PROFILE_SPECIFIER = "IOS_APP_STORE-20260914";

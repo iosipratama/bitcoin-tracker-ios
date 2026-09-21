@@ -1,3 +1,4 @@
+import SwiftData
 import SwiftUI
 
 /// Decides what a launch opens on. A branch rather than a cover, so `HomeView`
@@ -6,6 +7,7 @@ import SwiftUI
 struct RootView: View {
     @AppStorage(AppStorageKey.hasCompletedWelcome) private var hasCompletedWelcome = false
     @Environment(PortfolioViewModel.self) private var viewModel
+    @Environment(\.modelContext) private var modelContext
     @Environment(\.scenePhase) private var scenePhase
 
     var body: some View {
@@ -31,6 +33,12 @@ struct RootView: View {
                 viewModel.startFlipMonitoring()
             } else {
                 viewModel.stopFlipMonitoring()
+
+                // Leaving the app is the one moment that reliably follows every
+                // edit — a renamed wallet, a new goal, a different currency.
+                // Watching each of those individually would mean a hook in five
+                // screens and a sixth one missed.
+                WidgetBridge.publish(context: modelContext, formatter: viewModel.formatter)
             }
         }
     }
