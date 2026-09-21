@@ -220,7 +220,7 @@ struct WalletDetailView: View {
         } else {
             VStack(alignment: .leading, spacing: 10) {
                 HStack(alignment: .firstTextBaseline) {
-                    Text("Addresses")
+                    Text(wallet.addresses.count == 1 ? "Address" : "Addresses")
                         .font(.system(size: 17, weight: .semibold))
                         .foregroundStyle(.secondaryLabel)
 
@@ -267,77 +267,91 @@ struct AddressRow: View {
     /// resolved has nothing to show.
     private var hasEverLoaded: Bool { address.lastUpdated != nil }
 
+    /// The balance, or the reason there isn't one yet.
+    @ViewBuilder private var balanceLine: some View {
+        if hasEverLoaded {
+            HStack(alignment: .firstTextBaseline, spacing: 4) {
+                if let prefix = viewModel.amountPrefix {
+                    Text(prefix)
+                        .font(.walletBalanceMark)
+                        .foregroundStyle(Custom.labelTertiary)
+                }
+
+                Text(viewModel.formattedAmount(btc: address.balance.totalBTC))
+                    .font(.walletBalance)
+                    .foregroundStyle(.label)
+
+                if let suffix = viewModel.amountSuffix {
+                    Text(suffix)
+                        .font(.walletFiat)
+                        .foregroundStyle(Custom.labelTertiary)
+                }
+
+                if address.balance.hasPending {
+                    Text("\(viewModel.formattedPending(address.pendingSatoshis)) pending")
+                        .font(.system(size: 12))
+                        .foregroundStyle(.brand)
+                }
+            }
+            .lineLimit(1)
+            .minimumScaleFactor(0.6)
+        } else if let error = address.fetchError {
+            Text(error)
+                .font(.system(size: 13))
+                .foregroundStyle(.tertiaryLabel)
+        }
+    }
+
+    /// The fiat equivalent, which the copy confirmation borrows while it shows.
+    @ViewBuilder private var trailingLine: some View {
+        if didCopy {
+            Label("Copied", systemImage: "checkmark")
+                .labelStyle(.titleAndIcon)
+                .font(.system(size: 13, weight: .semibold))
+                .foregroundStyle(.brand)
+                .transition(.opacity)
+        } else if hasEverLoaded, viewModel.showsFiatValues {
+            HStack(spacing: 2) {
+                Text("\u{2261}")
+                    .font(.walletFiat)
+                    .foregroundStyle(Custom.labelTertiary)
+
+                Text(viewModel.formattedFiatWhole(viewModel.fiatValue(btc: address.balance.totalBTC)))
+                    .font(.walletFiat)
+                    .foregroundStyle(Custom.labelTertiary)
+            }
+            .lineLimit(1)
+            .minimumScaleFactor(0.6)
+        }
+    }
+
     var body: some View {
         Button {
             UIPasteboard.general.string = address.address
             withAnimation(.snappy) { didCopy = true }
         } label: {
-            HStack(alignment: .center, spacing: 0) {
-                VStack(alignment: .leading, spacing: 5) {
-                    // Monospaced on purpose: a truncated address is checked
-                    // character by character, which proportional digits hinder.
-                    Text(address.shortAddress)
-                        .font(.system(size: 15, weight: .medium, design: .monospaced))
-                        .foregroundStyle(.label)
+            VStack(alignment: .leading, spacing: 4) {
+                // Tracked wide rather than monospaced: a truncated address is
+                // checked character by character, and the letter spacing gives
+                // the eye the same footholds without leaving the rounded face.
+                Text(address.shortAddress)
+                    .font(.system(size: 15, weight: .semibold))
+                    .tracking(1.5)
+                    .foregroundStyle(.label)
+                    .lineLimit(1)
 
-                    if hasEverLoaded {
-                        HStack(spacing: 5) {
-                            // Same prefix/suffix the card and the header ask
-                            // for, so the unit is marked identically wherever a
-                            // balance appears.
-                            if let prefix = viewModel.amountPrefix {
-                                Text(prefix)
-                                    .font(.system(size: 13))
-                                    .foregroundStyle(.tertiaryLabel)
-                            }
+                HStack(alignment: .firstTextBaseline, spacing: 8) {
+                    balanceLine
 
-                            Text(viewModel.formattedAmount(btc: address.balance.totalBTC))
-                                .font(.system(size: 13))
-                                .foregroundStyle(.secondaryLabel)
+                    Spacer(minLength: 8)
 
-                            if let suffix = viewModel.amountSuffix {
-                                Text(suffix)
-                                    .font(.system(size: 12))
-                                    .foregroundStyle(.tertiaryLabel)
-                            }
-
-                            if address.balance.hasPending {
-                                Text("\(viewModel.formattedPending(address.pendingSatoshis)) pending")
-                                    .font(.system(size: 12))
-                                    .foregroundStyle(.brand)
-                            }
-                        }
-                    } else if let error = address.fetchError {
-                        // Nothing has ever loaded for this address, so there is
-                        // genuinely nothing true to show and the reason earns
-                        // its place. Muted, not alarming.
-                        Text(error)
-                            .font(.system(size: 12))
-                            .foregroundStyle(.tertiaryLabel)
-                    }
-                }
-
-                Spacer()
-
-                if didCopy {
-                    Label("Copied", systemImage: "checkmark")
-                        .labelStyle(.titleAndIcon)
-                        .font(.system(size: 13, weight: .semibold))
-                        .foregroundStyle(.brand)
-                        .transition(.opacity)
-                } else if hasEverLoaded, viewModel.showsFiatValues {
-                    Text(viewModel.formattedFiatWhole(viewModel.fiatValue(btc: address.balance.totalBTC)))
-                        .font(.system(size: 15, weight: .semibold))
-                        .foregroundStyle(.secondaryLabel)
-                        .lineLimit(1)
-                        .minimumScaleFactor(0.6)
+                    trailingLine
                 }
             }
-            .padding(.horizontal, 16)
-            .padding(.vertical, 14)
-            .frame(maxWidth: .infinity)
+            .padding(16)
+            .frame(maxWidth: .infinity, alignment: .leading)
             .background(
-                RoundedRectangle(cornerRadius: .cardRadius, style: .continuous)
+                RoundedRectangle(cornerRadius: .cardInsetRadius, style: .continuous)
                     .fill(.groupedBackground)
             )
             .contentShape(Rectangle())
