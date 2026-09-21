@@ -49,7 +49,7 @@ enum WalletSymbol: String, CaseIterable, Codable, Identifiable {
         case .fitness: "dumbbell.fill"
         case .gaming: "gamecontroller.fill"
         case .gift: "gift.fill"
-        case .wallet: "wallet.bifold"
+        case .wallet: "wallet.bifold.fill"
         case .person: "figure.stand.dress"
         case .child: "figure.child"
         case .energy: "bolt.fill"
