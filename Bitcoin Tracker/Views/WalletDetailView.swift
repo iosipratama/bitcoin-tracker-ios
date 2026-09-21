@@ -184,7 +184,7 @@ struct WalletDetailView: View {
                     .lineLimit(1)
                     .minimumScaleFactor(0.6)
 
-                    GoalMilestoneBar(progress: progress, isHidden: viewModel.hidesBalances)
+                    GoalMilestoneBar(progress: progress)
                 }
                 .padding(16)
                 .frame(maxWidth: .infinity, alignment: .leading)

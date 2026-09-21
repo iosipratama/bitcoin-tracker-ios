@@ -52,7 +52,7 @@ struct WalletRow: View {
                         .font(.walletFiat)
                         .foregroundStyle(Custom.labelTertiary)
 
-                    GoalRing(progress: progress, isHidden: viewModel.hidesBalances)
+                    GoalRing(progress: progress)
                 }
             }
         }

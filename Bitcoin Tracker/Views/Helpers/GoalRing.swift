@@ -5,8 +5,6 @@ import SwiftUI
 /// says how far past.
 struct GoalRing: View {
     let progress: Double
-    var isHidden = false
-
     var size: CGFloat = 22
 
     private let trackWidth: CGFloat = 3
@@ -20,12 +18,10 @@ struct GoalRing: View {
             Circle()
                 .stroke(.progressTrack, lineWidth: trackWidth)
 
-            if !isHidden {
-                Circle()
-                    .trim(from: 0, to: min(max(progress, 0), 1))
-                    .stroke(.brand, style: StrokeStyle(lineWidth: progressWidth, lineCap: .round))
-                    .rotationEffect(.degrees(-90))
-            }
+            Circle()
+                .trim(from: 0, to: min(max(progress, 0), 1))
+                .stroke(.brand, style: StrokeStyle(lineWidth: progressWidth, lineCap: .round))
+                .rotationEffect(.degrees(-90))
         }
         // One shared path, so the heavier arc overhangs the track evenly on
         // both sides. The inset keeps that overhang inside the frame.
