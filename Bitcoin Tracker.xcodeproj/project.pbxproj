@@ -6,9 +6,34 @@
 	objectVersion = 77;
 	objects = {
 
+/* Begin PBXBuildFile section */
+		4EC1FA2A2F484800002D5D0D /* Sato Widgets.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = 4EC1FA212F484800002D5D0D /* Sato Widgets.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+/* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		4EC1FA2C2F484800002D5D0D /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 4EC1F9832F484800002D5D0D /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 4EC1FA202F484800002D5D0D;
+			remoteInfo = "Sato Widgets";
+		};
+/* End PBXContainerItemProxy section */
+
 /* Begin PBXFileReference section */
 		4EC1F98B2F484800002D5D0D /* Bitcoin Tracker.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Bitcoin Tracker.app"; sourceTree = BUILT_PRODUCTS_DIR; };
+		4EC1FA212F484800002D5D0D /* Sato Widgets.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = "Sato Widgets.appex"; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
+
+/* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
+		4EC1FA2D2F484800002D5D0D /* Exceptions for "Sato Widgets" folder in "Sato Widgets" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				Info.plist,
+			);
+			target = 4EC1FA202F484800002D5D0D /* Sato Widgets */;
+		};
+/* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
 		4EC1F98D2F484800002D5D0D /* Bitcoin Tracker */ = {
@@ -21,10 +46,25 @@
 			path = Shared;
 			sourceTree = "<group>";
 		};
+		4EC1FA222F484800002D5D0D /* Sato Widgets */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			exceptions = (
+				4EC1FA2D2F484800002D5D0D /* Exceptions for "Sato Widgets" folder in "Sato Widgets" target */,
+			);
+			path = "Sato Widgets";
+			sourceTree = "<group>";
+		};
 /* End PBXFileSystemSynchronizedRootGroup section */
 
 /* Begin PBXFrameworksBuildPhase section */
 		4EC1F9882F484800002D5D0D /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		4EC1FA242F484800002D5D0D /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -39,6 +79,7 @@
 			children = (
 				4EC1F98D2F484800002D5D0D /* Bitcoin Tracker */,
 				4EC1FA102F484800002D5D0D /* Shared */,
+				4EC1FA222F484800002D5D0D /* Sato Widgets */,
 				4EC1F98C2F484800002D5D0D /* Products */,
 			);
 			sourceTree = "<group>";
@@ -47,6 +88,7 @@
 			isa = PBXGroup;
 			children = (
 				4EC1F98B2F484800002D5D0D /* Bitcoin Tracker.app */,
+				4EC1FA212F484800002D5D0D /* Sato Widgets.appex */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -61,10 +103,12 @@
 				4EC1F9872F484800002D5D0D /* Sources */,
 				4EC1F9882F484800002D5D0D /* Frameworks */,
 				4EC1F9892F484800002D5D0D /* Resources */,
+				4EC1FA292F484800002D5D0D /* Embed Foundation Extensions */,
 			);
 			buildRules = (
 			);
 			dependencies = (
+				4EC1FA2B2F484800002D5D0D /* PBXTargetDependency */,
 			);
 			fileSystemSynchronizedGroups = (
 				4EC1F98D2F484800002D5D0D /* Bitcoin Tracker */,
@@ -77,6 +121,29 @@
 			productReference = 4EC1F98B2F484800002D5D0D /* Bitcoin Tracker.app */;
 			productType = "com.apple.product-type.application";
 		};
+		4EC1FA202F484800002D5D0D /* Sato Widgets */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 4EC1FA262F484800002D5D0D /* Build configuration list for PBXNativeTarget "Sato Widgets" */;
+			buildPhases = (
+				4EC1FA232F484800002D5D0D /* Sources */,
+				4EC1FA242F484800002D5D0D /* Frameworks */,
+				4EC1FA252F484800002D5D0D /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			fileSystemSynchronizedGroups = (
+				4EC1FA222F484800002D5D0D /* Sato Widgets */,
+				4EC1FA102F484800002D5D0D /* Shared */,
+			);
+			name = "Sato Widgets";
+			packageProductDependencies = (
+			);
+			productName = "Sato Widgets";
+			productReference = 4EC1FA212F484800002D5D0D /* Sato Widgets.appex */;
+			productType = "com.apple.product-type.app-extension";
+		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
@@ -88,6 +155,9 @@
 				LastUpgradeCheck = 2620;
 				TargetAttributes = {
 					4EC1F98A2F484800002D5D0D = {
+						CreatedOnToolsVersion = 26.2;
+					};
+					4EC1FA202F484800002D5D0D = {
 						CreatedOnToolsVersion = 26.2;
 					};
 				};
@@ -107,6 +177,7 @@
 			projectRoot = "";
 			targets = (
 				4EC1F98A2F484800002D5D0D /* Bitcoin Tracker */,
+				4EC1FA202F484800002D5D0D /* Sato Widgets */,
 			);
 		};
 /* End PBXProject section */
@@ -119,10 +190,46 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		4EC1FA252F484800002D5D0D /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXResourcesBuildPhase section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		4EC1FA292F484800002D5D0D /* Embed Foundation Extensions */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 13;
+			files = (
+				4EC1FA2A2F484800002D5D0D /* Sato Widgets.appex in Embed Foundation Extensions */,
+			);
+			name = "Embed Foundation Extensions";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		4EC1FA2B2F484800002D5D0D /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 4EC1FA202F484800002D5D0D /* Sato Widgets */;
+			targetProxy = 4EC1FA2C2F484800002D5D0D /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
 
 /* Begin PBXSourcesBuildPhase section */
 		4EC1F9872F484800002D5D0D /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		4EC1FA232F484800002D5D0D /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -325,6 +432,68 @@
 			};
 			name = Release;
 		};
+		4EC1FA272F484800002D5D0D /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_ENTITLEMENTS = "Sato Widgets/Sato Widgets.entitlements";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 10;
+				DEVELOPMENT_TEAM = 37QG5KMDZA;
+				ENABLE_PREVIEWS = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = "Sato Widgets/Info.plist";
+				INFOPLIST_KEY_CFBundleDisplayName = Sato;
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.iosipratama.BitcoinTracker.SatoWidgets;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				STRING_CATALOG_GENERATE_SYMBOLS = YES;
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_DEFAULT_ACTOR_ISOLATION = MainActor;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = 1;
+			};
+			name = Debug;
+		};
+		4EC1FA282F484800002D5D0D /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_ENTITLEMENTS = "Sato Widgets/Sato Widgets.entitlements";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 10;
+				DEVELOPMENT_TEAM = 37QG5KMDZA;
+				ENABLE_PREVIEWS = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = "Sato Widgets/Info.plist";
+				INFOPLIST_KEY_CFBundleDisplayName = Sato;
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.iosipratama.BitcoinTracker.SatoWidgets;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				STRING_CATALOG_GENERATE_SYMBOLS = YES;
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_DEFAULT_ACTOR_ISOLATION = MainActor;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = 1;
+			};
+			name = Release;
+		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
@@ -342,6 +511,15 @@
 			buildConfigurations = (
 				4EC1F9972F484801002D5D0D /* Debug */,
 				4EC1F9982F484801002D5D0D /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		4EC1FA262F484800002D5D0D /* Build configuration list for PBXNativeTarget "Sato Widgets" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				4EC1FA272F484800002D5D0D /* Debug */,
+				4EC1FA282F484800002D5D0D /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
