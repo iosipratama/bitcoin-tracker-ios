@@ -2,18 +2,41 @@ import SwiftUI
 
 /// The first thing a new user sees. Nine lines that set expectations before any
 /// balance appears, then one way forward.
+///
+/// The lines arrive one at a time, at reading pace rather than on a metronome:
+/// a longer line earns a longer pause before the next, and there is an extra
+/// beat before the two lines where the argument turns. Each line lands in
+/// monochrome and takes its colour as the next one appears; the button comes
+/// last, like a full stop. A tap anywhere finishes the whole thing at once.
 struct WelcomeView: View {
     let onContinue: () -> Void
+
+    @Environment(\.accessibilityReduceMotion) private var reduceMotion
+    @Environment(\.accessibilityVoiceOverEnabled) private var voiceOverEnabled
+
+    @State private var revealedCount = 0
+    @State private var colouredCount = 0
+    @State private var showsButton = false
+
+    private var lines: [WelcomeLine] { WelcomeLine.all }
 
     var body: some View {
         ScrollView {
             VStack(alignment: .leading, spacing: 20) {
-                ForEach(WelcomeLine.all) { line in
+                ForEach(Array(lines.enumerated()), id: \.element.id) { index, line in
+                    let isRevealed = index < revealedCount
+                    let isStill = isRevealed || reduceMotion
+
                     line.text
                         .tracking(0.34)
                         .fixedSize(horizontal: false, vertical: true)
                         .frame(maxWidth: .infinity, alignment: .leading)
+                        .grayscale(index < colouredCount ? 0 : 1)
+                        .blur(radius: isStill ? 0 : 6)
+                        .offset(y: isStill ? 0 : 10)
+                        .opacity(isRevealed ? 1 : 0)
                         .accessibilityLabel(line.spokenText)
+                        .accessibilityHidden(!isRevealed)
                 }
             }
             .font(.system(size: 20, weight: .light))
@@ -25,13 +48,56 @@ struct WelcomeView: View {
         }
         .scrollBounceBehavior(.basedOnSize)
         .scrollEdgeEffectStyle(.soft, for: .bottom)
+        .onTapGesture { finish() }
         .safeAreaInset(edge: .bottom) { continueButton }
         .background(Custom.backgroundBase)
+        .sensoryFeedback(trigger: showsButton) { _, landed in
+            landed ? .impact(weight: .light) : nil
+        }
+        .task { await reveal() }
     }
 
     private var continueButton: some View {
         ProminentCapsuleButton(title: "Continue", action: onContinue)
+            .scaleEffect(showsButton || reduceMotion ? 1 : 0.96)
+            .offset(y: showsButton || reduceMotion ? 0 : 12)
+            .opacity(showsButton ? 1 : 0)
+            .allowsHitTesting(showsButton)
             .padding(.bottom, 46)
+    }
+
+    // MARK: - Choreography
+
+    private func reveal() async {
+        // VoiceOver reads the page top to bottom on its own schedule; a reveal
+        // racing it would only hide lines it is about to speak.
+        guard !voiceOverEnabled else { return finish(animated: false) }
+
+        for index in lines.indices {
+            try? await Task.sleep(for: WelcomeLine.pause(before: index))
+            guard !Task.isCancelled, !showsButton else { return }
+
+            withAnimation(.smooth(duration: 0.55)) { revealedCount = index + 1 }
+            withAnimation(.smooth(duration: 0.5)) { colouredCount = index }
+        }
+
+        try? await Task.sleep(for: .milliseconds(250))
+        guard !Task.isCancelled, !showsButton else { return }
+        withAnimation(.smooth(duration: 0.5)) { colouredCount = lines.count }
+
+        try? await Task.sleep(for: .milliseconds(200))
+        guard !Task.isCancelled, !showsButton else { return }
+        withAnimation(.snappy(duration: 0.55)) { showsButton = true }
+    }
+
+    private func finish(animated: Bool = true) {
+        guard !showsButton else { return }
+
+        withAnimation(animated ? .smooth(duration: 0.3) : nil) {
+            revealedCount = lines.count
+            colouredCount = lines.count
+            showsButton = true
+        }
     }
 }
 
@@ -42,6 +108,9 @@ struct WelcomeView: View {
 private struct WelcomeLine: Identifiable {
     let id: Int
     let segments: [WelcomeSegment]
+
+    /// Marks a line the argument turns on, which earns a longer pause before it.
+    var beatBefore = false
 
     /// Concatenation is the only way to flow an SF Symbol inside wrapping text:
     /// `AttributedString` carries no attachments and Markdown can't reach a
@@ -58,6 +127,16 @@ private struct WelcomeLine: Identifiable {
             .joined()
             .split(separator: " ")
             .joined(separator: " ")
+    }
+
+    /// The pause before a line is set by the length of the one before it, so
+    /// the sequence keeps roughly the pace of someone reading along.
+    static func pause(before index: Int) -> Duration {
+        guard index > 0 else { return .milliseconds(250) }
+
+        let dwell = 0.1 + 0.005 * Double(all[index - 1].spokenText.count)
+        let beat = all[index].beatBefore ? 0.2 : 0
+        return .seconds(dwell + beat)
     }
 }
 
@@ -117,10 +196,10 @@ private extension WelcomeLine {
         WelcomeLine(id: 4, segments: [
             .bitcoin,
             .plain(" rewards the people who do nothing 🧘")
-        ]),
+        ], beatBefore: true),
         WelcomeLine(id: 5, segments: [
             .plain("and this app, sato.")
-        ]),
+        ], beatBefore: true),
         WelcomeLine(id: 6, segments: [
             .plain("is for the "),
             .bitcoin,
