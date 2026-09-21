@@ -13,6 +13,15 @@ struct WalletCustomizer: View {
 
     private let columns = Array(repeating: GridItem(.flexible(), spacing: 12), count: 6)
 
+    /// Rounder than the cards elsewhere in the app. These three sit stacked and
+    /// nearly touching, and the softer corner is what keeps them reading as
+    /// separate surfaces rather than one long slab.
+    private let sectionRadius: CGFloat = 32
+
+    /// Concentric with `sectionRadius` across the field's 12pt inset, so the
+    /// two curves stay parallel.
+    private let fieldRadius: CGFloat = 20
+
     var body: some View {
         VStack(spacing: 20) {
             TextField("", text: $name, prompt: namePrompt)
@@ -24,9 +33,11 @@ struct WalletCustomizer: View {
                 .textInputAutocapitalization(.never)
                 .padding(.vertical, 8)
 
-            goalCard
-            accentGrid
-            symbolGrid
+            VStack(spacing: 6) {
+                goalCard
+                accentGrid
+                symbolGrid
+            }
         }
     }
 
@@ -39,7 +50,7 @@ struct WalletCustomizer: View {
             }
         }
         .background(
-            RoundedRectangle(cornerRadius: .cardRadius, style: .continuous)
+            RoundedRectangle(cornerRadius: sectionRadius, style: .continuous)
                 .fill(.groupedBackground)
         )
         .animation(.smooth, value: goalEnabled)
@@ -104,7 +115,7 @@ struct WalletCustomizer: View {
         .padding(.vertical, 14)
         .frame(maxWidth: .infinity, alignment: .leading)
         .background(
-            RoundedRectangle(cornerRadius: .cardInsetRadius, style: .continuous)
+            RoundedRectangle(cornerRadius: fieldRadius, style: .continuous)
                 .fill(Custom.backgroundBase)
         )
         .padding(.horizontal, 12)
@@ -172,7 +183,7 @@ struct WalletCustomizer: View {
         }
         .padding(16)
         .background(
-            RoundedRectangle(cornerRadius: .cardRadius, style: .continuous)
+            RoundedRectangle(cornerRadius: sectionRadius, style: .continuous)
                 .fill(.groupedBackground)
         )
     }
@@ -204,7 +215,7 @@ struct WalletCustomizer: View {
         }
         .padding(16)
         .background(
-            RoundedRectangle(cornerRadius: .cardRadius, style: .continuous)
+            RoundedRectangle(cornerRadius: sectionRadius, style: .continuous)
                 .fill(.groupedBackground)
         )
     }

@@ -38,7 +38,10 @@ struct WalletDetailView: View {
                     Button("Add Address", systemImage: "plus") { showAddAddress = true }
                     Button("Customize", systemImage: "paintbrush") { showCustomize = true }
                 } label: {
+                    // Without this the item reserves width for the title it
+                    // never draws, which nudges the centred nav title off-axis.
                     Label("Wallet actions", systemImage: "ellipsis")
+                        .labelStyle(.iconOnly)
                 }
                 .tint(.brand)
             }
@@ -192,6 +195,8 @@ struct WalletDetailView: View {
                 .padding(.horizontal, 16)
             }
             .padding(.top, 8)
+            // Pairs with the address section's own 8 to put 16 between them.
+            .padding(.bottom, 8)
             .accessibilityElement(children: .combine)
             .accessibilityLabel("Goal")
             .accessibilityValue("\(viewModel.formattedGoalPercent(progress)) of \(viewModel.formattedBTC(goalBTC))")
