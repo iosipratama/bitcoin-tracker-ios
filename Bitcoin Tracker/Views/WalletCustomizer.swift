@@ -172,7 +172,7 @@ struct WalletCustomizer: View {
                         .frame(height: 44)
                         .overlay {
                             if option == accent {
-                                Circle().strokeBorder(.label, lineWidth: 2).padding(-4)
+                                Circle().strokeBorder(option.color, lineWidth: 2).padding(-4)
                             }
                         }
                 }
