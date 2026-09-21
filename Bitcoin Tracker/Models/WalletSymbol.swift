@@ -11,8 +11,15 @@ enum WalletSymbol: String, CaseIterable, Codable, Identifiable {
     case car, tools, devices, education, work, travel
     case luggage, food, shopping, clothes, medical, fitness
     case gaming, gift, wallet, person, child, energy
+    case vault, goal, bitcoin, coldStorage, archive, purse
 
     var id: String { rawValue }
+
+    /// The pool the name-derived default draws from, frozen at the original
+    /// thirty. Widening it would change `allCases.count`, and with it the tile
+    /// of every wallet whose owner never chose one. Append new cases after this
+    /// boundary, never before it.
+    static let derivable = Array(allCases.prefix(30))
 
     var systemName: String {
         switch self {
@@ -46,6 +53,12 @@ enum WalletSymbol: String, CaseIterable, Codable, Identifiable {
         case .person: "figure.stand.dress"
         case .child: "figure.child"
         case .energy: "bolt.fill"
+        case .vault: "lock.fill"
+        case .goal: "target"
+        case .bitcoin: "bitcoinsign.circle.fill"
+        case .coldStorage: "externaldrive.fill"
+        case .archive: "archivebox.fill"
+        case .purse: "wallet.pass.fill"
         }
     }
 }

@@ -127,7 +127,8 @@ extension Wallet {
 
 extension Wallet {
     static func defaultSymbol(for name: String) -> WalletSymbol {
-        WalletSymbol.allCases[Int(name.stableHash % UInt64(WalletSymbol.allCases.count))]
+        let pool = WalletSymbol.derivable
+        return pool[Int(name.stableHash % UInt64(pool.count))]
     }
 
     static func defaultAccent(for name: String) -> WalletAccent {
