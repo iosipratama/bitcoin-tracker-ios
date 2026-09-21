@@ -12,12 +12,6 @@ final class PortfolioViewModel {
         static let flipToHide = "flipToHideBalance"
     }
 
-    /// Asterisks stand in for the digits while balances are hidden. Six for
-    /// bitcoin and four for fiat: enough to read as a covered figure without
-    /// suggesting how many digits are underneath.
-    private static let bitcoinMask = 6
-    private static let fiatMask = 4
-
     /// Public explorer APIs throttle aggressive clients, and a throttled response
     /// surfaces as an error badge on a wallet row. Stay well under.
     private static let maxConcurrentFetches = 4
@@ -138,99 +132,55 @@ final class PortfolioViewModel {
         #endif
     }
 
+    // MARK: - Formatting
+
+    /// Every figure on screen goes through here, and so does every figure in the
+    /// widget. Rebuilt on each read rather than stored: it is five words wide,
+    /// and a stored copy is one more thing that can fall out of step with the
+    /// settings it mirrors.
+    var formatter: BalanceFormatter {
+        BalanceFormatter(
+            currency: selectedCurrency,
+            showSatoshi: showSatoshi,
+            showFiat: showFiat,
+            price: currentPrice,
+            hidesBalances: hidesBalances
+        )
+    }
+
     var currentPrice: Double {
         prices[selectedCurrency.apiKey] ?? 0
     }
 
     /// False when the price fetch failed or hasn't landed yet. Without this check a
     /// failed fetch renders every holding as "$0.00", which reads as "your bitcoin is gone".
-    var isFiatAvailable: Bool {
-        currentPrice > 0
-    }
+    var isFiatAvailable: Bool { formatter.isFiatAvailable }
 
-    var showsFiatValues: Bool {
-        showFiat && isFiatAvailable
-    }
+    var showsFiatValues: Bool { formatter.showsFiatValues }
 
-    func fiatValue(btc: Double) -> Double {
-        btc * currentPrice
-    }
+    func fiatValue(btc: Double) -> Double { formatter.fiatValue(btc: btc) }
 
-    func formattedBTC(_ value: Double) -> String {
-        let figure = showSatoshi
-            ? "\(Int64((value * .satoshisPerBTC).rounded()).satsDigits) sats"
-            : value.btcDisplay
-        return hidesBalances ? masked(figure, digits: Self.bitcoinMask) : figure
-    }
+    func formattedBTC(_ value: Double) -> String { formatter.formattedBTC(value) }
 
     /// The bare figure, without a unit. The card draws the unit itself so it can
     /// style it separately.
-    func formattedAmount(btc: Double) -> String {
-        guard !hidesBalances else { return String(repeating: "*", count: Self.bitcoinMask) }
-        return showSatoshi ? Int64((btc * .satoshisPerBTC).rounded()).satsDigits : btc.btcDigits
-    }
+    func formattedAmount(btc: Double) -> String { formatter.formattedAmount(btc: btc) }
 
     /// ₿ leads a BTC figure; a sats figure is trailed by its unit instead, since
     /// ₿ denotes whole coins and would be wrong in front of a satoshi count.
-    var amountPrefix: String? { showSatoshi ? nil : "\u{20BF}" }
-    var amountSuffix: String? { showSatoshi ? "sats" : nil }
+    var amountPrefix: String? { formatter.amountPrefix }
+    var amountSuffix: String? { formatter.amountSuffix }
 
-    /// Signed so an unconfirmed outgoing spend reads as "-0.0010 BTC pending".
-    func formattedPending(_ satoshis: Int64) -> String {
-        let sign = satoshis < 0 ? "-" : "+"
-        let figure = "\(sign)\(abs(Double(satoshis) / .satoshisPerBTC).btcDisplay)"
-        return hidesBalances ? masked(figure, digits: Self.bitcoinMask) : figure
-    }
+    func formattedPending(_ satoshis: Int64) -> String { formatter.formattedPending(satoshis) }
 
-    /// Delegates fraction digits to the currency itself — JPY, KRW and VND have
-    /// none, so a hardcoded two would have rendered "¥1,234.00". Above four
-    /// figures the decimals are dropped entirely; on a rupiah balance they are
-    /// only noise.
-    func formattedFiat(_ value: Double) -> String {
-        let style = FloatingPointFormatStyle<Double>.Currency(code: selectedCurrency.rawValue)
-        let figure = abs(value) >= 10_000
-            ? value.formatted(style.precision(.fractionLength(0)))
-            : value.formatted(style)
-        return hidesBalances ? masked(figure, digits: Self.fiatMask) : figure
-    }
+    /// Keeps the cents, for the add-address balance preview where the exact
+    /// figure is being confirmed.
+    func formattedFiat(_ value: Double) -> String { formatter.formattedFiat(value) }
 
-    /// Whole currency units, used wherever a balance is displayed. Cents are
-    /// noise on a glanceable figure, and more so on a rupiah or yen one.
-    /// `formattedFiat` keeps them for the add-address balance preview, where the
-    /// exact figure is being confirmed.
-    func formattedFiatWhole(_ value: Double) -> String {
-        let figure = value.formatted(
-            FloatingPointFormatStyle<Double>.Currency(code: selectedCurrency.rawValue)
-                .precision(.fractionLength(0))
-        )
-        return hidesBalances ? masked(figure, digits: Self.fiatMask) : figure
-    }
+    /// Whole currency units, used wherever a balance is displayed.
+    func formattedFiatWhole(_ value: Double) -> String { formatter.formattedFiatWhole(value) }
 
-    /// Floored rather than rounded: 99.7% of a goal has not reached it. Left
-    /// uncapped above 100 so overshoot is visible.
-    ///
-    /// Deliberately outside the flip-to-hide mask. The target it's a percentage
-    /// of is masked, so the figure gives nothing away to someone reading over a
-    /// shoulder, and how far along you are is the one thing worth a glance when
-    /// the amounts are covered.
-    func formattedGoalPercent(_ progress: Double) -> String {
-        let percent = Int((progress * 100).rounded(.down))
-        return percent == 0 && progress > 0 ? "<1%" : "\(percent)%"
-    }
-
-    /// Replaces the run of digits in an already-formatted figure rather than
-    /// building a masked one from scratch, so the currency symbol, the sign and
-    /// the unit all survive wherever the locale happens to put them: "$1,234"
-    /// masks to "$****" and "1 234 kr" to "**** kr".
-    private func masked(_ figure: String, digits: Int) -> String {
-        guard let first = figure.firstIndex(where: \.isNumber),
-              let last = figure.lastIndex(where: \.isNumber) else { return figure }
-
-        return figure.replacingCharacters(
-            in: first...last,
-            with: String(repeating: "*", count: digits)
-        )
-    }
+    func formattedGoalPercent(_ progress: Double) -> String { formatter.formattedGoalPercent(progress) }
 
     func refreshPrices() async {
         do {
