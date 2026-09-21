@@ -7,6 +7,7 @@ struct HomeView: View {
     @Environment(\.modelContext) private var modelContext
     @Environment(PortfolioViewModel.self) private var viewModel
     @Environment(StoreManager.self) private var store
+    @Environment(WidgetRouter.self) private var router
     @Environment(\.requestReview) private var requestReview
 
     @State private var showAddWallet = false
@@ -83,8 +84,16 @@ struct HomeView: View {
             .sheet(isPresented: $showAddWallet) { AddWalletFlow() }
             .sheet(isPresented: $showSettings) { SettingsView() }
             .fullScreenCover(isPresented: $showPaywall) { PaywallView() }
-            .task { await viewModel.refreshBalances(wallets: wallets) }
+            .task { await refresh() }
+            .onChange(of: router.requestedWalletID, initial: true) { _, _ in
+                openRequestedWallet()
+            }
             .onChange(of: wallets.count, initial: true) { _, count in
+                // Also tried here: a cold launch from a widget can arrive
+                // before the query has resolved, and the id has to keep until
+                // there is a wallet to match it against.
+                openRequestedWallet()
+
                 defer { knownWalletCount = count }
                 guard let known = knownWalletCount, count > known else { return }
                 Task { await askForReviewIfEarned() }
@@ -106,6 +115,23 @@ struct HomeView: View {
                 Text("This removes the wallet from your tracker. Your bitcoin on-chain is not affected.")
             }
         }
+    }
+
+    /// The wallet a tapped widget asked for, once the query has one to show.
+    /// A request for a wallet that no longer exists is dropped rather than
+    /// held, so a deleted wallet can't sit there hijacking the next launch.
+    private func openRequestedWallet() {
+        guard let id = router.requestedWalletID, !wallets.isEmpty else { return }
+        selectedWallet = wallets.first { $0.widgetID == id }
+        router.clear()
+    }
+
+    /// Publishing after the fetch rather than before it: the snapshot is what
+    /// the Home Screen reads, and there is no point handing it the same figures
+    /// it already has.
+    private func refresh() async {
+        await viewModel.refreshBalances(wallets: wallets)
+        WidgetBridge.publish(context: modelContext, formatter: viewModel.formatter)
     }
 
     /// Asked once, after the app has shown a real balance for a wallet the
@@ -154,7 +180,7 @@ struct HomeView: View {
         .scrollContentBackground(.hidden)
         .scrollEdgeEffectStyle(.soft, for: .top)
         .refreshable {
-            await viewModel.refreshBalances(wallets: wallets)
+            await refresh()
         }
     }
 

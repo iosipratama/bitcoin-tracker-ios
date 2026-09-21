@@ -72,16 +72,18 @@ actor BitcoinAPIService {
 
     /// Persisted, because in memory alone it reset on every launch — which on a
     /// network that blocks the primary meant eating the full timeout each time
-    /// the app was opened.
+    /// the app was opened. Kept in the shared suite so the widget starts from
+    /// whichever explorer the app last found answering, rather than learning
+    /// the same lesson again in its own process.
     private var preferredEndpoint: Int {
         didSet {
             guard preferredEndpoint != oldValue else { return }
-            UserDefaults.standard.set(preferredEndpoint, forKey: Self.preferredKey)
+            AppGroup.defaults.set(preferredEndpoint, forKey: Self.preferredKey)
         }
     }
 
     private init() {
-        let stored = UserDefaults.standard.object(forKey: Self.preferredKey) as? Int
+        let stored = AppGroup.defaults.object(forKey: Self.preferredKey) as? Int
         preferredEndpoint = Self.endpoints.indices.contains(stored ?? -1) ? stored! : 0
 
         let config = URLSessionConfiguration.default

@@ -27,6 +27,12 @@ final class Wallet {
     /// Optional for the same reason the two above are.
     var goalSatoshis: Int64?
 
+    /// Names this wallet to a widget's stored configuration, which outlives the
+    /// app process and has to survive a rename. Optional for the same migration
+    /// reason as the fields above; filled the first time a snapshot is written,
+    /// and never changed afterwards.
+    var widgetID: UUID?
+
     var symbol: WalletSymbol {
         get { symbolName.flatMap(WalletSymbol.init(rawValue:)) ?? Self.defaultSymbol(for: name) }
         set { symbolName = newValue.rawValue }
@@ -104,6 +110,28 @@ extension Wallet {
         let padded = fraction.padding(toLength: 8, withPad: "0", startingAt: 0)
         guard let satoshis = Int64(whole + padded), satoshis > 0 else { return nil }
         return satoshis
+    }
+}
+
+// MARK: - Widget snapshot
+extension Wallet {
+    /// Flattened for the widget, which never sees SwiftData. Mutating rather
+    /// than computed because a wallet that has never been on the Home Screen
+    /// has no `widgetID` yet, and this is the moment it earns one.
+    func snapshot() -> WalletSnapshot {
+        if widgetID == nil { widgetID = UUID() }
+
+        return WalletSnapshot(
+            id: widgetID ?? UUID(),
+            name: name,
+            symbol: symbol,
+            accent: accent,
+            addresses: addresses.map(\.address),
+            balanceSatoshis: balance.confirmedSatoshis,
+            pendingSatoshis: balance.pendingSatoshis,
+            goalSatoshis: goalSatoshis,
+            lastUpdated: addresses.compactMap(\.lastUpdated).min()
+        )
     }
 }
 

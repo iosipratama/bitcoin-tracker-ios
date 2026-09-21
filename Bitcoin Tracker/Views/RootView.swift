@@ -1,3 +1,4 @@
+import SwiftData
 import SwiftUI
 
 /// Decides what a launch opens on. A branch rather than a cover, so `HomeView`
@@ -6,6 +7,8 @@ import SwiftUI
 struct RootView: View {
     @AppStorage(AppStorageKey.hasCompletedWelcome) private var hasCompletedWelcome = false
     @Environment(PortfolioViewModel.self) private var viewModel
+    @Environment(WidgetRouter.self) private var router
+    @Environment(\.modelContext) private var modelContext
     @Environment(\.scenePhase) private var scenePhase
 
     var body: some View {
@@ -26,11 +29,20 @@ struct RootView: View {
         // One modifier at the root, so the flip is confirmed from whichever
         // screen — or sheet — happens to be open.
         .sensoryFeedback(.impact(weight: .medium), trigger: viewModel.hidesBalances)
+        // Taken here rather than in `HomeView`, which isn't on screen yet when
+        // a tap on a widget launches the app cold.
+        .onOpenURL { router.open($0) }
         .onChange(of: scenePhase, initial: true) { _, phase in
             if phase == .active {
                 viewModel.startFlipMonitoring()
             } else {
                 viewModel.stopFlipMonitoring()
+
+                // Leaving the app is the one moment that reliably follows every
+                // edit — a renamed wallet, a new goal, a different currency.
+                // Watching each of those individually would mean a hook in five
+                // screens and a sixth one missed.
+                WidgetBridge.publish(context: modelContext, formatter: viewModel.formatter)
             }
         }
     }
