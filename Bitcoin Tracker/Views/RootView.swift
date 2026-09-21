@@ -7,6 +7,7 @@ import SwiftUI
 struct RootView: View {
     @AppStorage(AppStorageKey.hasCompletedWelcome) private var hasCompletedWelcome = false
     @Environment(PortfolioViewModel.self) private var viewModel
+    @Environment(WidgetRouter.self) private var router
     @Environment(\.modelContext) private var modelContext
     @Environment(\.scenePhase) private var scenePhase
 
@@ -28,6 +29,9 @@ struct RootView: View {
         // One modifier at the root, so the flip is confirmed from whichever
         // screen — or sheet — happens to be open.
         .sensoryFeedback(.impact(weight: .medium), trigger: viewModel.hidesBalances)
+        // Taken here rather than in `HomeView`, which isn't on screen yet when
+        // a tap on a widget launches the app cold.
+        .onOpenURL { router.open($0) }
         .onChange(of: scenePhase, initial: true) { _, phase in
             if phase == .active {
                 viewModel.startFlipMonitoring()

@@ -19,6 +19,7 @@ struct WalletBalanceWidget: Widget {
         ) { entry in
             BalanceWidgetView(entry: entry)
                 .containerBackground(Custom.fillPrimary, for: .widget)
+                .widgetURL(entry.walletURL)
         }
         .configurationDisplayName("Wallet")
         .description("The balance of one wallet.")
@@ -36,6 +37,7 @@ struct WalletGoalWidget: Widget {
         ) { entry in
             GoalWidgetView(entry: entry)
                 .containerBackground(Custom.fillPrimary, for: .widget)
+                .widgetURL(entry.walletURL)
         }
         .configurationDisplayName("Goal")
         .description("Progress towards one wallet's goal.")

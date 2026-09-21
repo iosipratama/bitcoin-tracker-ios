@@ -118,6 +118,15 @@ nonisolated struct WalletTimelineProvider: AppIntentTimelineProvider {
     }
 }
 
+nonisolated extension WalletEntry {
+    /// Opens the wallet this widget follows. nil when there is none, which
+    /// leaves the tap opening the app plainly — better than deep-linking into
+    /// a wallet that was deleted.
+    var walletURL: URL? {
+        wallet.flatMap { WalletLink.url(walletID: $0.id) }
+    }
+}
+
 nonisolated extension BalanceFormatter {
     /// Stands in before any snapshot exists, when there is no balance to format
     /// anyway.
