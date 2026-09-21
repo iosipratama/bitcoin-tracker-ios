@@ -1,13 +1,26 @@
 import SwiftUI
 
-/// Name, colour and symbol pickers. Shared by the add-wallet flow and by editing
-/// an existing wallet, so the two can't drift apart.
+/// Name, goal, colour and symbol pickers. Shared by the add-wallet flow and by
+/// editing an existing wallet, so the two can't drift apart.
 struct WalletCustomizer: View {
     @Binding var name: String
     @Binding var accent: WalletAccent
     @Binding var symbol: WalletSymbol
+    @Binding var goalEnabled: Bool
+    @Binding var goalText: String
+
+    @FocusState private var goalFieldFocused: Bool
 
     private let columns = Array(repeating: GridItem(.flexible(), spacing: 12), count: 6)
+
+    /// Rounder than the cards elsewhere in the app. These three sit stacked and
+    /// nearly touching, and the softer corner is what keeps them reading as
+    /// separate surfaces rather than one long slab.
+    private let sectionRadius: CGFloat = 32
+
+    /// Concentric with `sectionRadius` across the field's 12pt inset, so the
+    /// two curves stay parallel.
+    private let fieldRadius: CGFloat = 20
 
     var body: some View {
         VStack(spacing: 20) {
@@ -20,9 +33,126 @@ struct WalletCustomizer: View {
                 .textInputAutocapitalization(.never)
                 .padding(.vertical, 8)
 
-            accentGrid
-            symbolGrid
+            VStack(spacing: 6) {
+                goalCard
+                accentGrid
+                symbolGrid
+            }
         }
+    }
+
+    private var goalCard: some View {
+        VStack(spacing: 0) {
+            goalRow
+
+            if goalEnabled {
+                goalField
+            }
+        }
+        .background(
+            RoundedRectangle(cornerRadius: sectionRadius, style: .continuous)
+                .fill(.groupedBackground)
+        )
+        .animation(.smooth, value: goalEnabled)
+    }
+
+    private var goalRow: some View {
+        HStack(spacing: 14) {
+            Circle()
+                .fill(.cardBackground)
+                .frame(width: 44, height: 44)
+                .overlay {
+                    Image(.iconTarget)
+                        .renderingMode(.template)
+                        .resizable()
+                        .scaledToFit()
+                        .frame(width: 20, height: 20)
+                        .foregroundStyle(.label)
+                }
+                .accessibilityHidden(true)
+
+            VStack(alignment: .leading, spacing: 2) {
+                Text("Goal")
+                    .font(.system(size: 17, weight: .semibold))
+                    .foregroundStyle(.label)
+
+                Text("Track progress toward a target")
+                    .font(.system(size: 14))
+                    .foregroundStyle(.secondaryLabel)
+                    .fixedSize(horizontal: false, vertical: true)
+            }
+
+            Spacer(minLength: 8)
+
+            Toggle("Goal", isOn: $goalEnabled)
+                .labelsHidden()
+                .tint(.brand)
+        }
+        .padding(.horizontal, 16)
+        .padding(.vertical, 12)
+        .contentShape(.rect)
+        .onTapGesture { goalEnabled.toggle() }
+    }
+
+    private var goalField: some View {
+        HStack(spacing: 8) {
+            Text("\u{20BF}")
+                .font(.walletBalanceMark)
+                .foregroundStyle(Custom.labelTertiary)
+
+            TextField("", text: $goalText, prompt: goalPrompt)
+                .font(.system(size: 20, weight: .semibold))
+                .foregroundStyle(.label)
+                .keyboardType(.decimalPad)
+                .tint(.brand)
+                .focused($goalFieldFocused)
+                .onChange(of: goalText) { _, newValue in
+                    let cleaned = Self.sanitize(newValue)
+                    if cleaned != newValue { goalText = cleaned }
+                }
+        }
+        .padding(.horizontal, 16)
+        .padding(.vertical, 14)
+        .frame(maxWidth: .infinity, alignment: .leading)
+        .background(
+            RoundedRectangle(cornerRadius: fieldRadius, style: .continuous)
+                .fill(Custom.backgroundBase)
+        )
+        .padding(.horizontal, 12)
+        .padding(.bottom, 12)
+        .transition(.opacity.combined(with: .move(edge: .top)))
+        .onAppear { goalFieldFocused = goalText.isEmpty }
+    }
+
+    private var goalPrompt: Text {
+        Text("0.00")
+            .font(.system(size: 20, weight: .semibold))
+            .foregroundStyle(Custom.labelQuaternary)
+    }
+
+    /// The decimal pad still offers whatever separator the locale uses, and a
+    /// paste can carry anything at all, so the field polices itself: digits and
+    /// one separator, never more than eight decimals.
+    private static func sanitize(_ raw: String) -> String {
+        var result = ""
+        var separatorSeen = false
+        var decimals = 0
+
+        for character in raw {
+            if character.isNumber {
+                if separatorSeen {
+                    guard decimals < 8 else { continue }
+                    decimals += 1
+                }
+                result.append(character)
+            } else if character == "." || character == "," {
+                guard !separatorSeen else { continue }
+                separatorSeen = true
+                result.append(".")
+            }
+        }
+
+        return result
     }
 
     private var namePrompt: Text {
@@ -53,7 +183,7 @@ struct WalletCustomizer: View {
         }
         .padding(16)
         .background(
-            RoundedRectangle(cornerRadius: .cardRadius, style: .continuous)
+            RoundedRectangle(cornerRadius: sectionRadius, style: .continuous)
                 .fill(.groupedBackground)
         )
     }
@@ -85,7 +215,7 @@ struct WalletCustomizer: View {
         }
         .padding(16)
         .background(
-            RoundedRectangle(cornerRadius: .cardRadius, style: .continuous)
+            RoundedRectangle(cornerRadius: sectionRadius, style: .continuous)
                 .fill(.groupedBackground)
         )
     }

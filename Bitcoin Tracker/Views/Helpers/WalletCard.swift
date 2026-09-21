@@ -44,10 +44,20 @@ struct WalletRow: View {
                 .font(.walletName)
                 .foregroundStyle(Custom.labelSecondary)
 
-            Spacer(minLength: 0)
+            Spacer(minLength: 8)
+
+            if let progress = wallet.goalProgress {
+                HStack(spacing: 8) {
+                    Text(viewModel.formattedGoalPercent(progress))
+                        .font(.walletFiat)
+                        .foregroundStyle(Custom.labelTertiary)
+
+                    GoalRing(progress: progress, isHidden: viewModel.hidesBalances)
+                }
+            }
         }
         .padding(.top, panelInset)
-        .padding(.leading, panelInset)
+        .padding(.horizontal, panelInset)
     }
 
     private var balancePanel: some View {

@@ -17,6 +17,7 @@ final class PortfolioViewModel {
     /// suggesting how many digits are underneath.
     private static let bitcoinMask = 6
     private static let fiatMask = 4
+    private static let goalMask = 2
 
     /// Public explorer APIs throttle aggressive clients, and a throttled response
     /// surfaces as an error badge on a wallet row. Stay well under.
@@ -204,6 +205,19 @@ final class PortfolioViewModel {
                 .precision(.fractionLength(0))
         )
         return hidesBalances ? masked(figure, digits: Self.fiatMask) : figure
+    }
+
+    /// Floored rather than rounded: 99.7% of a goal has not reached it. Left
+    /// uncapped above 100 so overshoot is visible.
+    ///
+    /// Masked with the balances because a percentage of a target the owner
+    /// chose is the balance restated.
+    func formattedGoalPercent(_ progress: Double) -> String {
+        guard !hidesBalances else {
+            return String(repeating: "*", count: Self.goalMask) + "%"
+        }
+        let percent = Int((progress * 100).rounded(.down))
+        return percent == 0 && progress > 0 ? "<1%" : "\(percent)%"
     }
 
     /// Replaces the run of digits in an already-formatted figure rather than

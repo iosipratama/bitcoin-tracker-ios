@@ -23,6 +23,10 @@ final class Wallet {
     private var symbolName: String?
     private var accentName: String?
 
+    /// The target balance, in satoshis. nil means the wallet has no goal.
+    /// Optional for the same reason the two above are.
+    var goalSatoshis: Int64?
+
     var symbol: WalletSymbol {
         get { symbolName.flatMap(WalletSymbol.init(rawValue:)) ?? Self.defaultSymbol(for: name) }
         set { symbolName = newValue.rawValue }
@@ -53,6 +57,56 @@ final class Wallet {
     var totalBTC: Double { balance.totalBTC }
 }
 
+// MARK: - Goal
+
+extension Wallet {
+    var hasGoal: Bool { (goalSatoshis ?? 0) > 0 }
+
+    var goalBTC: Double? {
+        guard hasGoal, let goalSatoshis else { return nil }
+        return Double(goalSatoshis) / .satoshisPerBTC
+    }
+
+    /// Deliberately unclamped: a wallet past its target reads 140% rather than
+    /// stalling at 100%, which is the whole reward for overshooting.
+    var goalProgress: Double? {
+        guard hasGoal, let goalSatoshis else { return nil }
+        return Double(totalSatoshis) / Double(goalSatoshis)
+    }
+
+    /// The goal put back into the editing field. Full satoshi precision, minus
+    /// the trailing zeros that precision leaves behind — nobody typed "0.02000000".
+    var goalEditText: String {
+        guard let goalBTC else { return "" }
+
+        var text = String(format: "%.8f", goalBTC)
+        while text.hasSuffix("0") { text.removeLast() }
+        if text.hasSuffix(".") { text.removeLast() }
+        return text
+    }
+
+    /// Parses what someone typed into the goal field. Both the add flow and the
+    /// edit sheet validate and save through this, so they can't disagree about
+    /// what counts as a usable amount.
+    static func goalSatoshis(fromBTCText text: String) -> Int64? {
+        let trimmed = text.trimmingCharacters(in: .whitespaces)
+        guard !trimmed.isEmpty else { return nil }
+
+        let parts = trimmed.replacingOccurrences(of: ",", with: ".").split(separator: ".", omittingEmptySubsequences: false)
+        guard parts.count <= 2 else { return nil }
+
+        let whole = parts[0].isEmpty ? "0" : String(parts[0])
+        let fraction = parts.count == 2 ? String(parts[1].prefix(8)) : ""
+        guard whole.allSatisfy(\.isNumber), fraction.allSatisfy(\.isNumber) else { return nil }
+
+        // Assembled as an integer string rather than multiplied as a Double:
+        // 0.1 * 100_000_000 lands on 10000000.000000002, which truncates short.
+        let padded = fraction.padding(toLength: 8, withPad: "0", startingAt: 0)
+        guard let satoshis = Int64(whole + padded), satoshis > 0 else { return nil }
+        return satoshis
+    }
+}
+
 // MARK: - Address lookup
 
 extension Wallet {
@@ -73,7 +127,8 @@ extension Wallet {
 
 extension Wallet {
     static func defaultSymbol(for name: String) -> WalletSymbol {
-        WalletSymbol.allCases[Int(name.stableHash % UInt64(WalletSymbol.allCases.count))]
+        let pool = WalletSymbol.derivable
+        return pool[Int(name.stableHash % UInt64(pool.count))]
     }
 
     static func defaultAccent(for name: String) -> WalletAccent {
