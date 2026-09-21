@@ -21,7 +21,7 @@ struct GoalMilestoneBar: View {
             HStack(spacing: spacing) {
                 ForEach(0..<milestones, id: \.self) { index in
                     Capsule()
-                        .fill(.cardBackground)
+                        .fill(.progressTrack)
                         .overlay(alignment: .leading) {
                             Capsule()
                                 .fill(.brand)

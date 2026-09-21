@@ -53,7 +53,6 @@ struct WalletRow: View {
                         .foregroundStyle(Custom.labelTertiary)
 
                     GoalRing(progress: progress, isHidden: viewModel.hidesBalances)
-                        .frame(width: 20, height: 20)
                 }
             }
         }

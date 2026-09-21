@@ -23,6 +23,10 @@ private enum Palette {
     static let controlFill = Color(hex: 0x242218, opacity: 0.8)
     static let divider = Color(hex: 0xFFFFFF, opacity: 0.08)
 
+    /// The unfilled part of a progress indicator. Opaque rather than a white
+    /// wash: it has to hold the same value on every card surface it sits on.
+    static let progressTrack = Color(hex: 0x343434)
+
     /// Sits on a saturated accent tile, so it is near-black rather than the page
     /// colour — the two happen to be close but mean different things.
     static let onAccent = Color(hex: 0x10100E)
@@ -124,6 +128,7 @@ extension ShapeStyle where Self == Color {
 
     /// Hairline rule between rows.
     static var divider: Color { Palette.divider }
+    static var progressTrack: Color { Palette.progressTrack }
 
 }
 
