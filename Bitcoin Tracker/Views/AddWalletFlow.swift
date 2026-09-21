@@ -22,6 +22,8 @@ struct AddWalletFlow: View {
     @State private var name = ""
     @State private var accent: WalletAccent = .blue
     @State private var symbol: WalletSymbol = .family
+    @State private var goalEnabled = false
+    @State private var goalText = ""
 
     private var trimmedAddress: String {
         address.trimmingCharacters(in: .whitespacesAndNewlines)
@@ -32,6 +34,13 @@ struct AddWalletFlow: View {
     private var canSave: Bool {
         !name.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty
             && store.canAddWallet(existing: allWallets.count)
+            && hasUsableGoal
+    }
+
+    /// A goal switched on but left blank would be dropped on save without
+    /// saying so, so the confirm button waits for it.
+    private var hasUsableGoal: Bool {
+        !goalEnabled || Wallet.goalSatoshis(fromBTCText: goalText) != nil
     }
 
     var body: some View {
@@ -111,11 +120,18 @@ struct AddWalletFlow: View {
             )
 
             ScrollView {
-                WalletCustomizer(name: $name, accent: $accent, symbol: $symbol)
-                    .padding(.horizontal, 16)
-                    .padding(.top, 8)
-                    .padding(.bottom, 28)
+                WalletCustomizer(
+                    name: $name,
+                    accent: $accent,
+                    symbol: $symbol,
+                    goalEnabled: $goalEnabled,
+                    goalText: $goalText
+                )
+                .padding(.horizontal, 16)
+                .padding(.top, 8)
+                .padding(.bottom, 28)
             }
+            .scrollDismissesKeyboard(.interactively)
         }
     }
 
@@ -170,6 +186,7 @@ struct AddWalletFlow: View {
         let wallet = Wallet(name: name.trimmingCharacters(in: .whitespacesAndNewlines))
         wallet.symbol = symbol
         wallet.accent = accent
+        wallet.goalSatoshis = goalEnabled ? Wallet.goalSatoshis(fromBTCText: goalText) : nil
 
         let btcAddress = BitcoinAddress(address: trimmedAddress)
         if let checkedBalance {
@@ -190,9 +207,12 @@ struct EditWalletView: View {
     @State private var name = ""
     @State private var accent: WalletAccent = .blue
     @State private var symbol: WalletSymbol = .family
+    @State private var goalEnabled = false
+    @State private var goalText = ""
 
     private var canSave: Bool {
         !name.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty
+            && (!goalEnabled || Wallet.goalSatoshis(fromBTCText: goalText) != nil)
     }
 
     var body: some View {
@@ -205,11 +225,18 @@ struct EditWalletView: View {
             )
 
             ScrollView {
-                WalletCustomizer(name: $name, accent: $accent, symbol: $symbol)
-                    .padding(.horizontal, 16)
-                    .padding(.top, 8)
-                    .padding(.bottom, 28)
+                WalletCustomizer(
+                    name: $name,
+                    accent: $accent,
+                    symbol: $symbol,
+                    goalEnabled: $goalEnabled,
+                    goalText: $goalText
+                )
+                .padding(.horizontal, 16)
+                .padding(.top, 8)
+                .padding(.bottom, 28)
             }
+            .scrollDismissesKeyboard(.interactively)
         }
         .fontDesign(.rounded)
         .background(.appBackground)
@@ -218,9 +245,17 @@ struct EditWalletView: View {
         .task {
             // Seeded once on appear: reading straight from the model would make
             // every keystroke a write.
-            name = wallet.name
-            accent = wallet.accent
-            symbol = wallet.symbol
+            // Untransacted, the goal card would animate open the moment the
+            // sheet appears, as though someone had just switched it on.
+            var transaction = Transaction()
+            transaction.disablesAnimations = true
+            withTransaction(transaction) {
+                name = wallet.name
+                accent = wallet.accent
+                symbol = wallet.symbol
+                goalEnabled = wallet.hasGoal
+                goalText = wallet.goalEditText
+            }
         }
     }
 
@@ -229,6 +264,8 @@ struct EditWalletView: View {
         wallet.name = name.trimmingCharacters(in: .whitespacesAndNewlines)
         wallet.accent = accent
         wallet.symbol = symbol
+        // Switching the goal off clears the target rather than parking it.
+        wallet.goalSatoshis = goalEnabled ? Wallet.goalSatoshis(fromBTCText: goalText) : nil
         dismiss()
     }
 }

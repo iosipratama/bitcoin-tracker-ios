@@ -22,6 +22,7 @@ struct WalletDetailView: View {
         ScrollView {
             VStack(spacing: 0) {
                 walletHeader
+                goalSection
                 addressList
             }
             .padding(.bottom, 40)
@@ -141,6 +142,59 @@ struct WalletDetailView: View {
                     .font(.system(size: 15))
                     .foregroundStyle(.tertiaryLabel)
             }
+        }
+    }
+
+    @ViewBuilder
+    private var goalSection: some View {
+        if let progress = wallet.goalProgress, let goalBTC = wallet.goalBTC {
+            VStack(alignment: .leading, spacing: 10) {
+                Text("Goal")
+                    .font(.system(size: 17, weight: .semibold))
+                    .foregroundStyle(.secondaryLabel)
+                    .padding(.horizontal, 20)
+
+                VStack(alignment: .leading, spacing: 14) {
+                    HStack(alignment: .firstTextBaseline, spacing: 4) {
+                        if let prefix = viewModel.amountPrefix {
+                            Text(prefix)
+                                .font(.walletBalanceMark)
+                                .foregroundStyle(Custom.labelTertiary)
+                        }
+
+                        Text(viewModel.formattedAmount(btc: goalBTC))
+                            .font(.walletBalance)
+                            .foregroundStyle(.label)
+
+                        if let suffix = viewModel.amountSuffix {
+                            Text(suffix)
+                                .font(.walletFiat)
+                                .foregroundStyle(Custom.labelTertiary)
+                        }
+
+                        Spacer(minLength: 8)
+
+                        Text(viewModel.formattedGoalPercent(progress))
+                            .font(.system(size: 17, weight: .semibold))
+                            .foregroundStyle(.brand)
+                    }
+                    .lineLimit(1)
+                    .minimumScaleFactor(0.6)
+
+                    GoalMilestoneBar(progress: progress, isHidden: viewModel.hidesBalances)
+                }
+                .padding(16)
+                .frame(maxWidth: .infinity, alignment: .leading)
+                .background(
+                    RoundedRectangle(cornerRadius: .cardRadius, style: .continuous)
+                        .fill(.groupedBackground)
+                )
+                .padding(.horizontal, 16)
+            }
+            .padding(.top, 8)
+            .accessibilityElement(children: .combine)
+            .accessibilityLabel("Goal")
+            .accessibilityValue("\(viewModel.formattedGoalPercent(progress)) of \(viewModel.formattedBTC(goalBTC))")
         }
     }
 
