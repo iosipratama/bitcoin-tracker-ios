@@ -314,7 +314,7 @@ struct AboutView: View {
     var body: some View {
         ScrollView {
             VStack(alignment: .leading, spacing: 20) {
-                Text("Sato is a calm, watch-only bitcoin tracker for long-term holder. It stores no private keys and has no account.")
+                Text("Sato is a calm, watch-only bitcoin tracker for long-term holders. It stores no private keys and has no account.")
                     .font(.system(size: 15))
                     .foregroundStyle(.secondaryLabel)
                     .fixedSize(horizontal: false, vertical: true)
