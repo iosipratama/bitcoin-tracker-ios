@@ -5,7 +5,6 @@ import SwiftUI
 /// of a whole is not.
 struct GoalMilestoneBar: View {
     let progress: Double
-    var isHidden = false
 
     private let milestones = 5
     private let spacing: CGFloat = 6
@@ -36,7 +35,7 @@ struct GoalMilestoneBar: View {
     }
 
     private func fillWidth(at index: Int, segment: CGFloat) -> CGFloat {
-        guard !isHidden, segment > 0 else { return 0 }
+        guard segment > 0 else { return 0 }
 
         let fraction = min(max(progress * Double(milestones) - Double(index), 0), 1)
         guard fraction > 0 else { return 0 }
