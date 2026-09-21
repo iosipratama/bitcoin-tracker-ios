@@ -7,19 +7,26 @@ struct GoalRing: View {
     let progress: Double
     var size: CGFloat = 22
 
-    /// Proportional to `size` rather than fixed, so the same ring reads
-    /// correctly beside a wallet name at 22pt and filling a widget at 72pt.
-    /// The ratios are the original 3 and 5 at the original 22.
-    private var trackWidth: CGFloat { size * 3 / 22 }
+    var trackWidth: CGFloat = 3
 
     /// Heavier than the track it runs on, so the distance already covered
     /// carries more weight than the distance left.
-    private var progressWidth: CGFloat { size * 5 / 22 }
+    ///
+    /// Both widths are overridable rather than proportional to `size`: scaling
+    /// them with the diameter turns a ring that reads well beside a wallet name
+    /// into a thick donut when a widget draws it three times larger.
+    var progressWidth: CGFloat = 5
+
+    /// `progressTrack` is tuned for the filled bar on the detail screen, where
+    /// a solid area carries the contrast. Drawn as a thin arc at widget size it
+    /// all but disappears, so the Home Screen passes a lighter tier rather than
+    /// the app quietly relighting a token it shares.
+    var trackStyle: Color = .progressTrack
 
     var body: some View {
         ZStack {
             Circle()
-                .stroke(.progressTrack, lineWidth: trackWidth)
+                .stroke(trackStyle, lineWidth: trackWidth)
 
             Circle()
                 .trim(from: 0, to: min(max(progress, 0), 1))

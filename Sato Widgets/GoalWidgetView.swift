@@ -7,8 +7,13 @@ import WidgetKit
 struct GoalWidgetView: View {
     let entry: WalletEntry
 
-    private let ringSize: CGFloat = 76
-    private let tileSize: CGFloat = 34
+    private let ringSize: CGFloat = 72
+    private let tileSize: CGFloat = 30
+
+    /// Heavier than the 3/5 the card uses, because the ring is three times the
+    /// diameter here and the same hairline would read as a scratch.
+    private let trackWidth: CGFloat = 5
+    private let progressWidth: CGFloat = 7
 
     var body: some View {
         if let wallet = entry.wallet {
@@ -20,12 +25,21 @@ struct GoalWidgetView: View {
 
     private func content(_ wallet: WalletSnapshot) -> some View {
         VStack(spacing: 0) {
+            Spacer(minLength: 0)
+
             ZStack {
-                GoalRing(progress: wallet.goalProgress ?? 0, size: ringSize)
+                GoalRing(
+                    progress: wallet.goalProgress ?? 0,
+                    size: ringSize,
+                    trackWidth: trackWidth,
+                    progressWidth: progressWidth,
+                    trackStyle: Custom.labelQuaternary
+                )
                 WalletSymbolTile(symbol: wallet.symbol, accent: wallet.accent, size: tileSize)
             }
 
             Spacer(minLength: 10)
+                .frame(maxHeight: 14)
 
             Text(wallet.name)
                 .font(.walletName)
@@ -35,6 +49,8 @@ struct GoalWidgetView: View {
 
             caption(wallet)
                 .padding(.top, 2)
+
+            Spacer(minLength: 0)
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)
         .multilineTextAlignment(.center)
