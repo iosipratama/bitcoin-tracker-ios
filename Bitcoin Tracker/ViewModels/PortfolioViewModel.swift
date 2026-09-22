@@ -10,6 +10,7 @@ final class PortfolioViewModel {
         static let showFiat = "showFiat"
         static let showSatoshi = "showSatoshi"
         static let flipToHide = "flipToHideBalance"
+        static let theme = "appTheme"
     }
 
     /// Public explorer APIs throttle aggressive clients, and a throttled response
@@ -68,6 +69,16 @@ final class PortfolioViewModel {
         }
     }
 
+    /// Applied once, at the root of the scene. Lives beside the other display
+    /// settings rather than in `@AppStorage` so the Settings row and the app
+    /// entry point read the same value through the same object.
+    var theme: AppTheme {
+        didSet {
+            guard theme != oldValue else { return }
+            UserDefaults.standard.set(theme.rawValue, forKey: Key.theme)
+        }
+    }
+
     /// Latched by the flip rather than mirroring the orientation, so a covered
     /// balance stays covered once the phone is picked back up. Never persisted:
     /// a launch always starts with the figures showing.
@@ -102,6 +113,8 @@ final class PortfolioViewModel {
         showFiat = defaults.object(forKey: Key.showFiat) as? Bool ?? true
         showSatoshi = defaults.object(forKey: Key.showSatoshi) as? Bool ?? false
         flipToHideBalance = defaults.bool(forKey: Key.flipToHide)
+        theme = defaults.string(forKey: Key.theme)
+            .flatMap(AppTheme.init(rawValue:)) ?? .automatic
 
         flipDetector.onFlip = { [weak self] in
             self?.balancesHidden.toggle()

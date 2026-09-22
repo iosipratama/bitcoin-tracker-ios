@@ -22,6 +22,7 @@ struct SettingsView: View {
                     bitcoinSection(showSatoshi: $bindable.showSatoshi)
                     fiatSection(showFiat: $bindable.showFiat, currency: $bindable.selectedCurrency)
                     appSection(flipToHide: $bindable.flipToHideBalance)
+                    themeSection(theme: $bindable.theme)
                     supportSection
                     #if DEBUG
                     debugSection
@@ -105,15 +106,7 @@ struct SettingsView: View {
                     }
                 } label: {
                     SettingsRow(icon: .iconGlobe, title: "Select currency") {
-                        HStack(spacing: 5) {
-                            Text(currency.wrappedValue.displayName)
-                                .font(.system(size: 17))
-                                .foregroundStyle(.label)
-
-                            Image(systemName: "chevron.up.chevron.down")
-                                .font(.system(size: 12, weight: .semibold))
-                                .foregroundStyle(.tertiaryLabel)
-                        }
+                        pickerValue(currency.wrappedValue.displayName)
                     }
                 }
                 .buttonStyle(.plain)
@@ -141,6 +134,42 @@ struct SettingsView: View {
                     .tint(.brand)
             }
             .onTapGesture { flipToHide.wrappedValue.toggle() }
+        }
+    }
+
+    /// Its own surface rather than a row in the App group: that group's footer
+    /// explains the flip, and a theme row beneath it would read as the thing
+    /// being explained.
+    private func themeSection(theme: Binding<AppTheme>) -> some View {
+        SettingsGroup(title: nil) {
+            Menu {
+                Picker("Theme", selection: theme) {
+                    ForEach(AppTheme.allCases) { option in
+                        Text(option.displayName).tag(option)
+                    }
+                }
+            } label: {
+                SettingsRow(systemImage: "circle.lefthalf.filled", title: "Theme") {
+                    pickerValue(theme.wrappedValue.displayName)
+                }
+            }
+            .buttonStyle(.plain)
+            .accessibilityLabel("Theme")
+            .accessibilityValue(theme.wrappedValue.displayName)
+        }
+    }
+
+    /// The trailing side of a row that opens a menu: the current choice and
+    /// the glyph that says it can be changed.
+    private func pickerValue(_ text: String) -> some View {
+        HStack(spacing: 5) {
+            Text(text)
+                .font(.system(size: 17))
+                .foregroundStyle(.label)
+
+            Image(systemName: "chevron.up.chevron.down")
+                .font(.system(size: 12, weight: .semibold))
+                .foregroundStyle(.tertiaryLabel)
         }
     }
 

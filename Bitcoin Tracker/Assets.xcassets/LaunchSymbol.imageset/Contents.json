@@ -1,6 +1,16 @@
 {
   "images" : [
     {
+      "filename" : "sato-symbol-logo-light.svg",
+      "idiom" : "universal"
+    },
+    {
+      "appearances" : [
+        {
+          "appearance" : "luminosity",
+          "value" : "dark"
+        }
+      ],
       "filename" : "sato-symbol-logo.svg",
       "idiom" : "universal"
     }
@@ -8,9 +18,5 @@
   "info" : {
     "author" : "xcode",
     "version" : 1
-  },
-  "properties" : {
-    "preserves-vector-representation" : true,
-    "template-rendering-intent" : "original"
   }
 }

@@ -26,7 +26,7 @@ long-term Bitcoin holder. someone who bought and isn't selling. They don't want 
 - Wallet Detail — wallet name, aggregated balance, list of addresses with individual balances
 - Add Wallet — a single flow covering the name, the first address, and its preview
 - Wallet Customizer — symbol and accent colour for a wallet
-- Settings — fiat currency selector, fiat show/hide, satoshi toggle, support links, API attribution, restore purchase
+- Settings — fiat currency selector, fiat show/hide, satoshi toggle, flip-to-hide, theme (Automatic / Light / Dark), support links, API attribution, restore purchase
 - Paywall — the one purchase, reachable when adding a second wallet and from Settings
 - Debug — DEBUG-only toggles (fake unlock, force paywall, force empty state)
 
@@ -34,7 +34,7 @@ long-term Bitcoin holder. someone who bought and isn't selling. They don't want 
 
 - **SwiftUI + SwiftData** (no UIKit, no third-party dependencies)
 - **Platform:** iPhone only (`TARGETED_DEVICE_FAMILY = 1`). There is no iPad adaptation anywhere — no size classes, no width clamps — so adding iPad means real layout work, not just a build setting.
-- **Models:** `Wallet` (name, createdAt, optional symbol/accent raw strings, cascade → addresses, `freeLimit`) and `BitcoinAddress` (address, `balanceSatoshis`, `pendingSatoshis`, lastUpdated, fetchError). Supporting value types: `AddressBalance`, `Quote`, `FiatCurrency` (29 currencies), `WalletSymbol`, `WalletAccent`, `SupportLinks`, `SupportEnvironment`
+- **Models:** `Wallet` (name, createdAt, optional symbol/accent raw strings, cascade → addresses, `freeLimit`) and `BitcoinAddress` (address, `balanceSatoshis`, `pendingSatoshis`, lastUpdated, fetchError). Supporting value types: `AddressBalance`, `Quote`, `FiatCurrency` (29 currencies), `WalletSymbol`, `WalletAccent`, `AppTheme`, `SupportLinks`, `SupportEnvironment`
 - **Services:**
   - `BitcoinAPIService` — `actor`; fetches on-chain balance from Esplora-compatible explorers, mempool.space first, then mempool.emzy.de and blockstream.info as fallbacks
   - `PriceService` — `actor`; fetches BTC price via CoinGecko, 60-second in-memory cache
@@ -43,7 +43,7 @@ long-term Bitcoin holder. someone who bought and isn't selling. They don't want 
 - **ViewModel:** `PortfolioViewModel` drives the home screen
 - **Views:** `RootView`, `WelcomeView`, `HomeView`, `WalletDetailView`, `AddWalletFlow`, `AddAddressView`, `WalletCustomizer`, `SettingsView`, `PaywallView`, `DebugView`
 - **Helpers:** `WalletCard`, `AnimatingNumber`, `ProminentCapsuleButton`, `SettingsRow`, `StaleStamp`
-- **Extensions:** `Color+Extensions` (custom palette + `cardRadius`/`rowRadius`), `Font+Extensions`, `Double+Bitcoin`
+- **Extensions:** `Color+Extensions` (adaptive palette — every token carries a light and a dark value via `Color(light:dark:)` — plus `cardRadius`/`rowRadius`), `Font+Extensions`, `Double+Bitcoin`
 
 ## Purchases
 
@@ -64,4 +64,6 @@ The listing lives in `appStoreConnect/` and syncs through Bitrig. Edit those fil
 
 
 ### Design principles
-- Dark only.
+- Two themes, one design. Dark came first and sets the structure: page is the deepest surface, cards lift off it, the inset panel drops back to the page tone. Light inverts the direction (paper page `F4F3F0`, white cards, paper inset) but keeps the structure.
+- Theme is a setting (`PortfolioViewModel.theme`, default Automatic) applied once via `preferredColorScheme` at the app root. Never hard-code `.dark`, `.white` or `.black` in a view; every colour goes through a role in `Color+Extensions`.
+- The accent `F7931A` and `onAccent` are the only colours that don't change with the theme.
