@@ -14,7 +14,7 @@ struct Bitcoin_TrackerApp: App {
                 .environment(store)
                 .environment(router)
                 .task { await store.load() }
-                .preferredColorScheme(.dark)
+                .preferredColorScheme(viewModel.theme.colorScheme)
         }
         .modelContainer(for: [Wallet.self, BitcoinAddress.self])
     }

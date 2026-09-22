@@ -60,8 +60,9 @@ struct SettingsRow<Trailing: View>: View {
         self.trailing = trailing()
     }
 
-    /// For rows with no drawn asset of their own — the debug screen, which
-    /// isn't worth commissioning artwork for.
+    /// For rows with no drawn asset of their own — the theme row, whose
+    /// half-filled circle SF Symbols already draw well, and the debug screen,
+    /// which isn't worth commissioning artwork for.
     init(systemImage: String, title: String, @ViewBuilder trailing: () -> Trailing) {
         self.glyph = .symbol(systemImage)
         self.title = title
