@@ -1,0 +1,11 @@
+Goals. Give a wallet a target, like a house or a year off, and watch it fill in over time.
+
+Home Screen widgets. See a wallet's balance, or how close it is to its goal, without opening Sato.
+
+A light theme. Choose Automatic, Light, or Dark in Settings.
+
+Flip to hide. Turn your phone face down to hide your balances. Switch it on in Settings.
+
+Sato now runs on iOS 18, so more iPhones can use it.
+
+Plus a cleaner address card and a gentler welcome.
