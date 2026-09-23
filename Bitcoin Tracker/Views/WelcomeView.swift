@@ -47,7 +47,7 @@ struct WelcomeView: View {
             .padding(.bottom, 16)
         }
         .scrollBounceBehavior(.basedOnSize)
-        .scrollEdgeEffectStyle(.soft, for: .bottom)
+        .softScrollEdge(for: .bottom)
         .onTapGesture { finish() }
         .safeAreaInset(edge: .bottom) { continueButton }
         .background(Custom.backgroundBase)

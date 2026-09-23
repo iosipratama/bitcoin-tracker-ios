@@ -245,25 +245,33 @@ struct SheetConfirmButton: View {
     var isEnabled = true
     let action: () -> Void
 
+    private var fill: Color {
+        isEnabled ? .brand : .brandDisabled
+    }
+
     var body: some View {
         Button(action: action) {
-            Image(systemName: "checkmark")
-                .font(.system(size: 17, weight: .semibold))
-                .foregroundStyle(.onAccent)
-                .frame(width: .sheetButton, height: .sheetButton)
+            if #available(iOS 26.0, *) {
                 // The effect rather than .glassProminent: that button style adds
                 // its own padding around the label, so a 44pt label rendered
                 // closer to 60 and outgrew the close button beside it.
-                .glassEffect(
-                    .regular
-                        .tint(isEnabled ? Color.brand : Color.brandDisabled)
-                        .interactive(),
-                    in: .circle
-                )
+                checkmark
+                    .glassEffect(.regular.tint(fill).interactive(), in: .circle)
+            } else {
+                checkmark
+                    .background(Circle().fill(fill))
+            }
         }
         .buttonStyle(.plain)
         .disabled(!isEnabled)
         .accessibilityLabel("Save")
+    }
+
+    private var checkmark: some View {
+        Image(systemName: "checkmark")
+            .font(.system(size: 17, weight: .semibold))
+            .foregroundStyle(.onAccent)
+            .frame(width: .sheetButton, height: .sheetButton)
     }
 }
 
