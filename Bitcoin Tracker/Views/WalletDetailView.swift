@@ -27,7 +27,7 @@ struct WalletDetailView: View {
             }
             .padding(.bottom, 40)
         }
-        .scrollEdgeEffectStyle(.soft, for: .top)
+        .softScrollEdge(for: .top)
         .fontDesign(.rounded)
         .background(.appBackground)
         .navigationTitle(wallet.name)

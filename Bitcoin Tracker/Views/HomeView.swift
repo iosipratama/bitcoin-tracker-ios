@@ -178,7 +178,7 @@ struct HomeView: View {
         .listStyle(.plain)
         .contentMargins(.top, 16, for: .scrollContent)
         .scrollContentBackground(.hidden)
-        .scrollEdgeEffectStyle(.soft, for: .top)
+        .softScrollEdge(for: .top)
         .refreshable {
             await refresh()
         }

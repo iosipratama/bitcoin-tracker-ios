@@ -33,7 +33,7 @@ long-term Bitcoin holder. someone who bought and isn't selling. They don't want 
 ## Architecture
 
 - **SwiftUI + SwiftData** (no UIKit, no third-party dependencies)
-- **Platform:** iPhone only (`TARGETED_DEVICE_FAMILY = 1`). There is no iPad adaptation anywhere — no size classes, no width clamps — so adding iPad means real layout work, not just a build setting.
+- **Platform:** iPhone only (`TARGETED_DEVICE_FAMILY = 1`), iOS 18 and later. There is no iPad adaptation anywhere — no size classes, no width clamps — so adding iPad means real layout work, not just a build setting.
 - **Models:** `Wallet` (name, createdAt, optional symbol/accent raw strings, cascade → addresses, `freeLimit`) and `BitcoinAddress` (address, `balanceSatoshis`, `pendingSatoshis`, lastUpdated, fetchError). Supporting value types: `AddressBalance`, `Quote`, `FiatCurrency` (29 currencies), `WalletSymbol`, `WalletAccent`, `AppTheme`, `SupportLinks`, `SupportEnvironment`
 - **Services:**
   - `BitcoinAPIService` — `actor`; fetches on-chain balance from Esplora-compatible explorers, mempool.space first, then mempool.emzy.de and blockstream.info as fallbacks
@@ -61,6 +61,7 @@ The listing lives in `appStoreConnect/` and syncs through Bitrig. Edit those fil
 - Prefer editing existing files over creating new ones
 - No comments unless the WHY is non-obvious
 - No third-party packages — keep it dependency-free
+- iOS 26 is the reference design; iOS 18 is the floor because it runs on the same iPhones as iOS 17 (XR/XS and later), so going lower gains no devices. iOS 26 APIs (Liquid Glass, scroll edge effects) go behind `#available(iOS 26.0, *)` with a plain iOS 18 fallback that keeps the colour roles, e.g. `softScrollEdge(for:)` and `SheetConfirmButton`
 
 
 ### Design principles
