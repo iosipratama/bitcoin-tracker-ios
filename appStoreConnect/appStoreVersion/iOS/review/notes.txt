@@ -1,11 +1,18 @@
 Sato is a read-only ("watch-only") Bitcoin tracker. It holds no private keys, cannot send or receive funds, and has no trading, exchange or custody features. There is no account system and no sign-in, so no demo account is needed.
 
 To try the app:
-1. Tap Continue on the welcome screen, then create a wallet and give it any name.
-2. Paste any public Bitcoin address to see its balance. A well-known public address with a balance you can use for testing: 1A1zP1eP5QGefi2DMPTfTL5SLmv7DivfNa
-3. Pull to refresh to re-fetch the balance and price.
-4. Settings lets you switch the fiat currency, hide fiat, and show amounts in satoshis.
+1. Tap Continue on the welcome screen, then tap + to add a wallet.
+2. Tap Paste to paste any public Bitcoin address. A well-known public address with a balance you can use for testing: 1A1zP1eP5QGefi2DMPTfTL5SLmv7DivfNa
+3. Give the wallet any name and tap the checkmark.
+4. Pull to refresh to re-fetch the balance and price.
+5. Settings lets you switch the fiat currency, hide fiat, show amounts in satoshis, and choose the theme.
+
+New in 1.1:
+- Goals: open a wallet, tap the ••• menu, choose Customize, switch on Goal and enter a BTC amount. Progress shows on the wallet and on the Home list.
+- Home Screen widgets: touch and hold the Home Screen, tap Edit > Add Widget, and search for Sato. There are two small widgets, Wallet and Goal. Touch and hold a widget and choose Edit Widget to pick a wallet; tapping the widget opens that wallet in the app.
+- Flip to hide: turn on Settings > Flip-to-Hide Balance, then place the iPhone face down to hide balances. They stay hidden when it is picked up; placing it face down again shows them.
+- Light theme: Settings > Theme (Automatic, Light, Dark).
 
 Data sources: on-chain balances come from public Esplora block explorers (mempool.space and mirrors); the BTC price comes from CoinGecko. Both are public, unauthenticated endpoints. Wallet names and addresses are stored only on the device.
 
-In-app purchase: Sato Plus is a one-time non-consumable that lifts the one-wallet limit. The paywall appears when adding a second wallet, and can also be reached from Settings, where Restore Purchase is available.
+In-app purchase: Sato Plus is a one-time non-consumable that lifts the one-wallet limit. The paywall appears when adding a second wallet: after creating the first wallet, tap + again. Restore Purchase is in Settings.

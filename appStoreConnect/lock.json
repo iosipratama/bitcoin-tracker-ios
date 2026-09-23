@@ -2,40 +2,52 @@
   "appId": "6811720640",
   "derived": {
     "appStoreVersionScreenshotSets": {
-      "IOS:1.0:en-US:APP_IPHONE_67": {
+      "IOS:1.1:en-US:APP_IPHONE_67": {
         "screenshots": [
           {
-            "fileName": "01-track.png",
-            "fileSize": 527654,
-            "id": "62054d5c-2c95-4b09-9eb9-b3a995311539",
-            "sourceFileChecksum": "e75066e2d51972cd4ab2bb088ae02969"
+            "fileName": "01-goals.png",
+            "fileSize": 573602,
+            "id": "f1c00019-6029-8bc0-8019-143f021f78ce",
+            "sourceFileChecksum": "8ec388cad902337b8f0fec1e6481ecb0"
           },
           {
-            "fileName": "02-paste.png",
-            "fileSize": 404310,
-            "id": "93579c8d-9d43-44a5-848e-3084853eb4d6",
-            "sourceFileChecksum": "685a243f6d486bb65bd9ef9a60b41ff1"
+            "fileName": "02-progress.png",
+            "fileSize": 542784,
+            "id": "cb800019-6029-8bc0-801a-6f30f6700d7e",
+            "sourceFileChecksum": "dc6eff7bcceef69c7486f75213dd1473"
           },
           {
-            "fileName": "03-purpose.png",
-            "fileSize": 529153,
-            "id": "47a472d9-d337-4e14-b681-f7b59d9749ef",
-            "sourceFileChecksum": "7a204e16040c7fa05c394adccb69352a"
+            "fileName": "03-paste.png",
+            "fileSize": 411381,
+            "id": "fe400019-6029-8bc0-8008-bc9c296165f2",
+            "sourceFileChecksum": "d029b4b64af00e48bb5f49cfd921fc3e"
           },
           {
-            "fileName": "04-units.png",
-            "fileSize": 430328,
-            "id": "4c1c6302-6578-4c86-ad2e-18531ca25199",
-            "sourceFileChecksum": "bc466626cf4795a884e23b967cb7e169"
+            "fileName": "04-goal-every-stack.png",
+            "fileSize": 527826,
+            "id": "09000019-6029-8bc0-8000-bbca79b1aced",
+            "sourceFileChecksum": "e7382f941aeb58cd6b11faa785fa04c8"
           },
           {
-            "fileName": "05-manifesto.png",
+            "fileName": "05-home-screen.png",
+            "fileSize": 1032325,
+            "id": "86400019-6029-8bc0-802d-a4f0eda317d0",
+            "sourceFileChecksum": "c7ee32784f3502b9a340828585c8bb75"
+          },
+          {
+            "fileName": "06-your-way.png",
+            "fileSize": 448401,
+            "id": "05c00019-6029-8bc0-800a-fc4eea0b2140",
+            "sourceFileChecksum": "e71d47d165f868357c4971d5011e0520"
+          },
+          {
+            "fileName": "07-manifesto.png",
             "fileSize": 232000,
-            "id": "5d3314e6-8983-4d1b-a02f-0116c8d5cfb1",
+            "id": "97400019-6029-8bc0-8011-d7aa759aab85",
             "sourceFileChecksum": "0aaf305832cafe7a0d4124dd293a03c1"
           }
         ],
-        "setID": "f65705d3-463e-4656-a252-095fb839d13b"
+        "setID": "9e671fe7-35dd-4e75-ab98-12d3a239ca3a"
       }
     },
     "inAppPurchasePricing": {
@@ -1408,75 +1420,1135 @@
       "id": "50e06c58-3b25-41ec-bad5-03a9df15fc6f",
       "type": "appInfoLocalizations"
     },
-    "appStoreReviewDetail:IOS:1.0": {
+    "appStoreReviewDetail:IOS:1.1": {
       "fields": {
         "contactEmail": "pratamaiosi@gmail.com",
         "contactFirstName": "Iosi",
         "contactLastName": "Pratama Putra",
         "contactPhone": "+6285121965123",
         "demoAccountRequired": false,
-        "notes": "Sato is a read-only (\"watch-only\") Bitcoin tracker. It holds no private keys, cannot send or receive funds, and has no trading, exchange or custody features. There is no account system and no sign-in, so no demo account is needed.\n\nTo try the app:\n1. Tap Continue on the welcome screen, then create a wallet and give it any name.\n2. Paste any public Bitcoin address to see its balance. A well-known public address with a balance you can use for testing: 1A1zP1eP5QGefi2DMPTfTL5SLmv7DivfNa\n3. Pull to refresh to re-fetch the balance and price.\n4. Settings lets you switch the fiat currency, hide fiat, and show amounts in satoshis.\n\nData sources: on-chain balances come from public Esplora block explorers (mempool.space and mirrors); the BTC price comes from CoinGecko. Both are public, unauthenticated endpoints. Wallet names and addresses are stored only on the device.\n\nIn-app purchase: Sato Plus is a one-time non-consumable that lifts the one-wallet limit. The paywall appears when adding a second wallet, and can also be reached from Settings, where Restore Purchase is available."
+        "notes": "Sato is a read-only (\"watch-only\") Bitcoin tracker. It holds no private keys, cannot send or receive funds, and has no trading, exchange or custody features. There is no account system and no sign-in, so no demo account is needed.\n\nTo try the app:\n1. Tap Continue on the welcome screen, then tap + to add a wallet.\n2. Tap Paste to paste any public Bitcoin address. A well-known public address with a balance you can use for testing: 1A1zP1eP5QGefi2DMPTfTL5SLmv7DivfNa\n3. Give the wallet any name and tap the checkmark.\n4. Pull to refresh to re-fetch the balance and price.\n5. Settings lets you switch the fiat currency, hide fiat, show amounts in satoshis, and choose the theme.\n\nNew in 1.1:\n- Goals: open a wallet, tap the ••• menu, choose Customize, switch on Goal and enter a BTC amount. Progress shows on the wallet and on the Home list.\n- Home Screen widgets: touch and hold the Home Screen, tap Edit > Add Widget, and search for Sato. There are two small widgets, Wallet and Goal. Touch and hold a widget and choose Edit Widget to pick a wallet; tapping the widget opens that wallet in the app.\n- Flip to hide: turn on Settings > Flip-to-Hide Balance, then place the iPhone face down to hide balances. They stay hidden when it is picked up; placing it face down again shows them.\n- Light theme: Settings > Theme (Automatic, Light, Dark).\n\nData sources: on-chain balances come from public Esplora block explorers (mempool.space and mirrors); the BTC price comes from CoinGecko. Both are public, unauthenticated endpoints. Wallet names and addresses are stored only on the device.\n\nIn-app purchase: Sato Plus is a one-time non-consumable that lifts the one-wallet limit. The paywall appears when adding a second wallet: after creating the first wallet, tap + again. Restore Purchase is in Settings."
       },
-      "id": "4db0648c-f258-42c8-ab1e-fd6a67530d77",
+      "id": "e8ae1cd1-a85b-40ea-8c49-f1ea5157d869",
       "type": "appStoreReviewDetails"
     },
-    "appStoreVersion:IOS:1.0": {
+    "appStoreVersion:IOS:1.1": {
       "fields": {
         "copyright": "2026 Iosi Pratama Putra",
         "releaseType": "AFTER_APPROVAL",
-        "versionString": "1.0"
+        "versionString": "1.1"
       },
-      "id": "4f627bb0-e38c-44cd-8b73-868f723a478d",
+      "id": "43afd7ba-5bcf-4ed6-9d12-830b05a9ce1c",
       "type": "appStoreVersions"
     },
-    "appStoreVersionLocalization:IOS:1.0:en-US": {
+    "appStoreVersionLocalization:IOS:1.1:en-US": {
       "fields": {
         "description": "Sato is a calm, watch-only bitcoin tracker. See what you've saved without the noise.\n\nPaste a public address and see your balance. No account. No seed phrase. No keys. Sato can only look. It can never move your bitcoin.\n\nWHY SATO\n\nBitcoin goes up and down in dollars, and most apps make you feel every swing: charts, alerts, red numbers. But bitcoin tends to reward the people who do nothing. Sato is made for that. Open it now and then, see where you stand, close it again.\n\nWHAT YOU CAN DO\n\n- Track several wallets, each with one or more addresses\n- Organize by goal, like a house, college, or retirement, with your own icon and color\n- See balances in BTC or sats\n- Show value in 29 currencies, or hide fiat completely\n- See pending amounts separately, so nothing surprises you\n- Use Legacy, SegWit, and Taproot addresses\n\nPRIVATE BY DESIGN\n\nNo account, no analytics, no servers of our own. Your wallets stay on your phone. Sato only asks public block explorers for balances and a price service for exchange rates. Nothing identifies you, because there's nothing to identify.\n\nSATO PLUS\n\nSato is free with one wallet. A single one-time purchase — never a subscription — unlocks as many wallets as you like.",
-        "keywords": "sats,satoshi,hodl,cold,storage,hardware,address,portfolio,crypto,price,stack,savings,balance,monitor",
+        "keywords": "savings,goal,sats,satoshi,address,balance,hodl,stack,fiat,currency,private,crypto,widget,target",
         "marketingUrl": "https://mekarya.studio/apps/sato",
         "promotionalText": "For long-term bitcoin holders saving for the future, Sato gives you peace, not price alerts or meme coins.",
-        "supportUrl": "https://mekarya.studio/support/sato"
+        "supportUrl": "https://mekarya.studio/support/sato",
+        "whatsNew": "Goals. Give a wallet a target, like a house or a year off, and watch your stack grow toward it.\n\nHome Screen widgets. Check a wallet's balance or goal progress without opening Sato.\n\nLight theme. Pick Automatic, Light, or Dark in Settings.\n\nFlip to hide. Put your phone face down and your balances disappear. Turn it on in Settings.\n\niOS 18 support. More iPhones can run Sato now.\n\nAlso: a cleaner address card and a friendlier welcome."
       },
-      "id": "3e16736a-a727-44b4-b57e-4a2c8d999073",
+      "id": "bf815e1c-2599-44e4-9694-4b18f42d3d25",
       "type": "appStoreVersionLocalizations"
     },
-    "appStoreVersionScreenshotSet:IOS:1.0:en-US:APP_IPHONE_67": {
+    "appStoreVersionScreenshotSet:IOS:1.1:en-US:APP_IPHONE_67": {
       "fields": {
         "screenshots": [
           {
-            "file": "01-track.png",
-            "fileSize": 527654,
-            "sourceFileChecksum": "e75066e2d51972cd4ab2bb088ae02969"
+            "file": "01-goals.png",
+            "fileSize": 573602,
+            "sourceFileChecksum": "8ec388cad902337b8f0fec1e6481ecb0"
           },
           {
-            "file": "02-paste.png",
-            "fileSize": 404310,
-            "sourceFileChecksum": "685a243f6d486bb65bd9ef9a60b41ff1"
+            "file": "02-progress.png",
+            "fileSize": 542784,
+            "sourceFileChecksum": "dc6eff7bcceef69c7486f75213dd1473"
           },
           {
-            "file": "03-purpose.png",
-            "fileSize": 529153,
-            "sourceFileChecksum": "7a204e16040c7fa05c394adccb69352a"
+            "file": "03-paste.png",
+            "fileSize": 411381,
+            "sourceFileChecksum": "d029b4b64af00e48bb5f49cfd921fc3e"
           },
           {
-            "file": "04-units.png",
-            "fileSize": 430328,
-            "sourceFileChecksum": "bc466626cf4795a884e23b967cb7e169"
+            "file": "04-goal-every-stack.png",
+            "fileSize": 527826,
+            "sourceFileChecksum": "e7382f941aeb58cd6b11faa785fa04c8"
           },
           {
-            "file": "05-manifesto.png",
+            "file": "05-home-screen.png",
+            "fileSize": 1032325,
+            "sourceFileChecksum": "c7ee32784f3502b9a340828585c8bb75"
+          },
+          {
+            "file": "06-your-way.png",
+            "fileSize": 448401,
+            "sourceFileChecksum": "e71d47d165f868357c4971d5011e0520"
+          },
+          {
+            "file": "07-manifesto.png",
             "fileSize": 232000,
             "sourceFileChecksum": "0aaf305832cafe7a0d4124dd293a03c1"
           }
         ]
       },
-      "id": "f65705d3-463e-4656-a252-095fb839d13b",
+      "id": "9e671fe7-35dd-4e75-ab98-12d3a239ca3a",
       "type": "appScreenshotSets"
     },
     "availability": {
       "fields": {
         "territories": [
-
+          {
+            "available": true,
+            "preOrderEnabled": false,
+            "releaseDate": "2026-09-22",
+            "territory": "AFG"
+          },
+          {
+            "available": true,
+            "preOrderEnabled": false,
+            "releaseDate": "2026-09-22",
+            "territory": "AGO"
+          },
+          {
+            "available": true,
+            "preOrderEnabled": false,
+            "releaseDate": "2026-09-22",
+            "territory": "AIA"
+          },
+          {
+            "available": true,
+            "preOrderEnabled": false,
+            "releaseDate": "2026-09-22",
+            "territory": "ALB"
+          },
+          {
+            "available": true,
+            "preOrderEnabled": false,
+            "releaseDate": "2026-09-22",
+            "territory": "ARE"
+          },
+          {
+            "available": true,
+            "preOrderEnabled": false,
+            "releaseDate": "2026-09-22",
+            "territory": "ARG"
+          },
+          {
+            "available": true,
+            "preOrderEnabled": false,
+            "releaseDate": "2026-09-22",
+            "territory": "ARM"
+          },
+          {
+            "available": true,
+            "preOrderEnabled": false,
+            "releaseDate": "2026-09-22",
+            "territory": "ATG"
+          },
+          {
+            "available": true,
+            "preOrderEnabled": false,
+            "releaseDate": "2026-09-22",
+            "territory": "AUS"
+          },
+          {
+            "available": true,
+            "preOrderEnabled": false,
+            "releaseDate": "2026-09-22",
+            "territory": "AUT"
+          },
+          {
+            "available": true,
+            "preOrderEnabled": false,
+            "releaseDate": "2026-09-22",
+            "territory": "AZE"
+          },
+          {
+            "available": true,
+            "preOrderEnabled": false,
+            "releaseDate": "2026-09-22",
+            "territory": "BEL"
+          },
+          {
+            "available": true,
+            "preOrderEnabled": false,
+            "releaseDate": "2026-09-22",
+            "territory": "BEN"
+          },
+          {
+            "available": true,
+            "preOrderEnabled": false,
+            "releaseDate": "2026-09-22",
+            "territory": "BFA"
+          },
+          {
+            "available": true,
+            "preOrderEnabled": false,
+            "releaseDate": "2026-09-22",
+            "territory": "BGR"
+          },
+          {
+            "available": true,
+            "preOrderEnabled": false,
+            "releaseDate": "2026-09-22",
+            "territory": "BHR"
+          },
+          {
+            "available": true,
+            "preOrderEnabled": false,
+            "releaseDate": "2026-09-22",
+            "territory": "BHS"
+          },
+          {
+            "available": true,
+            "preOrderEnabled": false,
+            "releaseDate": "2026-09-22",
+            "territory": "BIH"
+          },
+          {
+            "available": true,
+            "preOrderEnabled": false,
+            "releaseDate": "2026-09-22",
+            "territory": "BLR"
+          },
+          {
+            "available": true,
+            "preOrderEnabled": false,
+            "releaseDate": "2026-09-22",
+            "territory": "BLZ"
+          },
+          {
+            "available": true,
+            "preOrderEnabled": false,
+            "releaseDate": "2026-09-22",
+            "territory": "BMU"
+          },
+          {
+            "available": true,
+            "preOrderEnabled": false,
+            "releaseDate": "2026-09-22",
+            "territory": "BOL"
+          },
+          {
+            "available": true,
+            "preOrderEnabled": false,
+            "releaseDate": "2026-09-22",
+            "territory": "BRA"
+          },
+          {
+            "available": true,
+            "preOrderEnabled": false,
+            "releaseDate": "2026-09-22",
+            "territory": "BRB"
+          },
+          {
+            "available": true,
+            "preOrderEnabled": false,
+            "releaseDate": "2026-09-22",
+            "territory": "BRN"
+          },
+          {
+            "available": true,
+            "preOrderEnabled": false,
+            "releaseDate": "2026-09-22",
+            "territory": "BTN"
+          },
+          {
+            "available": true,
+            "preOrderEnabled": false,
+            "releaseDate": "2026-09-22",
+            "territory": "BWA"
+          },
+          {
+            "available": true,
+            "preOrderEnabled": false,
+            "releaseDate": "2026-09-22",
+            "territory": "CAN"
+          },
+          {
+            "available": true,
+            "preOrderEnabled": false,
+            "releaseDate": "2026-09-22",
+            "territory": "CHE"
+          },
+          {
+            "available": true,
+            "preOrderEnabled": false,
+            "releaseDate": "2026-09-22",
+            "territory": "CHL"
+          },
+          {
+            "available": true,
+            "preOrderEnabled": false,
+            "releaseDate": "2026-09-22",
+            "territory": "CHN"
+          },
+          {
+            "available": true,
+            "preOrderEnabled": false,
+            "releaseDate": "2026-09-22",
+            "territory": "CIV"
+          },
+          {
+            "available": true,
+            "preOrderEnabled": false,
+            "releaseDate": "2026-09-22",
+            "territory": "CMR"
+          },
+          {
+            "available": true,
+            "preOrderEnabled": false,
+            "releaseDate": "2026-09-22",
+            "territory": "COD"
+          },
+          {
+            "available": true,
+            "preOrderEnabled": false,
+            "releaseDate": "2026-09-22",
+            "territory": "COG"
+          },
+          {
+            "available": true,
+            "preOrderEnabled": false,
+            "releaseDate": "2026-09-22",
+            "territory": "COL"
+          },
+          {
+            "available": true,
+            "preOrderEnabled": false,
+            "releaseDate": "2026-09-22",
+            "territory": "CPV"
+          },
+          {
+            "available": true,
+            "preOrderEnabled": false,
+            "releaseDate": "2026-09-22",
+            "territory": "CRI"
+          },
+          {
+            "available": true,
+            "preOrderEnabled": false,
+            "releaseDate": "2026-09-22",
+            "territory": "CYM"
+          },
+          {
+            "available": true,
+            "preOrderEnabled": false,
+            "releaseDate": "2026-09-22",
+            "territory": "CYP"
+          },
+          {
+            "available": true,
+            "preOrderEnabled": false,
+            "releaseDate": "2026-09-22",
+            "territory": "CZE"
+          },
+          {
+            "available": true,
+            "preOrderEnabled": false,
+            "releaseDate": "2026-09-22",
+            "territory": "DEU"
+          },
+          {
+            "available": true,
+            "preOrderEnabled": false,
+            "releaseDate": "2026-09-22",
+            "territory": "DMA"
+          },
+          {
+            "available": true,
+            "preOrderEnabled": false,
+            "releaseDate": "2026-09-22",
+            "territory": "DNK"
+          },
+          {
+            "available": true,
+            "preOrderEnabled": false,
+            "releaseDate": "2026-09-22",
+            "territory": "DOM"
+          },
+          {
+            "available": true,
+            "preOrderEnabled": false,
+            "releaseDate": "2026-09-22",
+            "territory": "DZA"
+          },
+          {
+            "available": true,
+            "preOrderEnabled": false,
+            "releaseDate": "2026-09-22",
+            "territory": "ECU"
+          },
+          {
+            "available": true,
+            "preOrderEnabled": false,
+            "releaseDate": "2026-09-22",
+            "territory": "EGY"
+          },
+          {
+            "available": true,
+            "preOrderEnabled": false,
+            "releaseDate": "2026-09-22",
+            "territory": "ESP"
+          },
+          {
+            "available": true,
+            "preOrderEnabled": false,
+            "releaseDate": "2026-09-22",
+            "territory": "EST"
+          },
+          {
+            "available": true,
+            "preOrderEnabled": false,
+            "releaseDate": "2026-09-22",
+            "territory": "FIN"
+          },
+          {
+            "available": true,
+            "preOrderEnabled": false,
+            "releaseDate": "2026-09-22",
+            "territory": "FJI"
+          },
+          {
+            "available": true,
+            "preOrderEnabled": false,
+            "releaseDate": "2026-09-22",
+            "territory": "FRA"
+          },
+          {
+            "available": true,
+            "preOrderEnabled": false,
+            "releaseDate": "2026-09-22",
+            "territory": "FSM"
+          },
+          {
+            "available": true,
+            "preOrderEnabled": false,
+            "releaseDate": "2026-09-22",
+            "territory": "GAB"
+          },
+          {
+            "available": true,
+            "preOrderEnabled": false,
+            "releaseDate": "2026-09-22",
+            "territory": "GBR"
+          },
+          {
+            "available": true,
+            "preOrderEnabled": false,
+            "releaseDate": "2026-09-22",
+            "territory": "GEO"
+          },
+          {
+            "available": true,
+            "preOrderEnabled": false,
+            "releaseDate": "2026-09-22",
+            "territory": "GHA"
+          },
+          {
+            "available": true,
+            "preOrderEnabled": false,
+            "releaseDate": "2026-09-22",
+            "territory": "GMB"
+          },
+          {
+            "available": true,
+            "preOrderEnabled": false,
+            "releaseDate": "2026-09-22",
+            "territory": "GNB"
+          },
+          {
+            "available": true,
+            "preOrderEnabled": false,
+            "releaseDate": "2026-09-22",
+            "territory": "GRC"
+          },
+          {
+            "available": true,
+            "preOrderEnabled": false,
+            "releaseDate": "2026-09-22",
+            "territory": "GRD"
+          },
+          {
+            "available": true,
+            "preOrderEnabled": false,
+            "releaseDate": "2026-09-22",
+            "territory": "GTM"
+          },
+          {
+            "available": true,
+            "preOrderEnabled": false,
+            "releaseDate": "2026-09-22",
+            "territory": "GUY"
+          },
+          {
+            "available": true,
+            "preOrderEnabled": false,
+            "releaseDate": "2026-09-22",
+            "territory": "HKG"
+          },
+          {
+            "available": true,
+            "preOrderEnabled": false,
+            "releaseDate": "2026-09-22",
+            "territory": "HND"
+          },
+          {
+            "available": true,
+            "preOrderEnabled": false,
+            "releaseDate": "2026-09-22",
+            "territory": "HRV"
+          },
+          {
+            "available": true,
+            "preOrderEnabled": false,
+            "releaseDate": "2026-09-22",
+            "territory": "HUN"
+          },
+          {
+            "available": true,
+            "preOrderEnabled": false,
+            "releaseDate": "2026-09-22",
+            "territory": "IDN"
+          },
+          {
+            "available": true,
+            "preOrderEnabled": false,
+            "releaseDate": "2026-09-22",
+            "territory": "IND"
+          },
+          {
+            "available": true,
+            "preOrderEnabled": false,
+            "releaseDate": "2026-09-22",
+            "territory": "IRL"
+          },
+          {
+            "available": true,
+            "preOrderEnabled": false,
+            "releaseDate": "2026-09-22",
+            "territory": "IRQ"
+          },
+          {
+            "available": true,
+            "preOrderEnabled": false,
+            "releaseDate": "2026-09-22",
+            "territory": "ISL"
+          },
+          {
+            "available": true,
+            "preOrderEnabled": false,
+            "releaseDate": "2026-09-22",
+            "territory": "ISR"
+          },
+          {
+            "available": true,
+            "preOrderEnabled": false,
+            "releaseDate": "2026-09-22",
+            "territory": "ITA"
+          },
+          {
+            "available": true,
+            "preOrderEnabled": false,
+            "releaseDate": "2026-09-22",
+            "territory": "JAM"
+          },
+          {
+            "available": true,
+            "preOrderEnabled": false,
+            "releaseDate": "2026-09-22",
+            "territory": "JOR"
+          },
+          {
+            "available": true,
+            "preOrderEnabled": false,
+            "releaseDate": "2026-09-22",
+            "territory": "JPN"
+          },
+          {
+            "available": true,
+            "preOrderEnabled": false,
+            "releaseDate": "2026-09-22",
+            "territory": "KAZ"
+          },
+          {
+            "available": true,
+            "preOrderEnabled": false,
+            "releaseDate": "2026-09-22",
+            "territory": "KEN"
+          },
+          {
+            "available": true,
+            "preOrderEnabled": false,
+            "releaseDate": "2026-09-22",
+            "territory": "KGZ"
+          },
+          {
+            "available": true,
+            "preOrderEnabled": false,
+            "releaseDate": "2026-09-22",
+            "territory": "KHM"
+          },
+          {
+            "available": true,
+            "preOrderEnabled": false,
+            "releaseDate": "2026-09-22",
+            "territory": "KNA"
+          },
+          {
+            "available": true,
+            "preOrderEnabled": false,
+            "releaseDate": "2026-09-22",
+            "territory": "KOR"
+          },
+          {
+            "available": true,
+            "preOrderEnabled": false,
+            "releaseDate": "2026-09-22",
+            "territory": "KWT"
+          },
+          {
+            "available": true,
+            "preOrderEnabled": false,
+            "releaseDate": "2026-09-22",
+            "territory": "LAO"
+          },
+          {
+            "available": true,
+            "preOrderEnabled": false,
+            "releaseDate": "2026-09-22",
+            "territory": "LBN"
+          },
+          {
+            "available": true,
+            "preOrderEnabled": false,
+            "releaseDate": "2026-09-22",
+            "territory": "LBR"
+          },
+          {
+            "available": true,
+            "preOrderEnabled": false,
+            "releaseDate": "2026-09-22",
+            "territory": "LBY"
+          },
+          {
+            "available": true,
+            "preOrderEnabled": false,
+            "releaseDate": "2026-09-22",
+            "territory": "LCA"
+          },
+          {
+            "available": true,
+            "preOrderEnabled": false,
+            "releaseDate": "2026-09-22",
+            "territory": "LKA"
+          },
+          {
+            "available": true,
+            "preOrderEnabled": false,
+            "releaseDate": "2026-09-22",
+            "territory": "LTU"
+          },
+          {
+            "available": true,
+            "preOrderEnabled": false,
+            "releaseDate": "2026-09-22",
+            "territory": "LUX"
+          },
+          {
+            "available": true,
+            "preOrderEnabled": false,
+            "releaseDate": "2026-09-22",
+            "territory": "LVA"
+          },
+          {
+            "available": true,
+            "preOrderEnabled": false,
+            "releaseDate": "2026-09-22",
+            "territory": "MAC"
+          },
+          {
+            "available": true,
+            "preOrderEnabled": false,
+            "releaseDate": "2026-09-22",
+            "territory": "MAR"
+          },
+          {
+            "available": true,
+            "preOrderEnabled": false,
+            "releaseDate": "2026-09-22",
+            "territory": "MDA"
+          },
+          {
+            "available": true,
+            "preOrderEnabled": false,
+            "releaseDate": "2026-09-22",
+            "territory": "MDG"
+          },
+          {
+            "available": true,
+            "preOrderEnabled": false,
+            "releaseDate": "2026-09-22",
+            "territory": "MDV"
+          },
+          {
+            "available": true,
+            "preOrderEnabled": false,
+            "releaseDate": "2026-09-22",
+            "territory": "MEX"
+          },
+          {
+            "available": true,
+            "preOrderEnabled": false,
+            "releaseDate": "2026-09-22",
+            "territory": "MKD"
+          },
+          {
+            "available": true,
+            "preOrderEnabled": false,
+            "releaseDate": "2026-09-22",
+            "territory": "MLI"
+          },
+          {
+            "available": true,
+            "preOrderEnabled": false,
+            "releaseDate": "2026-09-22",
+            "territory": "MLT"
+          },
+          {
+            "available": true,
+            "preOrderEnabled": false,
+            "releaseDate": "2026-09-22",
+            "territory": "MMR"
+          },
+          {
+            "available": true,
+            "preOrderEnabled": false,
+            "releaseDate": "2026-09-22",
+            "territory": "MNE"
+          },
+          {
+            "available": true,
+            "preOrderEnabled": false,
+            "releaseDate": "2026-09-22",
+            "territory": "MNG"
+          },
+          {
+            "available": true,
+            "preOrderEnabled": false,
+            "releaseDate": "2026-09-22",
+            "territory": "MOZ"
+          },
+          {
+            "available": true,
+            "preOrderEnabled": false,
+            "releaseDate": "2026-09-22",
+            "territory": "MRT"
+          },
+          {
+            "available": true,
+            "preOrderEnabled": false,
+            "releaseDate": "2026-09-22",
+            "territory": "MSR"
+          },
+          {
+            "available": true,
+            "preOrderEnabled": false,
+            "releaseDate": "2026-09-22",
+            "territory": "MUS"
+          },
+          {
+            "available": true,
+            "preOrderEnabled": false,
+            "releaseDate": "2026-09-22",
+            "territory": "MWI"
+          },
+          {
+            "available": true,
+            "preOrderEnabled": false,
+            "releaseDate": "2026-09-22",
+            "territory": "MYS"
+          },
+          {
+            "available": true,
+            "preOrderEnabled": false,
+            "releaseDate": "2026-09-22",
+            "territory": "NAM"
+          },
+          {
+            "available": true,
+            "preOrderEnabled": false,
+            "releaseDate": "2026-09-22",
+            "territory": "NER"
+          },
+          {
+            "available": true,
+            "preOrderEnabled": false,
+            "releaseDate": "2026-09-22",
+            "territory": "NGA"
+          },
+          {
+            "available": true,
+            "preOrderEnabled": false,
+            "releaseDate": "2026-09-22",
+            "territory": "NIC"
+          },
+          {
+            "available": true,
+            "preOrderEnabled": false,
+            "releaseDate": "2026-09-22",
+            "territory": "NLD"
+          },
+          {
+            "available": true,
+            "preOrderEnabled": false,
+            "releaseDate": "2026-09-22",
+            "territory": "NOR"
+          },
+          {
+            "available": true,
+            "preOrderEnabled": false,
+            "releaseDate": "2026-09-22",
+            "territory": "NPL"
+          },
+          {
+            "available": true,
+            "preOrderEnabled": false,
+            "releaseDate": "2026-09-22",
+            "territory": "NRU"
+          },
+          {
+            "available": true,
+            "preOrderEnabled": false,
+            "releaseDate": "2026-09-22",
+            "territory": "NZL"
+          },
+          {
+            "available": true,
+            "preOrderEnabled": false,
+            "releaseDate": "2026-09-22",
+            "territory": "OMN"
+          },
+          {
+            "available": true,
+            "preOrderEnabled": false,
+            "releaseDate": "2026-09-22",
+            "territory": "PAK"
+          },
+          {
+            "available": true,
+            "preOrderEnabled": false,
+            "releaseDate": "2026-09-22",
+            "territory": "PAN"
+          },
+          {
+            "available": true,
+            "preOrderEnabled": false,
+            "releaseDate": "2026-09-22",
+            "territory": "PER"
+          },
+          {
+            "available": true,
+            "preOrderEnabled": false,
+            "releaseDate": "2026-09-22",
+            "territory": "PHL"
+          },
+          {
+            "available": true,
+            "preOrderEnabled": false,
+            "releaseDate": "2026-09-22",
+            "territory": "PLW"
+          },
+          {
+            "available": true,
+            "preOrderEnabled": false,
+            "releaseDate": "2026-09-22",
+            "territory": "PNG"
+          },
+          {
+            "available": true,
+            "preOrderEnabled": false,
+            "releaseDate": "2026-09-22",
+            "territory": "POL"
+          },
+          {
+            "available": true,
+            "preOrderEnabled": false,
+            "releaseDate": "2026-09-22",
+            "territory": "PRT"
+          },
+          {
+            "available": true,
+            "preOrderEnabled": false,
+            "releaseDate": "2026-09-22",
+            "territory": "PRY"
+          },
+          {
+            "available": true,
+            "preOrderEnabled": false,
+            "releaseDate": "2026-09-22",
+            "territory": "QAT"
+          },
+          {
+            "available": true,
+            "preOrderEnabled": false,
+            "releaseDate": "2026-09-22",
+            "territory": "ROU"
+          },
+          {
+            "available": true,
+            "preOrderEnabled": false,
+            "releaseDate": "2026-09-22",
+            "territory": "RUS"
+          },
+          {
+            "available": true,
+            "preOrderEnabled": false,
+            "releaseDate": "2026-09-22",
+            "territory": "RWA"
+          },
+          {
+            "available": true,
+            "preOrderEnabled": false,
+            "releaseDate": "2026-09-22",
+            "territory": "SAU"
+          },
+          {
+            "available": true,
+            "preOrderEnabled": false,
+            "releaseDate": "2026-09-22",
+            "territory": "SEN"
+          },
+          {
+            "available": true,
+            "preOrderEnabled": false,
+            "releaseDate": "2026-09-22",
+            "territory": "SGP"
+          },
+          {
+            "available": true,
+            "preOrderEnabled": false,
+            "releaseDate": "2026-09-22",
+            "territory": "SLB"
+          },
+          {
+            "available": true,
+            "preOrderEnabled": false,
+            "releaseDate": "2026-09-22",
+            "territory": "SLE"
+          },
+          {
+            "available": true,
+            "preOrderEnabled": false,
+            "releaseDate": "2026-09-22",
+            "territory": "SLV"
+          },
+          {
+            "available": true,
+            "preOrderEnabled": false,
+            "releaseDate": "2026-09-22",
+            "territory": "SRB"
+          },
+          {
+            "available": true,
+            "preOrderEnabled": false,
+            "releaseDate": "2026-09-22",
+            "territory": "STP"
+          },
+          {
+            "available": true,
+            "preOrderEnabled": false,
+            "releaseDate": "2026-09-22",
+            "territory": "SUR"
+          },
+          {
+            "available": true,
+            "preOrderEnabled": false,
+            "releaseDate": "2026-09-22",
+            "territory": "SVK"
+          },
+          {
+            "available": true,
+            "preOrderEnabled": false,
+            "releaseDate": "2026-09-22",
+            "territory": "SVN"
+          },
+          {
+            "available": true,
+            "preOrderEnabled": false,
+            "releaseDate": "2026-09-22",
+            "territory": "SWE"
+          },
+          {
+            "available": true,
+            "preOrderEnabled": false,
+            "releaseDate": "2026-09-22",
+            "territory": "SWZ"
+          },
+          {
+            "available": true,
+            "preOrderEnabled": false,
+            "releaseDate": "2026-09-22",
+            "territory": "SYC"
+          },
+          {
+            "available": true,
+            "preOrderEnabled": false,
+            "releaseDate": "2026-09-22",
+            "territory": "TCA"
+          },
+          {
+            "available": true,
+            "preOrderEnabled": false,
+            "releaseDate": "2026-09-22",
+            "territory": "TCD"
+          },
+          {
+            "available": true,
+            "preOrderEnabled": false,
+            "releaseDate": "2026-09-22",
+            "territory": "THA"
+          },
+          {
+            "available": true,
+            "preOrderEnabled": false,
+            "releaseDate": "2026-09-22",
+            "territory": "TJK"
+          },
+          {
+            "available": true,
+            "preOrderEnabled": false,
+            "releaseDate": "2026-09-22",
+            "territory": "TKM"
+          },
+          {
+            "available": true,
+            "preOrderEnabled": false,
+            "releaseDate": "2026-09-22",
+            "territory": "TON"
+          },
+          {
+            "available": true,
+            "preOrderEnabled": false,
+            "releaseDate": "2026-09-22",
+            "territory": "TTO"
+          },
+          {
+            "available": true,
+            "preOrderEnabled": false,
+            "releaseDate": "2026-09-22",
+            "territory": "TUN"
+          },
+          {
+            "available": true,
+            "preOrderEnabled": false,
+            "releaseDate": "2026-09-22",
+            "territory": "TUR"
+          },
+          {
+            "available": true,
+            "preOrderEnabled": false,
+            "releaseDate": "2026-09-22",
+            "territory": "TWN"
+          },
+          {
+            "available": true,
+            "preOrderEnabled": false,
+            "releaseDate": "2026-09-22",
+            "territory": "TZA"
+          },
+          {
+            "available": true,
+            "preOrderEnabled": false,
+            "releaseDate": "2026-09-22",
+            "territory": "UGA"
+          },
+          {
+            "available": true,
+            "preOrderEnabled": false,
+            "releaseDate": "2026-09-22",
+            "territory": "UKR"
+          },
+          {
+            "available": true,
+            "preOrderEnabled": false,
+            "releaseDate": "2026-09-22",
+            "territory": "URY"
+          },
+          {
+            "available": true,
+            "preOrderEnabled": false,
+            "releaseDate": "2026-09-22",
+            "territory": "USA"
+          },
+          {
+            "available": true,
+            "preOrderEnabled": false,
+            "releaseDate": "2026-09-22",
+            "territory": "UZB"
+          },
+          {
+            "available": true,
+            "preOrderEnabled": false,
+            "releaseDate": "2026-09-22",
+            "territory": "VCT"
+          },
+          {
+            "available": true,
+            "preOrderEnabled": false,
+            "releaseDate": "2026-09-22",
+            "territory": "VEN"
+          },
+          {
+            "available": true,
+            "preOrderEnabled": false,
+            "releaseDate": "2026-09-22",
+            "territory": "VGB"
+          },
+          {
+            "available": true,
+            "preOrderEnabled": false,
+            "releaseDate": "2026-09-22",
+            "territory": "VNM"
+          },
+          {
+            "available": true,
+            "preOrderEnabled": false,
+            "releaseDate": "2026-09-22",
+            "territory": "VUT"
+          },
+          {
+            "available": true,
+            "preOrderEnabled": false,
+            "releaseDate": "2026-09-22",
+            "territory": "XKS"
+          },
+          {
+            "available": true,
+            "preOrderEnabled": false,
+            "releaseDate": "2026-09-22",
+            "territory": "YEM"
+          },
+          {
+            "available": true,
+            "preOrderEnabled": false,
+            "releaseDate": "2026-09-22",
+            "territory": "ZAF"
+          },
+          {
+            "available": true,
+            "preOrderEnabled": false,
+            "releaseDate": "2026-09-22",
+            "territory": "ZMB"
+          },
+          {
+            "available": true,
+            "preOrderEnabled": false,
+            "releaseDate": "2026-09-22",
+            "territory": "ZWE"
+          }
         ]
       },
       "id": "6811720640",

@@ -8,7 +8,7 @@ The app fetches live balances and price and displays them — nothing else.
 
 **Core philosophy:** help people stack sats and *not* get shaken by volatility. The UI should feel calm, grounded, and intentional — not like a trading terminal.
 
-The App Store name is "Sato - Bitcoin Tracker"; the display name is Sato. The Xcode target, project folder, and bundle ID (`com.iosipratama.BitcoinTracker`) all still say Bitcoin Tracker. The bundle ID is registered with App Store Connect and must never change.
+The App Store name is "Sato: BTC Portfolio Tracker" from 1.1 (1.0 shipped as "Sato - Bitcoin Tracker"); names stop at 30 characters. The display name is Sato. The Xcode target, project folder, and bundle ID (`com.iosipratama.BitcoinTracker`) all still say Bitcoin Tracker. The bundle ID is registered with App Store Connect and must never change.
 
 
 ### ideal users
@@ -27,7 +27,7 @@ long-term Bitcoin holder. someone who bought and isn't selling. They don't want 
 - Add Wallet — a single flow covering the name, the first address, and its preview
 - Wallet Customizer — symbol and accent colour for a wallet
 - Settings — fiat currency selector, fiat show/hide, satoshi toggle, flip-to-hide, theme (Automatic / Light / Dark), support links, API attribution, restore purchase
-- Paywall — the one purchase, reachable when adding a second wallet and from Settings
+- Paywall — the one purchase, reachable only when adding a second wallet (Settings has Restore Purchase, not the paywall)
 - Debug — DEBUG-only toggles (fake unlock, force paywall, force empty state)
 
 ## Architecture
