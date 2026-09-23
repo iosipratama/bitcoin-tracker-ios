@@ -8,7 +8,7 @@ The app fetches live balances and price and displays them — nothing else.
 
 **Core philosophy:** help people stack sats and *not* get shaken by volatility. The UI should feel calm, grounded, and intentional — not like a trading terminal.
 
-The App Store name is "Sato - Bitcoin Tracker"; the display name is Sato. The Xcode target, project folder, and bundle ID (`com.iosipratama.BitcoinTracker`) all still say Bitcoin Tracker. The bundle ID is registered with App Store Connect and must never change.
+The App Store name is "Sato: BTC Portfolio Tracker" from 1.1 (1.0 shipped as "Sato - Bitcoin Tracker"); names stop at 30 characters. The display name is Sato. The Xcode target, project folder, and bundle ID (`com.iosipratama.BitcoinTracker`) all still say Bitcoin Tracker. The bundle ID is registered with App Store Connect and must never change.
 
 
 ### ideal users
