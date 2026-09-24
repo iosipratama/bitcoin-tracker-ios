@@ -6,6 +6,7 @@ struct Bitcoin_TrackerApp: App {
     @State private var viewModel = PortfolioViewModel()
     @State private var store = StoreManager()
     @State private var router = WidgetRouter()
+    @State private var lock = AppLock()
 
     var body: some Scene {
         WindowGroup {
@@ -13,6 +14,7 @@ struct Bitcoin_TrackerApp: App {
                 .environment(viewModel)
                 .environment(store)
                 .environment(router)
+                .environment(lock)
                 .task { await store.load() }
                 .preferredColorScheme(viewModel.theme.colorScheme)
         }

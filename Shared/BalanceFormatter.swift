@@ -45,6 +45,18 @@ nonisolated struct BalanceFormatter: Sendable {
         return showSatoshi ? Int64((btc * .satoshisPerBTC).rounded()).satsDigits : btc.btcDigits
     }
 
+    /// Like `formattedAmount(btc:)`, but without the trailing zeros a round
+    /// target would otherwise carry.
+    func formattedGoalAmount(btc: Double) -> String {
+        guard !hidesBalances, !showSatoshi else { return formattedAmount(btc: btc) }
+        return btc.trimmedBTCDigits
+    }
+
+    func formattedGoalBTC(_ value: Double) -> String {
+        guard !hidesBalances, !showSatoshi else { return formattedBTC(value) }
+        return "\(value.trimmedBTCDigits) BTC"
+    }
+
     /// ₿ leads a BTC figure; a sats figure is trailed by its unit instead.
     var amountPrefix: String? { showSatoshi ? nil : "\u{20BF}" }
     var amountSuffix: String? { showSatoshi ? "sats" : nil }

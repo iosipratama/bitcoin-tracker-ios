@@ -83,12 +83,7 @@ extension Wallet {
     /// The goal put back into the editing field. Full satoshi precision, minus
     /// the trailing zeros that precision leaves behind — nobody typed "0.02000000".
     var goalEditText: String {
-        guard let goalBTC else { return "" }
-
-        var text = String(format: "%.8f", goalBTC)
-        while text.hasSuffix("0") { text.removeLast() }
-        if text.hasSuffix(".") { text.removeLast() }
-        return text
+        goalBTC?.trimmedBTCDigits ?? ""
     }
 
     /// Parses what someone typed into the goal field. Both the add flow and the
