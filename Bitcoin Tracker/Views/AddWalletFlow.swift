@@ -87,9 +87,11 @@ struct AddWalletFlow: View {
     }
 
     /// A field, not a label: people tap the grey prompt to paste into it before
-    /// they look for the button. A paste lands as one multi-character change and
-    /// goes straight on, like the button; so does Return, which a vertical field
-    /// delivers as a newline rather than through onSubmit.
+    /// they look for the button. A whole address arriving in an empty field is a
+    /// paste and goes straight on, like the button; anything else waits for
+    /// Return, which a vertical field delivers as a newline rather than through
+    /// onSubmit. Counting characters instead would mistake fast typing, whose
+    /// keystrokes can land in one update, for a paste.
     private var addressField: some View {
         TextField("", text: $address, prompt: addressPrompt, axis: .vertical)
             .font(.system(size: address.count > 44 ? 22 : 26, weight: .semibold))
@@ -108,7 +110,8 @@ struct AddWalletFlow: View {
                 // it is either checking the address or has rejected it.
                 guard !isChecking, new != rejectedAddress else { return }
                 let submitted = new.contains(where: \.isNewline)
-                guard submitted || new.count - old.count > 1 else { return }
+                let pasted = old.isEmpty && BitcoinAddress.isValidFormat(new)
+                guard submitted || pasted else { return }
                 Task { await accept(new) }
             }
     }
