@@ -149,7 +149,7 @@ struct SettingsView: View {
                     }
                 }
             } label: {
-                SettingsRow(systemImage: "circle.lefthalf.filled", title: "Theme") {
+                SettingsRow(icon: .iconTheme, title: "Theme") {
                     pickerValue(theme.wrappedValue.displayName)
                 }
             }
