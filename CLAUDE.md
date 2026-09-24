@@ -26,7 +26,7 @@ long-term Bitcoin holder. someone who bought and isn't selling. They don't want 
 - Wallet Detail — wallet name, aggregated balance, list of addresses with individual balances
 - Add Wallet — a single flow covering the name, the first address, and its preview
 - Wallet Customizer — symbol and accent colour for a wallet
-- Settings — fiat currency selector, fiat show/hide, satoshi toggle, flip-to-hide, theme (Automatic / Light / Dark), support links, API attribution, restore purchase
+- Settings — fiat currency selector, fiat show/hide, satoshi toggle, flip-to-hide, Face ID lock, hide in app switcher, theme (Automatic / Light / Dark), support links, API attribution, restore purchase
 - Paywall — the one purchase, reachable only when adding a second wallet (Settings has Restore Purchase, not the paywall)
 - Debug — DEBUG-only toggles (fake unlock, force paywall, force empty state)
 
@@ -39,6 +39,7 @@ long-term Bitcoin holder. someone who bought and isn't selling. They don't want 
   - `BitcoinAPIService` — `actor`; fetches on-chain balance from Esplora-compatible explorers, mempool.space first, then mempool.emzy.de and blockstream.info as fallbacks
   - `PriceService` — `actor`; fetches BTC price via CoinGecko, 60-second in-memory cache
   - `StoreManager` — `@Observable @MainActor`; the only file that imports StoreKit. One non-consumable (`…​.plus`) lifts the wallet limit
+  - `AppLock` — `@Observable @MainActor`; Face ID (device owner authentication) on launch and return from background, plus the app-switcher cover. `PrivacyCover` draws both in its own alert-level `UIWindow` so it sits above sheets
   - `ReviewPrompt` — decides whether the app has earned the right to ask for a review
 - **ViewModel:** `PortfolioViewModel` drives the home screen
 - **Views:** `RootView`, `WelcomeView`, `HomeView`, `WalletDetailView`, `AddWalletFlow`, `AddAddressView`, `WalletCustomizer`, `SettingsView`, `PaywallView`, `DebugView`

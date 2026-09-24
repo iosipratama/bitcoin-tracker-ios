@@ -8,6 +8,7 @@ struct RootView: View {
     @AppStorage(AppStorageKey.hasCompletedWelcome) private var hasCompletedWelcome = false
     @Environment(PortfolioViewModel.self) private var viewModel
     @Environment(WidgetRouter.self) private var router
+    @Environment(AppLock.self) private var lock
     @Environment(\.modelContext) private var modelContext
     @Environment(\.scenePhase) private var scenePhase
 
@@ -32,7 +33,13 @@ struct RootView: View {
         // Taken here rather than in `HomeView`, which isn't on screen yet when
         // a tap on a widget launches the app cold.
         .onOpenURL { router.open($0) }
+        .accessibilityHidden(lock.coversScreen)
+        .onChange(of: lock.coversScreen, initial: true) { _, covering in
+            PrivacyWindow.shared.update(covering: covering, lock: lock, colorScheme: viewModel.theme.colorScheme)
+        }
         .onChange(of: scenePhase, initial: true) { _, phase in
+            lock.sceneDidChange(to: phase)
+
             if phase == .active {
                 viewModel.startFlipMonitoring()
             } else {

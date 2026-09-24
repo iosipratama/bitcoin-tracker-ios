@@ -5,6 +5,7 @@ struct SettingsView: View {
     @Environment(\.openURL) private var openURL
     @Environment(PortfolioViewModel.self) private var viewModel
     @Environment(StoreManager.self) private var store
+    @Environment(AppLock.self) private var lock
 
     @State private var mailUnavailable = false
     @State private var copiedAddress = 0
@@ -22,6 +23,7 @@ struct SettingsView: View {
                     bitcoinSection(showSatoshi: $bindable.showSatoshi)
                     fiatSection(showFiat: $bindable.showFiat, currency: $bindable.selectedCurrency)
                     appSection(flipToHide: $bindable.flipToHideBalance)
+                    privacySection
                     themeSection(theme: $bindable.theme)
                     supportSection
                     #if DEBUG
@@ -126,7 +128,7 @@ struct SettingsView: View {
     private func appSection(flipToHide: Binding<Bool>) -> some View {
         SettingsGroup(
             title: "App",
-            footer: "Flip your device down to quickly hide and show balances"
+            footer: "Flip your device down to quickly hide and show balances for better privacy."
         ) {
             SettingsRow(icon: .iconEyeClosed, title: "Flip-to-Hide Balance") {
                 Toggle("Flip-to-Hide Balance", isOn: flipToHide)
@@ -134,6 +136,36 @@ struct SettingsView: View {
                     .tint(.brand)
             }
             .onTapGesture { flipToHide.wrappedValue.toggle() }
+        }
+    }
+
+    private var privacySection: some View {
+        @Bindable var lock = lock
+        let biometryName = lock.biometryName
+        let requiresAuthentication = Binding {
+            lock.requiresAuthentication
+        } set: { requires in
+            Task { await lock.setRequiresAuthentication(requires) }
+        }
+
+        return SettingsGroup(
+            title: nil,
+            footer: "Blurs addresses when the app is in the background"
+        ) {
+            SettingsRow(icon: .iconFaceID, title: biometryName) {
+                Toggle(biometryName, isOn: requiresAuthentication)
+                    .labelsHidden()
+                    .tint(.brand)
+            }
+            .onTapGesture { requiresAuthentication.wrappedValue.toggle() }
+            .disabled(!lock.canAuthenticate && !lock.requiresAuthentication)
+
+            SettingsRow(icon: .iconEyeSlash, title: "Hide in app switcher") {
+                Toggle("Hide in app switcher", isOn: $lock.hidesInAppSwitcher)
+                    .labelsHidden()
+                    .tint(.brand)
+            }
+            .onTapGesture { lock.hidesInAppSwitcher.toggle() }
         }
     }
 
