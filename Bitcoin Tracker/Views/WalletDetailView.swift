@@ -165,7 +165,7 @@ struct WalletDetailView: View {
                                 .foregroundStyle(Custom.labelTertiary)
                         }
 
-                        Text(viewModel.formattedAmount(btc: goalBTC))
+                        Text(viewModel.formattedGoalAmount(btc: goalBTC))
                             .font(.walletBalance)
                             .foregroundStyle(.label)
 
@@ -199,7 +199,7 @@ struct WalletDetailView: View {
             .padding(.bottom, 8)
             .accessibilityElement(children: .combine)
             .accessibilityLabel("Goal")
-            .accessibilityValue("\(viewModel.formattedGoalPercent(progress)) of \(viewModel.formattedBTC(goalBTC))")
+            .accessibilityValue("\(viewModel.formattedGoalPercent(progress)) of \(viewModel.formattedGoalBTC(goalBTC))")
         }
     }
 

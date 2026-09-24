@@ -10,6 +10,15 @@ nonisolated extension Double {
     }
 
     var btcDisplay: String { "\(btcDigits) BTC" }
+
+    /// A goal is a figure someone chose, usually a round one, so it keeps full
+    /// satoshi precision but drops the trailing zeros: 5, 0.1, 0.25.
+    var trimmedBTCDigits: String {
+        var text = String(format: "%.8f", self)
+        while text.hasSuffix("0") { text.removeLast() }
+        if text.hasSuffix(".") { text.removeLast() }
+        return text
+    }
 }
 
 nonisolated extension Int64 {
