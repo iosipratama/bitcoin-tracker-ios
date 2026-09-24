@@ -18,6 +18,8 @@ struct AddWalletFlow: View {
     @State private var checkedBalance: AddressBalance?
     @State private var isChecking = false
     @State private var errorMessage: String?
+    @State private var rejectedAddress = ""
+    @FocusState private var isAddressFocused: Bool
 
     @State private var name = ""
     @State private var accent: WalletAccent = .blue
@@ -65,14 +67,9 @@ struct AddWalletFlow: View {
             Spacer(minLength: 0)
 
             VStack(spacing: 12) {
-                Text(trimmedAddress.isEmpty ? "Paste an address to watch" : trimmedAddress)
-                    .font(.system(size: 26, weight: .semibold))
-                    .foregroundStyle(trimmedAddress.isEmpty ? Custom.labelQuaternary : Custom.labelPrimary)
-                    .multilineTextAlignment(.center)
-                    .lineLimit(3)
-                    .minimumScaleFactor(0.7)
+                addressField
 
-                if let errorMessage {
+                if let errorMessage, rejectedAddress == address {
                     Text(errorMessage)
                         .font(.system(size: 14))
                         .foregroundStyle(.negative)
@@ -87,6 +84,41 @@ struct AddWalletFlow: View {
             pasteAction
                 .padding(.bottom, 28)
         }
+    }
+
+    /// A field, not a label: people tap the grey prompt to paste into it before
+    /// they look for the button. A whole address arriving in an empty field is a
+    /// paste and goes straight on, like the button; anything else waits for
+    /// Return, which a vertical field delivers as a newline rather than through
+    /// onSubmit. Counting characters instead would mistake fast typing, whose
+    /// keystrokes can land in one update, for a paste.
+    private var addressField: some View {
+        TextField("", text: $address, prompt: addressPrompt, axis: .vertical)
+            .font(.system(size: address.count > 44 ? 22 : 26, weight: .semibold))
+            .foregroundStyle(Custom.labelPrimary)
+            .multilineTextAlignment(.center)
+            .lineLimit(1...3)
+            .autocorrectionDisabled()
+            .textInputAutocapitalization(.never)
+            .keyboardType(.asciiCapable)
+            .submitLabel(.continue)
+            .focused($isAddressFocused)
+            .disabled(isChecking)
+            .accessibilityLabel("Bitcoin address")
+            .onChange(of: address) { old, new in
+                // `accept` writes the field too; by the time that change lands
+                // it is either checking the address or has rejected it.
+                guard !isChecking, new != rejectedAddress else { return }
+                let submitted = new.contains(where: \.isNewline)
+                let pasted = old.isEmpty && BitcoinAddress.isValidFormat(new)
+                guard submitted || pasted else { return }
+                Task { await accept(new) }
+            }
+    }
+
+    private var addressPrompt: Text {
+        Text("Paste an address to watch")
+            .foregroundStyle(Custom.labelQuaternary)
     }
 
     @ViewBuilder
@@ -138,19 +170,23 @@ struct AddWalletFlow: View {
     // MARK: - Actions
 
     private func accept(_ pasted: String) async {
-        address = pasted
+        // An address never contains whitespace, so any there came from the
+        // clipboard or the field's Return and can go.
+        let candidate = pasted.filter { !$0.isWhitespace }
+        address = candidate
+        isAddressFocused = false
         errorMessage = nil
         checkedBalance = nil
 
-        let candidate = pasted.trimmingCharacters(in: .whitespacesAndNewlines)
+        guard !candidate.isEmpty else { return }
 
         guard BitcoinAddress.isValidFormat(candidate) else {
-            errorMessage = "That doesn’t look like a Bitcoin address."
+            reject(candidate, "That doesn’t look like a Bitcoin address.")
             return
         }
 
         if let owner = Wallet.owner(of: candidate, in: allWallets) {
-            errorMessage = "This address is already tracked in “\(owner.name)”."
+            reject(candidate, "This address is already tracked in “\(owner.name)”.")
             return
         }
 
@@ -160,7 +196,7 @@ struct AddWalletFlow: View {
         do {
             checkedBalance = try await BitcoinAPIService.shared.fetchBalance(for: candidate)
         } catch APIError.invalidAddress {
-            errorMessage = "No such address on the Bitcoin network."
+            reject(candidate, "No such address on the Bitcoin network.")
             return
         } catch {
             // A transport failure is not a verdict on the address. Adding one
@@ -169,6 +205,13 @@ struct AddWalletFlow: View {
         }
 
         advanceToCustomize()
+    }
+
+    /// Kept with the address it was about, so editing the field clears it
+    /// without the edit having to be told apart from `accept` setting it.
+    private func reject(_ candidate: String, _ message: String) {
+        rejectedAddress = candidate
+        errorMessage = message
     }
 
     private func advanceToCustomize() {

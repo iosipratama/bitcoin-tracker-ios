@@ -2,7 +2,7 @@ Sato is a read-only ("watch-only") Bitcoin tracker. It holds no private keys, ca
 
 To try the app:
 1. Tap Continue on the welcome screen, then tap + to add a wallet.
-2. Tap Paste to paste any public Bitcoin address. A well-known public address with a balance you can use for testing: 1A1zP1eP5QGefi2DMPTfTL5SLmv7DivfNa
+2. Add a public Bitcoin address: copy one, then tap Paste. Or tap the grey "Paste an address to watch" text and paste or type the address there, then press Return. A well-known public address with a balance you can use for testing: 1A1zP1eP5QGefi2DMPTfTL5SLmv7DivfNa
 3. Give the wallet any name and tap the checkmark.
 4. Pull to refresh to re-fetch the balance and price.
 5. Settings lets you switch the fiat currency, hide fiat, show amounts in satoshis, and choose the theme.
