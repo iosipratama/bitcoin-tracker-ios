@@ -150,7 +150,7 @@ struct SettingsView: View {
 
         return SettingsGroup(
             title: nil,
-            footer: "Blurs addresses when the app is in the background"
+            footer: "Blurs your balances when you switch apps"
         ) {
             SettingsRow(icon: .iconFaceID, title: biometryName) {
                 Toggle(biometryName, isOn: requiresAuthentication)
