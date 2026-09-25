@@ -1,11 +1,7 @@
-Goals. Give a wallet a target, like a house or a year off, and watch your stack grow toward it.
+Face ID lock. Turn it on in Settings, and Sato asks for Face ID each time you open it.
 
-Home Screen widgets. Check a wallet's balance or goal progress without opening Sato.
+Hide in app switcher. Your balances blur when you switch apps.
 
-Light theme. Pick Automatic, Light, or Dark in Settings.
+Cleaner goals. Goal amounts drop the extra zeros, so 0.25 is just 0.25.
 
-Flip to hide. Put your phone face down and your balances disappear. Turn it on in Settings.
-
-iOS 18 support. More iPhones can run Sato now.
-
-Also: a cleaner address card and a friendlier welcome.
+Also: bolder Settings icons.

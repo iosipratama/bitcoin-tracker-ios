@@ -7,11 +7,15 @@ To try the app:
 4. Pull to refresh to re-fetch the balance and price.
 5. Settings lets you switch the fiat currency, hide fiat, show amounts in satoshis, and choose the theme.
 
-New in 1.1:
+Added in 1.1:
 - Goals: open a wallet, tap the ••• menu, choose Customize, switch on Goal and enter a BTC amount. Progress shows on the wallet and on the Home list.
 - Home Screen widgets: touch and hold the Home Screen, tap Edit > Add Widget, and search for Sato. There are two small widgets, Wallet and Goal. Touch and hold a widget and choose Edit Widget to pick a wallet; tapping the widget opens that wallet in the app.
 - Flip to hide: turn on Settings > Flip-to-Hide Balance, then place the iPhone face down to hide balances. They stay hidden when it is picked up; placing it face down again shows them.
 - Light theme: Settings > Theme (Automatic, Light, Dark).
+
+New in 1.2:
+- App lock: Settings > Face ID (Touch ID on devices with Touch ID, Passcode on devices with neither). Once on, Sato asks to unlock when it opens and when you return to it; the device passcode works whenever biometrics fail. It is off by default.
+- Hide in app switcher: Settings > Hide in app switcher blurs Sato while it is in the app switcher. Off by default.
 
 Data sources: on-chain balances come from public Esplora block explorers (mempool.space and mirrors); the BTC price comes from CoinGecko. Both are public, unauthenticated endpoints. Wallet names and addresses are stored only on the device.
 
