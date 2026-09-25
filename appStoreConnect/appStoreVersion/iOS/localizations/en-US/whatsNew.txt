@@ -1,7 +1,5 @@
-Face ID lock. Turn it on in Settings, and Sato asks for Face ID each time you open it.
+Face ID lock. Turn it on in Settings and Sato asks for Face ID every time you open it.
 
-Hide in app switcher. Your balances blur when you switch apps.
+Hidden in the app switcher. Your balances blur when you swipe between apps.
 
-Cleaner goals. Goal amounts drop the extra zeros, so 0.25 is just 0.25.
-
-Also: bolder Settings icons.
+Cleaner goals. Goal amounts drop the trailing zeros, so 0.25 BTC shows as 0.25, not 0.25000000.
