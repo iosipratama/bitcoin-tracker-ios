@@ -2,52 +2,52 @@
   "appId": "6811720640",
   "derived": {
     "appStoreVersionScreenshotSets": {
-      "IOS:1.1:en-US:APP_IPHONE_67": {
+      "IOS:1.2:en-US:APP_IPHONE_67": {
         "screenshots": [
           {
             "fileName": "01-goals.png",
             "fileSize": 573602,
-            "id": "f1c00019-6029-8bc0-8019-143f021f78ce",
+            "id": "c4fe1e6a-cde4-4956-b9a1-186e13e9ca45",
             "sourceFileChecksum": "8ec388cad902337b8f0fec1e6481ecb0"
           },
           {
             "fileName": "02-progress.png",
             "fileSize": 542784,
-            "id": "cb800019-6029-8bc0-801a-6f30f6700d7e",
+            "id": "a00595fb-1e52-4a94-b68e-0a2c12c6fc29",
             "sourceFileChecksum": "dc6eff7bcceef69c7486f75213dd1473"
           },
           {
             "fileName": "03-paste.png",
             "fileSize": 411381,
-            "id": "fe400019-6029-8bc0-8008-bc9c296165f2",
+            "id": "a3ec6f03-5803-496d-b751-4df8ad8da7ca",
             "sourceFileChecksum": "d029b4b64af00e48bb5f49cfd921fc3e"
           },
           {
             "fileName": "04-goal-every-stack.png",
             "fileSize": 527826,
-            "id": "09000019-6029-8bc0-8000-bbca79b1aced",
+            "id": "f207da0d-d621-4a05-9099-62f44d1097f3",
             "sourceFileChecksum": "e7382f941aeb58cd6b11faa785fa04c8"
           },
           {
             "fileName": "05-home-screen.png",
             "fileSize": 1032325,
-            "id": "86400019-6029-8bc0-802d-a4f0eda317d0",
+            "id": "e0c5b0c9-f2af-458c-8bb1-717c14b8bd70",
             "sourceFileChecksum": "c7ee32784f3502b9a340828585c8bb75"
           },
           {
             "fileName": "06-your-way.png",
             "fileSize": 448401,
-            "id": "05c00019-6029-8bc0-800a-fc4eea0b2140",
+            "id": "4a5d82b3-260a-45f8-9316-6beac340b1d4",
             "sourceFileChecksum": "e71d47d165f868357c4971d5011e0520"
           },
           {
             "fileName": "07-manifesto.png",
             "fileSize": 232000,
-            "id": "97400019-6029-8bc0-8011-d7aa759aab85",
+            "id": "1446a145-8478-420f-97d5-86d22b7e847f",
             "sourceFileChecksum": "0aaf305832cafe7a0d4124dd293a03c1"
           }
         ],
-        "setID": "9e671fe7-35dd-4e75-ab98-12d3a239ca3a"
+        "setID": "f99352d6-348b-4981-8fb3-94ef08bcac9f"
       }
     },
     "inAppPurchasePricing": {
@@ -1386,13 +1386,15 @@
         "profanityOrCrudeHumor": "NONE",
         "sexualContentGraphicAndNudity": "NONE",
         "sexualContentOrNudity": "NONE",
+        "socialMedia": false,
+        "socialMediaAgeRestricted": false,
         "unrestrictedWebAccess": false,
         "userGeneratedContent": false,
         "violenceCartoonOrFantasy": "NONE",
         "violenceRealistic": "NONE",
         "violenceRealisticProlongedGraphicOrSadistic": "NONE"
       },
-      "id": "09d76ec7-9779-4756-a1d0-36be32405da0",
+      "id": "be40c865-5983-4fec-ab3b-001c297c6be8",
       "type": "ageRatingDeclarations"
     },
     "app": {
@@ -1408,52 +1410,52 @@
         "primaryCategory": "FINANCE",
         "secondaryCategory": "UTILITIES"
       },
-      "id": "09d76ec7-9779-4756-a1d0-36be32405da0",
+      "id": "be40c865-5983-4fec-ab3b-001c297c6be8",
       "type": "appInfos"
     },
     "appInfoLocalization:en-US": {
       "fields": {
-        "name": "Sato - Bitcoin Tracker",
+        "name": "Sato: BTC Portfolio Tracker",
         "privacyPolicyUrl": "https://mekarya.studio/privacy/sato",
-        "subtitle": "Watch BTC wallets without keys"
+        "subtitle": "Watch Bitcoin wallets, no keys"
       },
-      "id": "50e06c58-3b25-41ec-bad5-03a9df15fc6f",
+      "id": "d205b570-0a5c-433f-a8d7-ff64d3b96bcb",
       "type": "appInfoLocalizations"
     },
-    "appStoreReviewDetail:IOS:1.1": {
+    "appStoreReviewDetail:IOS:1.2": {
       "fields": {
         "contactEmail": "pratamaiosi@gmail.com",
         "contactFirstName": "Iosi",
         "contactLastName": "Pratama Putra",
         "contactPhone": "+6285121965123",
         "demoAccountRequired": false,
-        "notes": "Sato is a read-only (\"watch-only\") Bitcoin tracker. It holds no private keys, cannot send or receive funds, and has no trading, exchange or custody features. There is no account system and no sign-in, so no demo account is needed.\n\nTo try the app:\n1. Tap Continue on the welcome screen, then tap + to add a wallet.\n2. Add a public Bitcoin address: copy one, then tap Paste. Or tap the grey \"Paste an address to watch\" text and paste or type the address there, then press Return. A well-known public address with a balance you can use for testing: 1A1zP1eP5QGefi2DMPTfTL5SLmv7DivfNa\n3. Give the wallet any name and tap the checkmark.\n4. Pull to refresh to re-fetch the balance and price.\n5. Settings lets you switch the fiat currency, hide fiat, show amounts in satoshis, and choose the theme.\n\nNew in 1.1:\n- Goals: open a wallet, tap the ••• menu, choose Customize, switch on Goal and enter a BTC amount. Progress shows on the wallet and on the Home list.\n- Home Screen widgets: touch and hold the Home Screen, tap Edit > Add Widget, and search for Sato. There are two small widgets, Wallet and Goal. Touch and hold a widget and choose Edit Widget to pick a wallet; tapping the widget opens that wallet in the app.\n- Flip to hide: turn on Settings > Flip-to-Hide Balance, then place the iPhone face down to hide balances. They stay hidden when it is picked up; placing it face down again shows them.\n- Light theme: Settings > Theme (Automatic, Light, Dark).\n\nData sources: on-chain balances come from public Esplora block explorers (mempool.space and mirrors); the BTC price comes from CoinGecko. Both are public, unauthenticated endpoints. Wallet names and addresses are stored only on the device.\n\nIn-app purchase: Sato Plus is a one-time non-consumable that lifts the one-wallet limit. The paywall appears when adding a second wallet: after creating the first wallet, tap + again. Restore Purchase is in Settings."
+        "notes": "Sato is a read-only (\"watch-only\") Bitcoin tracker. It holds no private keys, cannot send or receive funds, and has no trading, exchange or custody features. There is no account system and no sign-in, so no demo account is needed.\n\nTo try the app:\n1. Tap Continue on the welcome screen, then tap + to add a wallet.\n2. Add a public Bitcoin address: copy one, then tap Paste. Or tap the grey \"Paste an address to watch\" text and paste or type the address there, then press Return. A well-known public address with a balance you can use for testing: 1A1zP1eP5QGefi2DMPTfTL5SLmv7DivfNa\n3. Give the wallet any name and tap the checkmark.\n4. Pull to refresh to re-fetch the balance and price.\n5. Settings lets you switch the fiat currency, hide fiat, show amounts in satoshis, and choose the theme.\n\nAdded in 1.1:\n- Goals: open a wallet, tap the ••• menu, choose Customize, switch on Goal and enter a BTC amount. Progress shows on the wallet and on the Home list.\n- Home Screen widgets: touch and hold the Home Screen, tap Edit > Add Widget, and search for Sato. There are two small widgets, Wallet and Goal. Touch and hold a widget and choose Edit Widget to pick a wallet; tapping the widget opens that wallet in the app.\n- Flip to hide: turn on Settings > Flip-to-Hide Balance, then place the iPhone face down to hide balances. They stay hidden when it is picked up; placing it face down again shows them.\n- Light theme: Settings > Theme (Automatic, Light, Dark).\n\nNew in 1.2:\n- App lock: Settings > Face ID (Touch ID on devices with Touch ID, Passcode on devices with neither). Once on, Sato asks to unlock when it opens and when you return to it; the device passcode works whenever biometrics fail. It is off by default.\n- Hide in app switcher: Settings > Hide in app switcher blurs Sato while it is in the app switcher. Off by default.\n\nData sources: on-chain balances come from public Esplora block explorers (mempool.space and mirrors); the BTC price comes from CoinGecko. Both are public, unauthenticated endpoints. Wallet names and addresses are stored only on the device.\n\nIn-app purchase: Sato Plus is a one-time non-consumable that lifts the one-wallet limit. The paywall appears when adding a second wallet: after creating the first wallet, tap + again. Restore Purchase is in Settings."
       },
-      "id": "e8ae1cd1-a85b-40ea-8c49-f1ea5157d869",
+      "id": "357eccef-0416-44da-90c1-05e1852144d7",
       "type": "appStoreReviewDetails"
     },
-    "appStoreVersion:IOS:1.1": {
+    "appStoreVersion:IOS:1.2": {
       "fields": {
         "copyright": "2026 Iosi Pratama Putra",
         "releaseType": "AFTER_APPROVAL",
-        "versionString": "1.1"
+        "versionString": "1.2"
       },
-      "id": "43afd7ba-5bcf-4ed6-9d12-830b05a9ce1c",
+      "id": "ab9705e8-7fba-4461-b704-2845a5f9875d",
       "type": "appStoreVersions"
     },
-    "appStoreVersionLocalization:IOS:1.1:en-US": {
+    "appStoreVersionLocalization:IOS:1.2:en-US": {
       "fields": {
         "description": "Sato is a calm, watch-only bitcoin tracker. See what you've saved without the noise.\n\nPaste a public address and see your balance. No account. No seed phrase. No keys. Sato can only look. It can never move your bitcoin.\n\nWHY SATO\n\nBitcoin goes up and down in dollars, and most apps make you feel every swing: charts, alerts, red numbers. But bitcoin tends to reward the people who do nothing. Sato is made for that. Open it now and then, see where you stand, close it again.\n\nWHAT YOU CAN DO\n\n- Track several wallets, each with one or more addresses\n- Organize by goal, like a house, college, or retirement, with your own icon and color\n- See balances in BTC or sats\n- Show value in 29 currencies, or hide fiat completely\n- See pending amounts separately, so nothing surprises you\n- Use Legacy, SegWit, and Taproot addresses\n\nPRIVATE BY DESIGN\n\nNo account, no analytics, no servers of our own. Your wallets stay on your phone. Sato only asks public block explorers for balances and a price service for exchange rates. Nothing identifies you, because there's nothing to identify.\n\nSATO PLUS\n\nSato is free with one wallet. A single one-time purchase — never a subscription — unlocks as many wallets as you like.",
         "keywords": "savings,goal,sats,satoshi,address,balance,hodl,stack,fiat,currency,private,crypto,widget,target",
         "marketingUrl": "https://mekarya.studio/apps/sato",
         "promotionalText": "For long-term bitcoin holders saving for the future, Sato gives you peace, not price alerts or meme coins.",
         "supportUrl": "https://mekarya.studio/support/sato",
-        "whatsNew": "Goals. Give a wallet a target, like a house or a year off, and watch your stack grow toward it.\n\nHome Screen widgets. Check a wallet's balance or goal progress without opening Sato.\n\nLight theme. Pick Automatic, Light, or Dark in Settings.\n\nFlip to hide. Put your phone face down and your balances disappear. Turn it on in Settings.\n\niOS 18 support. More iPhones can run Sato now.\n\nAlso: a cleaner address card and a friendlier welcome."
+        "whatsNew": "Face ID lock. Turn it on in Settings and Sato asks for Face ID every time you open it.\n\nHidden in the app switcher. Your balances blur when you swipe between apps.\n\nCleaner goals. Goal amounts drop the trailing zeros, so 0.25 BTC shows as 0.25, not 0.25000000."
       },
-      "id": "bf815e1c-2599-44e4-9694-4b18f42d3d25",
+      "id": "da479aa7-ea9a-49a2-b291-d4f5dbd7f3da",
       "type": "appStoreVersionLocalizations"
     },
-    "appStoreVersionScreenshotSet:IOS:1.1:en-US:APP_IPHONE_67": {
+    "appStoreVersionScreenshotSet:IOS:1.2:en-US:APP_IPHONE_67": {
       "fields": {
         "screenshots": [
           {
@@ -1493,7 +1495,7 @@
           }
         ]
       },
-      "id": "9e671fe7-35dd-4e75-ab98-12d3a239ca3a",
+      "id": "f99352d6-348b-4981-8fb3-94ef08bcac9f",
       "type": "appScreenshotSets"
     },
     "availability": {
