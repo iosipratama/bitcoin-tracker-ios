@@ -35,14 +35,16 @@ final class AppLock {
         LAContext().canEvaluatePolicy(.deviceOwnerAuthentication, error: nil)
     }
 
-    /// Named for the hardware in hand, so a Touch ID iPhone doesn't offer Face ID.
+    /// Named for the hardware in hand, so a Touch ID iPhone doesn't offer Face ID
+    /// and a device with only a passcode doesn't offer either.
     var biometryName: String {
         let context = LAContext()
         _ = context.canEvaluatePolicy(.deviceOwnerAuthenticationWithBiometrics, error: nil)
         return switch context.biometryType {
+        case .faceID: "Face ID"
         case .touchID: "Touch ID"
         case .opticID: "Optic ID"
-        default: "Face ID"
+        default: "Passcode"
         }
     }
 
