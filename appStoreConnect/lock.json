@@ -1386,13 +1386,15 @@
         "profanityOrCrudeHumor": "NONE",
         "sexualContentGraphicAndNudity": "NONE",
         "sexualContentOrNudity": "NONE",
+        "socialMedia": false,
+        "socialMediaAgeRestricted": false,
         "unrestrictedWebAccess": false,
         "userGeneratedContent": false,
         "violenceCartoonOrFantasy": "NONE",
         "violenceRealistic": "NONE",
         "violenceRealisticProlongedGraphicOrSadistic": "NONE"
       },
-      "id": "09d76ec7-9779-4756-a1d0-36be32405da0",
+      "id": "be40c865-5983-4fec-ab3b-001c297c6be8",
       "type": "ageRatingDeclarations"
     },
     "app": {
@@ -1408,16 +1410,16 @@
         "primaryCategory": "FINANCE",
         "secondaryCategory": "UTILITIES"
       },
-      "id": "09d76ec7-9779-4756-a1d0-36be32405da0",
+      "id": "be40c865-5983-4fec-ab3b-001c297c6be8",
       "type": "appInfos"
     },
     "appInfoLocalization:en-US": {
       "fields": {
-        "name": "Sato - Bitcoin Tracker",
+        "name": "Sato: BTC Portfolio Tracker",
         "privacyPolicyUrl": "https://mekarya.studio/privacy/sato",
-        "subtitle": "Watch BTC wallets without keys"
+        "subtitle": "Watch Bitcoin wallets, no keys"
       },
-      "id": "50e06c58-3b25-41ec-bad5-03a9df15fc6f",
+      "id": "d205b570-0a5c-433f-a8d7-ff64d3b96bcb",
       "type": "appInfoLocalizations"
     },
     "appStoreReviewDetail:IOS:1.1": {
