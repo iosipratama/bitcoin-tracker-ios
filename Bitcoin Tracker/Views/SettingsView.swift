@@ -362,7 +362,7 @@ struct SettingsView: View {
                             .font(.system(size: 17, weight: .semibold))
                             .foregroundStyle(.label)
 
-                        Text("Store all your wallet address")
+                        Text("Store all your wallet addresses")
                             .font(.system(size: 15))
                             .foregroundStyle(.secondaryLabel)
                     }
@@ -383,7 +383,7 @@ struct SettingsView: View {
             }
             .buttonStyle(.plain)
             .accessibilityElement(children: .ignore)
-            .accessibilityLabel("Crypto Contacts, Store all your wallet address")
+            .accessibilityLabel("Crypto Contacts, Store all your wallet addresses")
             .accessibilityHint("Opens the App Store")
             .accessibilityAddTraits(.isButton)
         }
