@@ -15,7 +15,7 @@ The App Store name is "Sato: BTC Portfolio Tracker" from 1.1 (1.0 shipped as "Sa
 long-term Bitcoin holder. someone who bought and isn't selling. They don't want to trade, they don't watch the price obsessively, and they're actively turned off by the anxiety-inducing UI of most crypto apps. They probably keep their BTC in cold storage and just want a calm, occasional check-in.
 
 - The quiet HODLer — has held for years, doesn't talk about it much, values privacy and restraint. The iA Writer aesthetic resonates because they think of Bitcoin more like a savings account than a speculative asset.
-- The privacy-conscious user — appreciates that there's no account, no backend, no data leaving their phone. The read-only, address-paste model feels right to them.
+- The privacy-conscious user — appreciates that there's no account, no backend, nothing leaving their phone except to their own private iCloud. The read-only, address-paste model feels right to them.
 - The minimalist / indie software person — uses apps like Things, iA Writer, Reeder. Has high standards for native iOS design and immediately uninstalls anything that feels bloated or gamified.
 - The gift recipient / new holder — someone whose partner or friend convinced them to buy some Bitcoin. They're not deep in crypto culture and would be alienated by a typical exchange app. This one feels approachable and unintimidating.
 
@@ -34,6 +34,7 @@ long-term Bitcoin holder. someone who bought and isn't selling. They don't want 
 
 - **SwiftUI + SwiftData** (no UIKit, no third-party dependencies)
 - **Platform:** iPhone only (`TARGETED_DEVICE_FAMILY = 1`), iOS 18 and later. There is no iPad adaptation anywhere — no size classes, no width clamps — so adding iPad means real layout work, not just a build setting.
+- **Sync:** SwiftData mirrors to the user's private CloudKit database (`iCloud.com.iosipratama.BitcoinTracker`), always on, no toggle — iOS Settings › iCloud is the off switch. CloudKit rules apply to every model change: each attribute optional or defaulted, every relationship optional with an inverse, no `@Attribute(.unique)`. Production schema changes are additive only and must be deployed in CloudKit Console before each release that changes the models. `Wallet.addresses` is optional for this reason; read through `addressList`, append through `add(_:)`
 - **Models:** `Wallet` (name, createdAt, optional symbol/accent raw strings, cascade → addresses, `freeLimit`) and `BitcoinAddress` (address, `balanceSatoshis`, `pendingSatoshis`, lastUpdated, fetchError). Supporting value types: `AddressBalance`, `Quote`, `FiatCurrency` (29 currencies), `WalletSymbol`, `WalletAccent`, `AppTheme`, `SupportLinks`, `SupportEnvironment`
 - **Services:**
   - `BitcoinAPIService` — `actor`; fetches on-chain balance from Esplora-compatible explorers, mempool.space first, then mempool.emzy.de and blockstream.info as fallbacks

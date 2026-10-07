@@ -3,11 +3,11 @@ import SwiftData
 
 @Model
 final class BitcoinAddress {
-    var address: String
+    var address: String = ""
 
     /// Confirmed on-chain balance. Kept under its original name so existing
     /// stores migrate without a mapping model.
-    var balanceSatoshis: Int64
+    var balanceSatoshis: Int64 = 0
 
     /// Unconfirmed mempool delta. Negative while an outgoing spend is pending.
     /// Defaults to zero so lightweight migration can add it.

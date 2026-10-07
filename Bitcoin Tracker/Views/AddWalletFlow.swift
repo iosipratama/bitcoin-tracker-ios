@@ -235,7 +235,7 @@ struct AddWalletFlow: View {
         if let checkedBalance {
             btcAddress.apply(checkedBalance)
         }
-        wallet.addresses.append(btcAddress)
+        wallet.add(btcAddress)
 
         modelContext.insert(wallet)
         dismiss()

@@ -214,7 +214,7 @@ struct AddAddressView: View {
             btcAddress.apply(previewBalance)
         }
         // SwiftData maintains the inverse; setting both sides can duplicate the row.
-        wallet.addresses.append(btcAddress)
+        wallet.add(btcAddress)
         dismiss()
     }
 }

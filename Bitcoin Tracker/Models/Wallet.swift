@@ -8,10 +8,12 @@ final class Wallet {
     /// rests on — anyone tracking a second is past deciding whether to trust it.
     static let freeLimit = 1
 
-    var name: String
-    @Relationship(deleteRule: .cascade)
-    var addresses: [BitcoinAddress]
-    var createdAt: Date
+    // Every attribute has a default and the relationship is optional because
+    // iCloud sync refuses any model that doesn't.
+    var name: String = ""
+    @Relationship(deleteRule: .cascade, inverse: \BitcoinAddress.wallet)
+    var addresses: [BitcoinAddress]? = []
+    var createdAt: Date = Date.now
 
     /// Stored as optional raw strings rather than as the enums themselves.
     /// Lightweight migration only fills a declared default for primitive
@@ -49,8 +51,14 @@ final class Wallet {
         self.createdAt = .now
     }
 
+    var addressList: [BitcoinAddress] { addresses ?? [] }
+
+    func add(_ address: BitcoinAddress) {
+        addresses = addressList + [address]
+    }
+
     var balance: AddressBalance {
-        addresses.reduce(.zero) { running, address in
+        addressList.reduce(.zero) { running, address in
             AddressBalance(
                 confirmedSatoshis: running.confirmedSatoshis + address.balanceSatoshis,
                 pendingSatoshis: running.pendingSatoshis + address.pendingSatoshis
@@ -121,11 +129,11 @@ extension Wallet {
             name: name,
             symbol: symbol,
             accent: accent,
-            addresses: addresses.map(\.address),
+            addresses: addressList.map(\.address),
             balanceSatoshis: balance.confirmedSatoshis,
             pendingSatoshis: balance.pendingSatoshis,
             goalSatoshis: goalSatoshis,
-            lastUpdated: addresses.compactMap(\.lastUpdated).min()
+            lastUpdated: addressList.compactMap(\.lastUpdated).min()
         )
     }
 }
@@ -139,7 +147,7 @@ extension Wallet {
         let trimmed = address.trimmingCharacters(in: .whitespacesAndNewlines)
         guard !trimmed.isEmpty else { return nil }
         return wallets.first { wallet in
-            wallet.addresses.contains {
+            wallet.addressList.contains {
                 $0.address.caseInsensitiveCompare(trimmed) == .orderedSame
             }
         }
