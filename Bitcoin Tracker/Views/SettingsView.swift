@@ -30,6 +30,7 @@ struct SettingsView: View {
                     debugSection
                     #endif
                     rateCard
+                    moreFromMekaryaSection
                     footer
                 }
                 .padding(.horizontal, 16)
@@ -341,6 +342,51 @@ struct SettingsView: View {
         }
         .buttonStyle(.plain)
         .accessibilityLabel("Rate Sato on the App Store")
+    }
+
+    private var moreFromMekaryaSection: some View {
+        SettingsGroup(title: "more from mekarya") {
+            Button {
+                openURL(SupportLinks.cryptoContacts)
+            } label: {
+                HStack(spacing: 12) {
+                    Image(.cryptoContactsIcon)
+                        .resizable()
+                        .scaledToFit()
+                        .frame(width: 45, height: 45)
+                        .clipShape(RoundedRectangle(cornerRadius: 10, style: .continuous))
+                        .accessibilityHidden(true)
+
+                    VStack(alignment: .leading, spacing: 2) {
+                        Text("Crypto Contacts")
+                            .font(.system(size: 17, weight: .semibold))
+                            .foregroundStyle(.label)
+
+                        Text("Store all your wallet address")
+                            .font(.system(size: 15))
+                            .foregroundStyle(.secondaryLabel)
+                    }
+                    .multilineTextAlignment(.leading)
+
+                    Spacer(minLength: 0)
+
+                    Text("Get")
+                        .font(.system(size: 17, weight: .semibold))
+                        .foregroundStyle(.brand)
+                        .padding(.horizontal, 12)
+                        .frame(height: 28)
+                        .background(Capsule().fill(.pillFill))
+                }
+                .padding(16)
+                .frame(maxWidth: .infinity, alignment: .leading)
+                .contentShape(.rect)
+            }
+            .buttonStyle(.plain)
+            .accessibilityElement(children: .ignore)
+            .accessibilityLabel("Crypto Contacts, Store all your wallet address")
+            .accessibilityHint("Opens the App Store")
+            .accessibilityAddTraits(.isButton)
+        }
     }
 
     private var footer: some View {
