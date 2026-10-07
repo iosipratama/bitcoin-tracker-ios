@@ -17,7 +17,7 @@ WHAT YOU CAN DO
 
 PRIVATE BY DESIGN
 
-No account, no analytics, no servers of our own. Your wallets stay on your phone and sync through your own private iCloud, so they come back if you reinstall. Sato only asks public block explorers for balances and a price service for exchange rates. Nothing identifies you, because there's nothing to identify.
+No account, no analytics, no servers of our own. Your wallets stay on your phone and sync through your own private iCloud. Sato only asks public block explorers for balances and a price service for exchange rates. Nothing identifies you, because there's nothing to identify.
 
 SATO PLUS
 
