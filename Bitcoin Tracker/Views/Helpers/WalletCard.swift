@@ -2,6 +2,9 @@ import SwiftUI
 
 struct WalletRow: View {
     let wallet: Wallet
+    /// Only ever true beside the detail column on iPad, where the list has to
+    /// say which wallet the right side is showing.
+    var isSelected = false
 
     @Environment(PortfolioViewModel.self) private var viewModel
 
@@ -22,10 +25,17 @@ struct WalletRow: View {
             RoundedRectangle(cornerRadius: .cardRadius, style: .continuous)
                 .fill(Custom.fillPrimary)
         )
+        .overlay {
+            if isSelected {
+                RoundedRectangle(cornerRadius: .cardRadius, style: .continuous)
+                    .strokeBorder(Color.brand, lineWidth: 2)
+            }
+        }
         // Applied once here; every Text below inherits the rounded design.
         .fontDesign(.rounded)
         .contentShape(Rectangle())
         .accessibilityElement(children: .combine)
+        .accessibilityAddTraits(isSelected ? .isSelected : [])
     }
 
     private var header: some View {

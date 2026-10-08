@@ -25,6 +25,7 @@ struct WalletDetailView: View {
                 goalSection
                 addressList
             }
+            .readableWidth()
             .padding(.bottom, 40)
         }
         .softScrollEdge(for: .top)

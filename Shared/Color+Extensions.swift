@@ -220,4 +220,9 @@ extension CGFloat {
     /// The balance panel nested inside a card — a touch tighter than the card
     /// that holds it, so the two curves don't read as one.
     static let cardInsetRadius: CGFloat = 16
+
+    /// The widest a column of cards or prose gets. Every iPhone is narrower,
+    /// so these only ever bite on iPad.
+    static let readableContent: CGFloat = 640
+    static let readableProse: CGFloat = 560
 }

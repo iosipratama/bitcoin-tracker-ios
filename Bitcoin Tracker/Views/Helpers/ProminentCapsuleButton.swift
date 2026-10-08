@@ -36,6 +36,7 @@ struct ProminentCapsuleButton: View {
         .buttonStyle(.plain)
         .disabled(!isEnabled || isBusy)
         .padding(.horizontal, 50)
+        .frame(maxWidth: .readableProse)
         .sensoryFeedback(.impact(weight: .medium, intensity: 1), trigger: taps)
     }
 }

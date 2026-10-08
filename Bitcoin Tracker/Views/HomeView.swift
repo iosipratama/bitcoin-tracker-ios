@@ -9,12 +9,14 @@ struct HomeView: View {
     @Environment(StoreManager.self) private var store
     @Environment(WidgetRouter.self) private var router
     @Environment(\.requestReview) private var requestReview
+    @Environment(\.horizontalSizeClass) private var horizontalSizeClass
 
     @State private var showAddWallet = false
     @State private var showSettings = false
     @State private var walletToDelete: Wallet? = nil
     @State private var selectedWallet: Wallet? = nil
     @State private var showPaywall = false
+    @State private var compactColumn: NavigationSplitViewColumn = .sidebar
 
     /// Seeded on first appearance so the query resolving on a cold launch
     /// doesn't read as a wallet having just been created.
@@ -46,75 +48,120 @@ struct HomeView: View {
         wallets.flatMap(\.addressList).compactMap(\.lastUpdated).min()
     }
 
-    var body: some View {
-        NavigationStack {
-            Group {
-                if showsEmptyState {
-                    emptyState
-                } else {
-                    walletList
-                }
-            }
-            .safeAreaInset(edge: .bottom) { quoteFooter }
-            .background(.appBackground)
-            .navigationTitle("Wallet")
-            .navigationBarTitleDisplayMode(.inline)
-            .toolbar {
-                ToolbarItem(placement: .topBarLeading) {
-                    Button("Settings", systemImage: "gearshape") { showSettings = true }
-                        .tint(Custom.labelSecondary)
-                }
-                ToolbarItem(placement: .topBarTrailing) {
-                    if viewModel.isLoading {
-                        ProgressView()
-                            .tint(.brand)
-                            .scaleEffect(0.8)
-                            .accessibilityLabel("Refreshing balances")
-                    } else {
-                        Button("Add Wallet", systemImage: "plus") {
-                            if canAddWallet { showAddWallet = true } else { showPaywall = true }
-                        }
-                        .tint(.brand)
-                    }
-                }
-            }
-            .navigationDestination(item: $selectedWallet) { wallet in
-                WalletDetailView(wallet: wallet)
-            }
-            .sheet(isPresented: $showAddWallet) { AddWalletFlow() }
-            .sheet(isPresented: $showSettings) { SettingsView() }
-            .fullScreenCover(isPresented: $showPaywall) { PaywallView() }
-            .task { await refresh() }
-            .onChange(of: router.requestedWalletID, initial: true) { _, _ in
-                openRequestedWallet()
-            }
-            .onChange(of: wallets.count, initial: true) { _, count in
-                // Also tried here: a cold launch from a widget can arrive
-                // before the query has resolved, and the id has to keep until
-                // there is a wallet to match it against.
-                openRequestedWallet()
+    /// Read from the window, not from inside a column: the sidebar reports
+    /// compact even on the widest iPad.
+    private var showsColumns: Bool { horizontalSizeClass == .regular }
 
-                defer { knownWalletCount = count }
-                guard let known = knownWalletCount, count > known else { return }
-                Task { await askForReviewIfEarned() }
-            }
-            .alert("Remove \(walletToDelete?.name ?? "wallet")?", isPresented: .init(
-                get: { walletToDelete != nil },
-                set: { if !$0 { walletToDelete = nil } }
-            )) {
-                Button("Remove", role: .destructive) {
-                    if let wallet = walletToDelete {
-                        modelContext.delete(wallet)
-                    }
-                    walletToDelete = nil
-                }
-                Button("Cancel", role: .cancel) {
-                    walletToDelete = nil
-                }
-            } message: {
-                Text("This removes the wallet from your tracker. Your bitcoin on-chain is not affected.")
+    var body: some View {
+        // Collapses to a single stack on iPhone and in a narrow iPad window,
+        // so there is one navigation model rather than one per device.
+        NavigationSplitView(columnVisibility: .constant(.all), preferredCompactColumn: $compactColumn) {
+            sidebar
+                .navigationSplitViewColumnWidth(min: 340, ideal: 380, max: 440)
+                .toolbar(removing: .sidebarToggle)
+        } detail: {
+            detail
+        }
+        .navigationSplitViewStyle(.balanced)
+    }
+
+    private var sidebar: some View {
+        Group {
+            if showsEmptyState {
+                emptyState
+            } else {
+                walletList
             }
         }
+        .safeAreaInset(edge: .bottom) { quoteFooter }
+        .background(.appBackground)
+        .navigationTitle("Wallet")
+        .navigationBarTitleDisplayMode(.inline)
+        .toolbar {
+            ToolbarItem(placement: .topBarLeading) {
+                Button("Settings", systemImage: "gearshape") { showSettings = true }
+                    .tint(Custom.labelSecondary)
+            }
+            ToolbarItem(placement: .topBarTrailing) {
+                if viewModel.isLoading {
+                    ProgressView()
+                        .tint(.brand)
+                        .scaleEffect(0.8)
+                        .accessibilityLabel("Refreshing balances")
+                } else {
+                    Button("Add Wallet", systemImage: "plus") {
+                        if canAddWallet { showAddWallet = true } else { showPaywall = true }
+                    }
+                    .tint(.brand)
+                }
+            }
+        }
+        .sheet(isPresented: $showAddWallet) { AddWalletFlow() }
+        .sheet(isPresented: $showSettings) { SettingsView() }
+        .fullScreenCover(isPresented: $showPaywall) { PaywallView() }
+        .task { await refresh() }
+        .onChange(of: router.requestedWalletID, initial: true) { _, _ in
+            openRequestedWallet()
+        }
+        .onChange(of: wallets.count, initial: true) { _, count in
+            // Also tried here: a cold launch from a widget can arrive
+            // before the query has resolved, and the id has to keep until
+            // there is a wallet to match it against.
+            openRequestedWallet()
+            selectFirstWalletIfShowingColumns()
+
+            defer { knownWalletCount = count }
+            guard let known = knownWalletCount, count > known else { return }
+            Task { await askForReviewIfEarned() }
+        }
+        .alert("Remove \(walletToDelete?.name ?? "wallet")?", isPresented: .init(
+            get: { walletToDelete != nil },
+            set: { if !$0 { walletToDelete = nil } }
+        )) {
+            Button("Remove", role: .destructive) {
+                if let wallet = walletToDelete {
+                    // Cleared first so the detail column never draws a
+                    // wallet that's already gone.
+                    if selectedWallet == wallet { selectedWallet = nil }
+                    modelContext.delete(wallet)
+                }
+                walletToDelete = nil
+            }
+            Button("Cancel", role: .cancel) {
+                walletToDelete = nil
+            }
+        } message: {
+            Text("This removes the wallet from your tracker. Your bitcoin on-chain is not affected.")
+        }
+        .onChange(of: showsColumns) { selectFirstWalletIfShowingColumns() }
+    }
+
+    /// With two columns there is always room for a wallet, and an empty right
+    /// half reads as something failing to load.
+    @ViewBuilder
+    private var detail: some View {
+        if let selectedWallet {
+            WalletDetailView(wallet: selectedWallet)
+                .id(selectedWallet.persistentModelID)
+        } else {
+            Text(wallets.isEmpty ? "" : "Select a wallet")
+                .font(.system(size: 17, weight: .semibold))
+                .fontDesign(.rounded)
+                .foregroundStyle(Custom.labelQuaternary)
+                .frame(maxWidth: .infinity, maxHeight: .infinity)
+                .background(.appBackground)
+        }
+    }
+
+    private func open(_ wallet: Wallet) {
+        selectedWallet = wallet
+        compactColumn = .detail
+    }
+
+    private func selectFirstWalletIfShowingColumns() {
+        guard showsColumns else { return }
+        if let selectedWallet, wallets.contains(selectedWallet) { return }
+        selectedWallet = wallets.first
     }
 
     /// The wallet a tapped widget asked for, once the query has one to show.
@@ -122,7 +169,7 @@ struct HomeView: View {
     /// held, so a deleted wallet can't sit there hijacking the next launch.
     private func openRequestedWallet() {
         guard let id = router.requestedWalletID, !wallets.isEmpty else { return }
-        selectedWallet = wallets.first { $0.widgetID == id }
+        if let wallet = wallets.first(where: { $0.widgetID == id }) { open(wallet) }
         router.clear()
     }
 
@@ -160,9 +207,9 @@ struct HomeView: View {
 
             ForEach(wallets) { wallet in
                 Button {
-                    selectedWallet = wallet
+                    open(wallet)
                 } label: {
-                    WalletRow(wallet: wallet)
+                    WalletRow(wallet: wallet, isSelected: showsColumns && selectedWallet == wallet)
                 }
                 .buttonStyle(.plain)
                 .listRowInsets(EdgeInsets(top: 0, leading: 20, bottom: 16, trailing: 20))
