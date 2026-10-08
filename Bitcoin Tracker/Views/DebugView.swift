@@ -11,6 +11,24 @@ struct DebugView: View {
     @Environment(PortfolioViewModel.self) private var viewModel
 
     @State private var showPaywall = false
+    private let sync = CloudSyncMonitor.shared
+
+    private var setupFailureText: String {
+        if let failure = sync.setupFailure {
+            return "Running local-only. Store failed to open with iCloud: \(failure)"
+        }
+        return "Upload should read OK a few seconds after any edit."
+    }
+
+    private func syncRow(_ symbol: String, _ title: String, _ value: String) -> some View {
+        SettingsRow(systemImage: symbol, title: title) {
+            Text(value)
+                .font(.system(size: 13))
+                .foregroundStyle(.secondaryLabel)
+                .multilineTextAlignment(.trailing)
+                .textSelection(.enabled)
+        }
+    }
 
     var body: some View {
         @Bindable var store = store
@@ -40,6 +58,17 @@ struct DebugView: View {
                             .foregroundStyle(.secondaryLabel)
                     }
                 }
+
+                SettingsGroup(
+                    title: "iCloud sync",
+                    footer: setupFailureText
+                ) {
+                    syncRow("person.icloud", "Account", sync.accountStatus)
+                    syncRow("gearshape", "Setup", sync.lastSetup)
+                    syncRow("icloud.and.arrow.up", "Upload", sync.lastExport)
+                    syncRow("icloud.and.arrow.down", "Download", sync.lastImport)
+                }
+                .task { await sync.refreshAccountStatus() }
 
                 SettingsGroup(title: "Main view") {
                     SettingsRow(systemImage: "tray", title: "Force empty state") {

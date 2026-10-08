@@ -28,10 +28,13 @@ struct Bitcoin_TrackerApp: App {
         let schema = Schema([Wallet.self, BitcoinAddress.self])
         let synced = ModelConfiguration(
             schema: schema,
-            cloudKitDatabase: .private("iCloud.com.iosipratama.BitcoinTracker")
+            cloudKitDatabase: .private(CloudSyncMonitor.containerID)
         )
-        if let container = try? ModelContainer(for: schema, configurations: synced) {
-            return container
+        _ = CloudSyncMonitor.shared
+        do {
+            return try ModelContainer(for: schema, configurations: synced)
+        } catch {
+            CloudSyncMonitor.shared.setupFailure = String(describing: error)
         }
 
         // Losing sync is better than failing to open someone's wallets at all.
