@@ -28,6 +28,15 @@ struct Bitcoin_TrackerApp: App {
     /// local store and syncs once they sign in.
     private static let modelContainer: ModelContainer = {
         let schema = Schema([Wallet.self, BitcoinAddress.self])
+
+        #if DEBUG
+        // Screenshot mode's demo wallets must never reach the real iCloud
+        // account, and a fresh store each launch keeps every capture identical.
+        if ScreenshotScene.current != nil {
+            let scratch = ModelConfiguration(schema: schema, isStoredInMemoryOnly: true, cloudKitDatabase: .none)
+            return try! ModelContainer(for: schema, configurations: scratch)
+        }
+        #endif
         let synced = ModelConfiguration(
             schema: schema,
             cloudKitDatabase: .private(CloudSyncMonitor.containerID)

@@ -76,6 +76,18 @@ final class ActivityStore {
         }
     }
 
+    #if DEBUG
+    /// Screenshot mode's history, marked fresh so opening the wallet doesn't
+    /// replace it with the network's.
+    func seed(_ wallet: Wallet, items: [ActivityItem]) {
+        entries[Self.key(for: wallet)] = Entry(
+            items: items.sorted(by: ActivityItem.newestFirst),
+            updated: .now.addingTimeInterval(3600),
+            balanceSatoshis: wallet.totalSatoshis
+        )
+    }
+    #endif
+
     private nonisolated static func fetch(_ addresses: [String]) async throws -> [ActivityItem] {
         var transactions: [String: EsploraTransaction] = [:]
 

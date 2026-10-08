@@ -23,6 +23,7 @@ struct HomeView: View {
     @State private var knownWalletCount: Int?
 
     #if DEBUG
+    @Environment(ActivityStore.self) private var activity
     @AppStorage(AppStorageKey.forcesEmptyState) private var forcesEmptyState = false
     #endif
 
@@ -57,7 +58,7 @@ struct HomeView: View {
         // so there is one navigation model rather than one per device.
         NavigationSplitView(columnVisibility: .constant(.all), preferredCompactColumn: $compactColumn) {
             sidebar
-                .navigationSplitViewColumnWidth(min: 340, ideal: 380, max: 440)
+                .navigationSplitViewColumnWidth(380)
                 .toolbar(removing: .sidebarToggle)
         } detail: {
             detail
@@ -65,8 +66,43 @@ struct HomeView: View {
         .navigationSplitViewStyle(.balanced)
         // On the split view rather than the sidebar, which collapsed on iPhone
         // reappears on every Back and would refetch each time.
-        .task { await refresh() }
+        .task {
+            #if DEBUG
+            if ScreenshotScene.current != nil {
+                await applyScreenshotScene()
+                return
+            }
+            #endif
+            await refresh()
+        }
     }
+
+    #if DEBUG
+    private func applyScreenshotScene() async {
+        // Fixed balances and history, and no balance fetch: a screenshot
+        // shouldn't depend on what four busy addresses did this minute.
+        if ScreenshotScene.loadsSampleWallets {
+            let wallets = SampleWallet.replaceAll(in: modelContext, demo: true)
+            for (wallet, sample) in zip(wallets, SampleWallet.all) {
+                activity.seed(wallet, items: SampleWallet.demoActivity(for: sample))
+            }
+            // Lets the query pick up the inserts before anything is selected.
+            try? await Task.sleep(for: .milliseconds(300))
+        }
+        await viewModel.refreshPrices()
+
+        switch ScreenshotScene.current {
+        case .detail:
+            if wallets.count > 2 { open(wallets[2]) }
+        case .addWallet:
+            showAddWallet = true
+        case .settings:
+            showSettings = true
+        case .home, nil:
+            break
+        }
+    }
+    #endif
 
     private var sidebar: some View {
         Group {
