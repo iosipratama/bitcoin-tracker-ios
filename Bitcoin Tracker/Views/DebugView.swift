@@ -12,6 +12,12 @@ struct DebugView: View {
 
     @State private var showPaywall = false
     private let sync = CloudSyncMonitor.shared
+    @State private var clipboardTypes = Self.currentClipboardTypes()
+
+    private static func currentClipboardTypes() -> String {
+        let types = UIPasteboard.general.types
+        return types.isEmpty ? "Empty" : types.joined(separator: "\n")
+    }
 
     private var setupFailureText: String {
         if let failure = sync.setupFailure {
@@ -69,6 +75,16 @@ struct DebugView: View {
                     syncRow("icloud.and.arrow.down", "Download", sync.lastImport)
                 }
                 .task { await sync.refreshAccountStatus() }
+
+                SettingsGroup(
+                    title: "Clipboard",
+                    footer: "The formats on the clipboard right now. Reading the list doesn't read the contents, so it never asks to paste."
+                ) {
+                    syncRow("doc.on.clipboard", "Formats", clipboardTypes)
+                }
+                .onReceive(NotificationCenter.default.publisher(for: UIApplication.didBecomeActiveNotification)) { _ in
+                    clipboardTypes = Self.currentClipboardTypes()
+                }
 
                 SettingsGroup(title: "Main view") {
                     SettingsRow(systemImage: "tray", title: "Force empty state") {
