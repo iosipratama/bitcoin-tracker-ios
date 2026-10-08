@@ -23,7 +23,7 @@ long-term Bitcoin holder. someone who bought and isn't selling. They don't want 
 ### Screens
 - Welcome — nine lines of copy shown once, before any balance appears
 - Home — list of wallets
-- Wallet Detail — wallet name, aggregated balance, list of addresses with individual balances
+- Wallet Detail — wallet name, aggregated balance, list of addresses with individual balances, Recent activity (last 10 transactions)
 - Add Wallet — a single flow covering the name, the first address, and its preview
 - Wallet Customizer — symbol and accent colour for a wallet
 - Settings — fiat currency selector, fiat show/hide, satoshi toggle, flip-to-hide, Face ID lock, hide in app switcher, theme (Automatic / Light / Dark), support links, API attribution, restore purchase
@@ -33,7 +33,7 @@ long-term Bitcoin holder. someone who bought and isn't selling. They don't want 
 ## Architecture
 
 - **SwiftUI + SwiftData** (no UIKit, no third-party dependencies)
-- **Platform:** iPhone only (`TARGETED_DEVICE_FAMILY = 1`), iOS 18 and later. There is no iPad adaptation anywhere — no size classes, no width clamps — so adding iPad means real layout work, not just a build setting.
+- **Platform:** iPhone and iPad (`TARGETED_DEVICE_FAMILY = "1,2"`, app and widgets), iOS 18 and later, from 1.2. Home is a `NavigationSplitView`: wallet list in the sidebar, `WalletDetailView` in the detail column, a 2pt brand outline on the selected card. It collapses to the iPhone stack whenever the window is compact, so iPhone and narrow iPad windows share one navigation model; `HomeView.showsColumns` (the window's size class) decides selection behaviour. Wide content is held to a centred column with `readableWidth(_:)` — `.readableContent` (640) for cards, `.readableProse` (560) for Welcome, the Paywall and the big capsule button. Every iPhone is narrower than both, so these never change the iPhone layout. iPad App Store screenshots live in `app-ipad-pro-3gen-129` (13-inch)
 - **Sync:** SwiftData mirrors to the user's private CloudKit database (`iCloud.com.iosipratama.BitcoinTracker`), always on, no toggle — iOS Settings › iCloud is the off switch. CloudKit rules apply to every model change: each attribute optional or defaulted, every relationship optional with an inverse, no `@Attribute(.unique)`. Production schema changes are additive only and must be deployed in CloudKit Console before each release that changes the models. `Wallet.addresses` is optional for this reason; read through `addressList`, append through `add(_:)`
 - **Models:** `Wallet` (name, createdAt, optional symbol/accent raw strings, cascade → addresses, `freeLimit`) and `BitcoinAddress` (address, `balanceSatoshis`, `pendingSatoshis`, lastUpdated, fetchError). Supporting value types: `AddressBalance`, `Quote`, `FiatCurrency` (29 currencies), `WalletSymbol`, `WalletAccent`, `AppTheme`, `SupportLinks`, `SupportEnvironment`
 - **Services:**
@@ -41,6 +41,7 @@ long-term Bitcoin holder. someone who bought and isn't selling. They don't want 
   - `PriceService` — `actor`; fetches BTC price via CoinGecko, 60-second in-memory cache
   - `StoreManager` — `@Observable @MainActor`; the only file that imports StoreKit. One non-consumable (`…​.plus`) lifts the wallet limit
   - `AppLock` — `@Observable @MainActor`; Face ID (device owner authentication) on launch and return from background, plus the app-switcher cover. `PrivacyCover` draws both in its own alert-level `UIWindow` so it sits above sheets
+  - `ActivityStore` — `@Observable @MainActor`; Recent activity per wallet (last 10, netted across the wallet's addresses), cached in `Application Support/RecentActivity.json` rather than SwiftData so it stays off iCloud. Refetches when the balance changes or the cache is over two minutes old; a failed fetch keeps the cached list
   - `ReviewPrompt` — decides whether the app has earned the right to ask for a review
 - **ViewModel:** `PortfolioViewModel` drives the home screen
 - **Views:** `RootView`, `WelcomeView`, `HomeView`, `WalletDetailView`, `AddWalletFlow`, `AddAddressView`, `WalletCustomizer`, `SettingsView`, `PaywallView`, `DebugView`

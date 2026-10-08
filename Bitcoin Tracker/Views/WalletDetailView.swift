@@ -5,6 +5,7 @@ struct WalletDetailView: View {
     @Bindable var wallet: Wallet
     @Environment(\.modelContext) private var modelContext
     @Environment(PortfolioViewModel.self) private var viewModel
+    @Environment(ActivityStore.self) private var activity
 
     @State private var showAddAddress = false
     @State private var showCustomize = false
@@ -24,7 +25,12 @@ struct WalletDetailView: View {
                 walletHeader
                 goalSection
                 addressList
+
+                if !wallet.addressList.isEmpty {
+                    RecentActivitySection(wallet: wallet)
+                }
             }
+            .readableWidth()
             .padding(.bottom, 40)
         }
         .softScrollEdge(for: .top)
@@ -45,6 +51,10 @@ struct WalletDetailView: View {
                 }
                 .tint(.brand)
             }
+        }
+        // A new balance means a transaction the stored list hasn't seen.
+        .task(id: "\(ActivityStore.key(for: wallet))|\(wallet.totalSatoshis)") {
+            await activity.refresh(wallet)
         }
         .sheet(isPresented: $showAddAddress) {
             AddAddressView(wallet: wallet)
@@ -392,6 +402,7 @@ struct AddressRow: View {
     return WalletDetailView(wallet: wallet)
         .modelContainer(container)
         .environment(viewModel)
+        .environment(ActivityStore())
 }
 
 #Preview("Empty State") {
@@ -406,6 +417,7 @@ struct AddressRow: View {
     return WalletDetailView(wallet: wallet)
         .modelContainer(container)
         .environment(viewModel)
+        .environment(ActivityStore())
 }
 
 #Preview("Address Row") {

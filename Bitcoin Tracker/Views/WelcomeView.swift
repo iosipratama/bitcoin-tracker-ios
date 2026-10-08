@@ -43,6 +43,7 @@ struct WelcomeView: View {
             .fontDesign(.rounded)
             .foregroundStyle(Custom.labelSecondary)
             .padding(.horizontal, 32)
+            .readableWidth(.readableProse)
             .padding(.top, 36)
             .padding(.bottom, 16)
         }

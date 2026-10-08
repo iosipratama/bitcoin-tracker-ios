@@ -1,5 +1,6 @@
 #if DEBUG
 import SwiftUI
+import SwiftData
 
 /// A private testing surface, compiled out of release builds. Everything here
 /// re-arms or overrides state the app is otherwise meant to reach only by
@@ -11,6 +12,8 @@ struct DebugView: View {
     @Environment(PortfolioViewModel.self) private var viewModel
 
     @State private var showPaywall = false
+    @State private var confirmsSampleWallets = false
+    @Environment(\.modelContext) private var modelContext
     private let sync = CloudSyncMonitor.shared
     @State private var clipboardTypes = Self.currentClipboardTypes()
 
@@ -86,6 +89,20 @@ struct DebugView: View {
                     clipboardTypes = Self.currentClipboardTypes()
                 }
 
+                SettingsGroup(
+                    title: "Screenshots",
+                    footer: "Replaces every wallet with four real addresses, named and coloured for App Store screenshots. Balances are live, so they move."
+                ) {
+                    Button {
+                        confirmsSampleWallets = true
+                    } label: {
+                        SettingsRow(systemImage: "photo.on.rectangle", title: "Load sample wallets") {
+                            EmptyView()
+                        }
+                    }
+                    .buttonStyle(.plain)
+                }
+
                 SettingsGroup(title: "Main view") {
                     SettingsRow(systemImage: "tray", title: "Force empty state") {
                         Toggle("Force empty state", isOn: $forcesEmptyState)
@@ -145,6 +162,50 @@ struct DebugView: View {
         .navigationTitle("Debug")
         .navigationBarTitleDisplayMode(.inline)
         .fullScreenCover(isPresented: $showPaywall) { PaywallView() }
+        .confirmationDialog("Replace all wallets with samples?", isPresented: $confirmsSampleWallets, titleVisibility: .visible) {
+            Button("Replace Wallets", role: .destructive) { loadSampleWallets() }
+        }
     }
+
+    private func loadSampleWallets() {
+        for wallet in (try? modelContext.fetch(FetchDescriptor<Wallet>())) ?? [] {
+            modelContext.delete(wallet)
+        }
+
+        // Staggered so Home lists them in this order, which sorts by creation.
+        let wallets = SampleWallet.all.enumerated().map { index, sample in
+            let wallet = Wallet(name: sample.name)
+            wallet.createdAt = .now.addingTimeInterval(Double(index - SampleWallet.all.count))
+            wallet.symbol = sample.symbol
+            wallet.accent = sample.accent
+            wallet.goalSatoshis = sample.goalSatoshis
+            wallet.add(BitcoinAddress(address: sample.address))
+            modelContext.insert(wallet)
+            return wallet
+        }
+        try? modelContext.save()
+
+        Task { await viewModel.refreshBalances(wallets: wallets) }
+    }
+}
+private struct SampleWallet {
+    var name: String
+    var symbol: WalletSymbol
+    var accent: WalletAccent
+    var address: String
+    var goalSatoshis: Int64?
+
+    /// Busy public addresses, so every card has a real balance. Goals are set
+    /// against October 2026 balances to land on believable percentages.
+    static let all = [
+        SampleWallet(name: "house down payment", symbol: .home, accent: .mint,
+                     address: "bc1qvmw9dmensxtuxu5vw7mxtxqurad2u99pdj9wwa", goalSatoshis: 15_000_000),
+        SampleWallet(name: "retire early", symbol: .holiday, accent: .orange,
+                     address: "bc1qq9qx0jj6glxe7dcgj98uke8yr4ze7sadt2qjgj", goalSatoshis: 50_000_000),
+        SampleWallet(name: "emran's college", symbol: .education, accent: .cyan,
+                     address: "bc1qc7s0je43r88p3zganwmfg862w9xm9qyeprqp7c", goalSatoshis: 10_000_000),
+        SampleWallet(name: "family savings", symbol: .parent, accent: .mint,
+                     address: "bc1qca3522yshz3t2m6aj92c6dvnc74x2seuqpwgat", goalSatoshis: nil),
+    ]
 }
 #endif

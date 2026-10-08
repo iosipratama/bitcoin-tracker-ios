@@ -49,6 +49,59 @@ nonisolated struct EsploraAddressResponse: Decodable, Sendable {
     }
 }
 
+/// The parts of an Esplora transaction needed to tell how much it moved in or
+/// out of a given set of addresses. Everything else in the response is ignored.
+nonisolated struct EsploraTransaction: Decodable, Sendable {
+    let txid: String
+    let status: Status
+    let vin: [Input]
+    let vout: [Output]
+
+    struct Status: Decodable, Sendable {
+        let confirmed: Bool
+        let block_time: TimeInterval?
+    }
+
+    struct Input: Decodable, Sendable {
+        /// nil on a coinbase input, which spends nothing.
+        let prevout: Output?
+    }
+
+    struct Output: Decodable, Sendable {
+        let scriptpubkey_address: String?
+        let value: Int64
+    }
+
+    /// What landed in `addresses` minus what left them. Measured against the
+    /// whole set, so coins moved between two addresses of one wallet net out to
+    /// the fee rather than reading as both a send and a receipt.
+    func netSatoshis(for addresses: Set<String>) -> Int64 {
+        let received = vout
+            .filter { $0.scriptpubkey_address.map(addresses.contains) ?? false }
+            .reduce(0) { $0 + $1.value }
+        let spent = vin
+            .compactMap(\.prevout)
+            .filter { $0.scriptpubkey_address.map(addresses.contains) ?? false }
+            .reduce(0) { $0 + $1.value }
+        return received - spent
+    }
+
+    /// The other side, as far as one address can stand for it: whoever funded
+    /// the first input of a receipt, or the largest output of a send that isn't
+    /// change. nil for newly mined coins and for moves between own addresses.
+    func counterparty(for addresses: Set<String>, isReceived: Bool) -> String? {
+        let isExternal = { (address: String?) in address.map { !addresses.contains($0) } ?? false }
+
+        if isReceived {
+            return vin.compactMap(\.prevout).first { isExternal($0.scriptpubkey_address) }?.scriptpubkey_address
+        }
+        return vout
+            .filter { isExternal($0.scriptpubkey_address) }
+            .max { $0.value < $1.value }?
+            .scriptpubkey_address
+    }
+}
+
 actor BitcoinAPIService {
     static let shared = BitcoinAPIService()
 
@@ -94,24 +147,52 @@ actor BitcoinAPIService {
     }
 
     func fetchBalance(for address: String) async throws -> AddressBalance {
+        try await hedged { endpoint, session in
+            let data = try await Self.get("\(endpoint)/address/\(try Self.encoded(address))", session: session)
+            guard let decoded = try? JSONDecoder().decode(EsploraAddressResponse.self, from: data) else {
+                throw APIError.decodingError
+            }
+            return AddressBalance(
+                confirmedSatoshis: decoded.chain_stats.delta,
+                pendingSatoshis: decoded.mempool_stats.delta
+            )
+        }
+    }
+
+    /// Pending transactions first, then the latest confirmed ones — up to 50
+    /// and 25 respectively, which is one page and far more than Recent Activity
+    /// shows.
+    func fetchTransactions(for address: String) async throws -> [EsploraTransaction] {
+        try await hedged { endpoint, session in
+            let data = try await Self.get("\(endpoint)/address/\(try Self.encoded(address))/txs", session: session)
+            guard let decoded = try? JSONDecoder().decode([EsploraTransaction].self, from: data) else {
+                throw APIError.decodingError
+            }
+            return decoded
+        }
+    }
+
+    private func hedged<Value: Sendable>(
+        _ fetch: @escaping @Sendable (String, URLSession) async throws -> Value
+    ) async throws -> Value {
         let order = Self.endpoints.indices.map { (preferredEndpoint + $0) % Self.endpoints.count }
 
-        switch await Self.race(address: address, order: order, session: session) {
-        case .success(let index, let balance):
+        switch await Self.race(order: order, session: session, fetch: fetch) {
+        case .success(let index, let value):
             preferredEndpoint = index
-            return balance
+            return value
         case .failure(let error):
             throw error
         }
     }
 
-    private enum RaceOutcome: Sendable {
-        case success(Int, AddressBalance)
+    private enum RaceOutcome<Value: Sendable>: Sendable {
+        case success(Int, Value)
         case failure(APIError)
     }
 
-    private enum EndpointOutcome: Sendable {
-        case success(Int, AddressBalance)
+    private enum EndpointOutcome<Value: Sendable>: Sendable {
+        case success(Int, Value)
         case failure(APIError)
         case skipped
     }
@@ -119,12 +200,12 @@ actor BitcoinAPIService {
     /// Hedged request. Each host starts one `hedgeDelay` after the previous, and
     /// the first success cancels the rest — so a responsive primary answers alone
     /// and a dead one costs 1.5s instead of the full 8s timeout.
-    private nonisolated static func race(
-        address: String,
+    private nonisolated static func race<Value: Sendable>(
         order: [Int],
-        session: URLSession
-    ) async -> RaceOutcome {
-        await withTaskGroup(of: EndpointOutcome.self) { group in
+        session: URLSession,
+        fetch: @escaping @Sendable (String, URLSession) async throws -> Value
+    ) async -> RaceOutcome<Value> {
+        await withTaskGroup(of: EndpointOutcome<Value>.self) { group in
             for (position, index) in order.enumerated() {
                 group.addTask {
                     if position > 0 {
@@ -136,12 +217,7 @@ actor BitcoinAPIService {
                     guard !Task.isCancelled else { return .skipped }
 
                     do {
-                        let balance = try await fetchBalance(
-                            for: address,
-                            from: endpoints[index],
-                            session: session
-                        )
-                        return .success(index, balance)
+                        return .success(index, try await fetch(endpoints[index], session))
                     } catch let error as APIError {
                         return .failure(error)
                     } catch {
@@ -154,9 +230,9 @@ actor BitcoinAPIService {
 
             for await outcome in group {
                 switch outcome {
-                case .success(let index, let balance):
+                case .success(let index, let value):
                     group.cancelAll()
-                    return .success(index, balance)
+                    return .success(index, value)
                 case .failure(.invalidAddress):
                     // Every mirror reads the same chain, so this verdict is final.
                     group.cancelAll()
@@ -173,15 +249,15 @@ actor BitcoinAPIService {
         }
     }
 
-    private nonisolated static func fetchBalance(
-        for address: String,
-        from endpoint: String,
-        session: URLSession
-    ) async throws -> AddressBalance {
-        guard let encoded = address.addingPercentEncoding(withAllowedCharacters: .alphanumerics),
-              let url = URL(string: "\(endpoint)/address/\(encoded)") else {
+    private nonisolated static func encoded(_ address: String) throws -> String {
+        guard let encoded = address.addingPercentEncoding(withAllowedCharacters: .alphanumerics) else {
             throw APIError.invalidURL
         }
+        return encoded
+    }
+
+    private nonisolated static func get(_ string: String, session: URLSession) async throws -> Data {
+        guard let url = URL(string: string) else { throw APIError.invalidURL }
 
         let (data, response) = try await session.data(from: url)
 
@@ -190,19 +266,10 @@ actor BitcoinAPIService {
         }
 
         switch http.statusCode {
-        case 200: break
+        case 200: return data
         case 400, 404: throw APIError.invalidAddress
         case 429: throw APIError.rateLimited
         default: throw APIError.httpError(http.statusCode)
         }
-
-        guard let decoded = try? JSONDecoder().decode(EsploraAddressResponse.self, from: data) else {
-            throw APIError.decodingError
-        }
-
-        return AddressBalance(
-            confirmedSatoshis: decoded.chain_stats.delta,
-            pendingSatoshis: decoded.mempool_stats.delta
-        )
     }
 }

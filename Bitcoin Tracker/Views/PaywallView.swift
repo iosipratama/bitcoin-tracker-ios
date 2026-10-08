@@ -17,7 +17,7 @@ struct PaywallView: View {
             .padding(.horizontal, 50)
             .padding(.top, 72)
             .padding(.bottom, 24)
-            .frame(maxWidth: .infinity, alignment: .leading)
+            .readableWidth(.readableProse, alignment: .leading)
         }
         .scrollBounceBehavior(.basedOnSize)
         .safeAreaInset(edge: .top) { closeBar }
