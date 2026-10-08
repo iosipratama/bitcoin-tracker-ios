@@ -23,6 +23,7 @@ struct HomeView: View {
     @State private var knownWalletCount: Int?
 
     #if DEBUG
+    @Environment(ActivityStore.self) private var activity
     @AppStorage(AppStorageKey.forcesEmptyState) private var forcesEmptyState = false
     #endif
 
@@ -57,7 +58,7 @@ struct HomeView: View {
         // so there is one navigation model rather than one per device.
         NavigationSplitView(columnVisibility: .constant(.all), preferredCompactColumn: $compactColumn) {
             sidebar
-                .navigationSplitViewColumnWidth(min: 340, ideal: 380, max: 440)
+                .navigationSplitViewColumnWidth(380)
                 .toolbar(removing: .sidebarToggle)
         } detail: {
             detail
@@ -67,7 +68,10 @@ struct HomeView: View {
         // reappears on every Back and would refetch each time.
         .task {
             #if DEBUG
-            await applyScreenshotScene()
+            if ScreenshotScene.current != nil {
+                await applyScreenshotScene()
+                return
+            }
             #endif
             await refresh()
         }
@@ -75,11 +79,17 @@ struct HomeView: View {
 
     #if DEBUG
     private func applyScreenshotScene() async {
+        // Fixed balances and history, and no balance fetch: a screenshot
+        // shouldn't depend on what four busy addresses did this minute.
         if ScreenshotScene.loadsSampleWallets {
-            SampleWallet.replaceAll(in: modelContext)
+            let wallets = SampleWallet.replaceAll(in: modelContext, demo: true)
+            for (wallet, sample) in zip(wallets, SampleWallet.all) {
+                activity.seed(wallet, items: SampleWallet.demoActivity(for: sample))
+            }
             // Lets the query pick up the inserts before anything is selected.
             try? await Task.sleep(for: .milliseconds(300))
         }
+        await viewModel.refreshPrices()
 
         switch ScreenshotScene.current {
         case .detail:

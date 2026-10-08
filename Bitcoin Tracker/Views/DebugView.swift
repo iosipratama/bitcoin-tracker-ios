@@ -195,25 +195,51 @@ struct SampleWallet {
     var accent: WalletAccent
     var address: String
     var goalSatoshis: Int64?
+    /// Shown instead of the live balance in screenshot mode. The real
+    /// addresses are busy and always mid-transaction, which reads as noise.
+    var demoSatoshis: Int64
 
-    /// Busy public addresses, so every card has a real balance. Goals are set
-    /// against October 2026 balances to land on believable percentages.
+    /// Demo balances and goals match the iPhone screenshots: 41%, 6%, 17%.
     static let all = [
         SampleWallet(name: "house down payment", symbol: .home, accent: .mint,
-                     address: "bc1qvmw9dmensxtuxu5vw7mxtxqurad2u99pdj9wwa", goalSatoshis: 15_000_000),
+                     address: "bc1qvmw9dmensxtuxu5vw7mxtxqurad2u99pdj9wwa",
+                     goalSatoshis: 36_000_000, demoSatoshis: 14_682_310),
         SampleWallet(name: "retire early", symbol: .holiday, accent: .orange,
-                     address: "bc1qq9qx0jj6glxe7dcgj98uke8yr4ze7sadt2qjgj", goalSatoshis: 50_000_000),
+                     address: "bc1qq9qx0jj6glxe7dcgj98uke8yr4ze7sadt2qjgj",
+                     goalSatoshis: 140_000_000, demoSatoshis: 8_412_370),
         SampleWallet(name: "emran's college", symbol: .education, accent: .cyan,
-                     address: "bc1qc7s0je43r88p3zganwmfg862w9xm9qyeprqp7c", goalSatoshis: 10_000_000),
+                     address: "bc1qc7s0je43r88p3zganwmfg862w9xm9qyeprqp7c",
+                     goalSatoshis: 19_000_000, demoSatoshis: 3_156_842),
         SampleWallet(name: "family savings", symbol: .parent, accent: .mint,
-                     address: "bc1qca3522yshz3t2m6aj92c6dvnc74x2seuqpwgat", goalSatoshis: nil),
+                     address: "bc1qca3522yshz3t2m6aj92c6dvnc74x2seuqpwgat",
+                     goalSatoshis: nil, demoSatoshis: 584_120),
     ]
+
+    /// Fortnightly buys from two exchanges and one spend, adding up to less
+    /// than the balance so the history reads as part of a longer one.
+    static func demoActivity(for sample: SampleWallet) -> [ActivityItem] {
+        let sources = [
+            "bc1qm34lsc65zpw79lxes69zkqmk6ee3ewf0j77s3h",
+            "bc1qjasf9z3h7w3jspkhtgatgpyvvzgpa2wwd2lr0eh5tx44reyn2k7sfc27a4",
+            "3FupZp77ySr7jwoLYEJ9mwzJpvoNBXsBnE",
+        ]
+        let step = max(sample.demoSatoshis / 24, 10_000)
+        let amounts: [Int64] = [3, 2, 4, 2, -1, 3, 2, 3, 2, 4].map { $0 * step }
+        return amounts.enumerated().map { index, amount in
+            ActivityItem(
+                id: "demo-\(sample.address)-\(index)",
+                netSatoshis: amount,
+                date: .now.addingTimeInterval(-Double(index * 14 + 2) * 86_400),
+                counterparty: sources[index % sources.count]
+            )
+        }
+    }
 
     /// An address not among the samples, for the paste screen.
     static let pasteExample = "bc1qxy2kgdygjrsqtzq2n0yrf2493p83kkfjhx0wlh"
 
     @discardableResult
-    static func replaceAll(in context: ModelContext) -> [Wallet] {
+    static func replaceAll(in context: ModelContext, demo: Bool = false) -> [Wallet] {
         for wallet in (try? context.fetch(FetchDescriptor<Wallet>())) ?? [] {
             context.delete(wallet)
         }
@@ -225,7 +251,12 @@ struct SampleWallet {
             wallet.symbol = sample.symbol
             wallet.accent = sample.accent
             wallet.goalSatoshis = sample.goalSatoshis
-            wallet.add(BitcoinAddress(address: sample.address))
+            let address = BitcoinAddress(address: sample.address)
+            if demo {
+                address.balanceSatoshis = sample.demoSatoshis
+                address.lastUpdated = .now
+            }
+            wallet.add(address)
             context.insert(wallet)
             return wallet
         }
