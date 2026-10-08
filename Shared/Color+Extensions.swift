@@ -37,6 +37,10 @@ private enum Palette {
     static let groupedBackground = Color(light: 0xFFFFFF, dark: 0x1F1F1F)
     static let controlFill = Color(light: 0xFFFFFF, dark: 0x242218, opacity: 0.8)
     static let divider = Color(light: 0x000000, dark: 0xFFFFFF, opacity: 0.08)
+    static let pillFill = Color(
+        light: Color(hex: 0x787880, opacity: 0.08),
+        dark: Color(hex: 0x767680, opacity: 0.18)
+    )
 
     /// The unfilled part of a progress indicator. Opaque rather than a wash:
     /// it has to hold the same value on every card surface it sits on.
@@ -167,6 +171,9 @@ extension ShapeStyle where Self == Color {
 
     /// Hairline rule between rows.
     static var divider: Color { Palette.divider }
+
+    /// Behind a small capsule button that sits inside a card, like an App Store Get button.
+    static var pillFill: Color { Palette.pillFill }
     static var progressTrack: Color { Palette.progressTrack }
 
 }

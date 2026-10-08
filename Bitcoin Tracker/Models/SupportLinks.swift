@@ -28,6 +28,7 @@ enum SupportLinks {
     }
 
     static let designer = URL(string: "https://mekarya.studio/")!
+    static let cryptoContacts = URL(string: "https://apps.apple.com/app/id6815055632")!
 
     static let blockExplorer = URL(string: "https://mempool.space")!
     static let priceData = URL(string: "https://www.coingecko.com")!

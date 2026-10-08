@@ -11,6 +11,30 @@ struct DebugView: View {
     @Environment(PortfolioViewModel.self) private var viewModel
 
     @State private var showPaywall = false
+    private let sync = CloudSyncMonitor.shared
+    @State private var clipboardTypes = Self.currentClipboardTypes()
+
+    private static func currentClipboardTypes() -> String {
+        let types = UIPasteboard.general.types
+        return types.isEmpty ? "Empty" : types.joined(separator: "\n")
+    }
+
+    private var setupFailureText: String {
+        if let failure = sync.setupFailure {
+            return "Running local-only. Store failed to open with iCloud: \(failure)"
+        }
+        return "Upload should read OK a few seconds after any edit."
+    }
+
+    private func syncRow(_ symbol: String, _ title: String, _ value: String) -> some View {
+        SettingsRow(systemImage: symbol, title: title) {
+            Text(value)
+                .font(.system(size: 13))
+                .foregroundStyle(.secondaryLabel)
+                .multilineTextAlignment(.trailing)
+                .textSelection(.enabled)
+        }
+    }
 
     var body: some View {
         @Bindable var store = store
@@ -39,6 +63,27 @@ struct DebugView: View {
                             .font(.system(size: 15))
                             .foregroundStyle(.secondaryLabel)
                     }
+                }
+
+                SettingsGroup(
+                    title: "iCloud sync",
+                    footer: setupFailureText
+                ) {
+                    syncRow("person.icloud", "Account", sync.accountStatus)
+                    syncRow("gearshape", "Setup", sync.lastSetup)
+                    syncRow("icloud.and.arrow.up", "Upload", sync.lastExport)
+                    syncRow("icloud.and.arrow.down", "Download", sync.lastImport)
+                }
+                .task { await sync.refreshAccountStatus() }
+
+                SettingsGroup(
+                    title: "Clipboard",
+                    footer: "The formats on the clipboard right now. Reading the list doesn't read the contents, so it never asks to paste."
+                ) {
+                    syncRow("doc.on.clipboard", "Formats", clipboardTypes)
+                }
+                .onReceive(NotificationCenter.default.publisher(for: UIApplication.didBecomeActiveNotification)) { _ in
+                    clipboardTypes = Self.currentClipboardTypes()
                 }
 
                 SettingsGroup(title: "Main view") {

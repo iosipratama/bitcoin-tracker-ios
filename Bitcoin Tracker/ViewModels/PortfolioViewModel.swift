@@ -213,7 +213,7 @@ final class PortfolioViewModel {
 
         await refreshPrices()
 
-        let addresses = wallets.flatMap(\.addresses)
+        let addresses = wallets.flatMap(\.addressList)
         guard !addresses.isEmpty else {
             lastRefreshFailed = false
             return

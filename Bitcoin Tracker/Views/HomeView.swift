@@ -43,7 +43,7 @@ struct HomeView: View {
     /// The oldest successful fetch across the portfolio — the honest answer to
     /// "how current is this number?"
     private var oldestUpdate: Date? {
-        wallets.flatMap(\.addresses).compactMap(\.lastUpdated).min()
+        wallets.flatMap(\.addressList).compactMap(\.lastUpdated).min()
     }
 
     var body: some View {
@@ -258,7 +258,7 @@ struct HomeView: View {
         let address = BitcoinAddress(address: "bc1qxy2kgdygjrsqtzq2n0yrf2493p83kkfjhx0wlh")
         address.balanceSatoshis = sats
         address.lastUpdated = .now
-        wallet.addresses.append(address)
+        wallet.add(address)
         container.mainContext.insert(wallet)
     }
 

@@ -40,6 +40,6 @@ enum ReviewPrompt {
             return false
         }
 
-        return newest.addresses.contains { $0.lastUpdated != nil && $0.fetchError == nil }
+        return newest.addressList.contains { $0.lastUpdated != nil && $0.fetchError == nil }
     }
 }

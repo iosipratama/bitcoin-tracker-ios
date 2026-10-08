@@ -1,0 +1,51 @@
+DEFINE SCHEMA
+
+    RECORD TYPE CD_BitcoinAddress (
+        CD_address         STRING QUERYABLE SEARCHABLE SORTABLE,
+        CD_balanceSatoshis INT64 QUERYABLE SORTABLE,
+        CD_entityName      STRING QUERYABLE SEARCHABLE SORTABLE,
+        CD_fetchError      STRING QUERYABLE SEARCHABLE SORTABLE,
+        CD_lastUpdated     TIMESTAMP QUERYABLE SORTABLE,
+        CD_pendingSatoshis INT64 QUERYABLE SORTABLE,
+        CD_wallet          STRING QUERYABLE SEARCHABLE SORTABLE,
+        "___createTime"    TIMESTAMP,
+        "___createdBy"     REFERENCE,
+        "___etag"          STRING,
+        "___modTime"       TIMESTAMP,
+        "___modifiedBy"    REFERENCE,
+        "___recordID"      REFERENCE,
+        GRANT WRITE TO "_creator",
+        GRANT CREATE TO "_icloud",
+        GRANT READ TO "_world"
+    );
+
+    RECORD TYPE CD_Wallet (
+        CD_accentName   STRING QUERYABLE SEARCHABLE SORTABLE,
+        CD_createdAt    TIMESTAMP QUERYABLE SORTABLE,
+        CD_entityName   STRING QUERYABLE SEARCHABLE SORTABLE,
+        CD_goalSatoshis INT64 QUERYABLE SORTABLE,
+        CD_name         STRING QUERYABLE SEARCHABLE SORTABLE,
+        CD_symbolName   STRING QUERYABLE SEARCHABLE SORTABLE,
+        CD_widgetID     STRING QUERYABLE SEARCHABLE SORTABLE,
+        "___createTime" TIMESTAMP,
+        "___createdBy"  REFERENCE,
+        "___etag"       STRING,
+        "___modTime"    TIMESTAMP,
+        "___modifiedBy" REFERENCE,
+        "___recordID"   REFERENCE,
+        GRANT WRITE TO "_creator",
+        GRANT CREATE TO "_icloud",
+        GRANT READ TO "_world"
+    );
+
+    RECORD TYPE Users (
+        "___createTime" TIMESTAMP,
+        "___createdBy"  REFERENCE,
+        "___etag"       STRING,
+        "___modTime"    TIMESTAMP,
+        "___modifiedBy" REFERENCE,
+        "___recordID"   REFERENCE,
+        roles           LIST<INT64>,
+        GRANT WRITE TO "_creator",
+        GRANT READ TO "_world"
+    );

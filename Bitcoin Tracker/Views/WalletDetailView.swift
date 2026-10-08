@@ -15,7 +15,7 @@ struct WalletDetailView: View {
     private let glowRadius: CGFloat = 150
 
     private var oldestUpdate: Date? {
-        wallet.addresses.compactMap(\.lastUpdated).min()
+        wallet.addressList.compactMap(\.lastUpdated).min()
     }
 
     var body: some View {
@@ -205,7 +205,7 @@ struct WalletDetailView: View {
 
     @ViewBuilder
     private var addressList: some View {
-        if wallet.addresses.isEmpty {
+        if wallet.addressList.isEmpty {
             VStack(spacing: 10) {
                 Text("No addresses yet")
                     .font(.system(size: 17, weight: .semibold))
@@ -220,7 +220,7 @@ struct WalletDetailView: View {
         } else {
             VStack(alignment: .leading, spacing: 10) {
                 HStack(alignment: .firstTextBaseline) {
-                    Text(wallet.addresses.count == 1 ? "Address" : "Addresses")
+                    Text(wallet.addressList.count == 1 ? "Address" : "Addresses")
                         .font(.system(size: 17, weight: .semibold))
                         .foregroundStyle(.secondaryLabel)
 
@@ -233,7 +233,7 @@ struct WalletDetailView: View {
                 // Cards rather than full-bleed rows with hairlines, matching the
                 // wallet list and settings.
                 VStack(spacing: 10) {
-                    ForEach(wallet.addresses) { address in
+                    ForEach(wallet.addressList) { address in
                         AddressRow(address: address, viewModel: viewModel)
                             .contextMenu {
                                 Button("Copy Address", systemImage: "doc.on.doc") {
@@ -252,7 +252,7 @@ struct WalletDetailView: View {
     }
 
     private func deleteAddress(_ address: BitcoinAddress) {
-        wallet.addresses.removeAll { $0.id == address.id }
+        wallet.addresses?.removeAll { $0.id == address.id }
         modelContext.delete(address)
     }
 }
