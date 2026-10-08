@@ -63,6 +63,9 @@ struct HomeView: View {
             detail
         }
         .navigationSplitViewStyle(.balanced)
+        // On the split view rather than the sidebar, which collapsed on iPhone
+        // reappears on every Back and would refetch each time.
+        .task { await refresh() }
     }
 
     private var sidebar: some View {
@@ -99,7 +102,6 @@ struct HomeView: View {
         .sheet(isPresented: $showAddWallet) { AddWalletFlow() }
         .sheet(isPresented: $showSettings) { SettingsView() }
         .fullScreenCover(isPresented: $showPaywall) { PaywallView() }
-        .task { await refresh() }
         .onChange(of: router.requestedWalletID, initial: true) { _, _ in
             openRequestedWallet()
         }
