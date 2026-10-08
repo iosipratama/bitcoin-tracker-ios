@@ -23,7 +23,7 @@ long-term Bitcoin holder. someone who bought and isn't selling. They don't want 
 ### Screens
 - Welcome — nine lines of copy shown once, before any balance appears
 - Home — list of wallets
-- Wallet Detail — wallet name, aggregated balance, list of addresses with individual balances
+- Wallet Detail — wallet name, aggregated balance, list of addresses with individual balances, Recent activity (last 10 transactions)
 - Add Wallet — a single flow covering the name, the first address, and its preview
 - Wallet Customizer — symbol and accent colour for a wallet
 - Settings — fiat currency selector, fiat show/hide, satoshi toggle, flip-to-hide, Face ID lock, hide in app switcher, theme (Automatic / Light / Dark), support links, API attribution, restore purchase
@@ -41,6 +41,7 @@ long-term Bitcoin holder. someone who bought and isn't selling. They don't want 
   - `PriceService` — `actor`; fetches BTC price via CoinGecko, 60-second in-memory cache
   - `StoreManager` — `@Observable @MainActor`; the only file that imports StoreKit. One non-consumable (`…​.plus`) lifts the wallet limit
   - `AppLock` — `@Observable @MainActor`; Face ID (device owner authentication) on launch and return from background, plus the app-switcher cover. `PrivacyCover` draws both in its own alert-level `UIWindow` so it sits above sheets
+  - `ActivityStore` — `@Observable @MainActor`; Recent activity per wallet (last 10, netted across the wallet's addresses), cached in `Application Support/RecentActivity.json` rather than SwiftData so it stays off iCloud. Refetches when the balance changes or the cache is over two minutes old; a failed fetch keeps the cached list
   - `ReviewPrompt` — decides whether the app has earned the right to ask for a review
 - **ViewModel:** `PortfolioViewModel` drives the home screen
 - **Views:** `RootView`, `WelcomeView`, `HomeView`, `WalletDetailView`, `AddWalletFlow`, `AddAddressView`, `WalletCustomizer`, `SettingsView`, `PaywallView`, `DebugView`
