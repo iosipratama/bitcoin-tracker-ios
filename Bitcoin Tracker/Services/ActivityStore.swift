@@ -142,7 +142,6 @@ nonisolated struct ActivityItem: Codable, Sendable, Identifiable, Hashable {
         return "\(isReceived ? "from" : "to") \(BitcoinAddress.shortened(counterparty))"
     }
 
-    var explorerURL: URL? { URL(string: "https://mempool.space/tx/\(id)") }
 
     /// Pending first, since it's the newest thing that's happened.
     static func newestFirst(_ lhs: ActivityItem, _ rhs: ActivityItem) -> Bool {

@@ -103,8 +103,6 @@ private struct ActivityRow: View {
     let item: ActivityItem
     let viewModel: PortfolioViewModel
 
-    @Environment(\.openURL) private var openURL
-
     private var dateText: String {
         item.date?.formatted(.dateTime.day().month(.abbreviated).year()) ?? "Pending"
     }
@@ -112,44 +110,38 @@ private struct ActivityRow: View {
     private var btc: Double { Double(item.netSatoshis.magnitude) / .satoshisPerBTC }
 
     var body: some View {
-        Button {
-            if let url = item.explorerURL { openURL(url) }
-        } label: {
-            HStack(alignment: .top, spacing: 12) {
-                VStack(alignment: .leading, spacing: 4) {
-                    Text(dateText)
-                        .foregroundStyle(item.isPending ? AnyShapeStyle(.brand) : AnyShapeStyle(.label))
+        HStack(alignment: .top, spacing: 12) {
+            VStack(alignment: .leading, spacing: 4) {
+                Text(dateText)
+                    .foregroundStyle(item.isPending ? AnyShapeStyle(.brand) : AnyShapeStyle(.label))
 
-                    Text(item.counterpartyLine)
-                        .foregroundStyle(Custom.labelTertiary)
-                }
-
-                Spacer(minLength: 8)
-
-                HStack(spacing: 2) {
-                    // A true minus, so it holds the same width as the plus.
-                    Text(item.isReceived ? "+" : "\u{2212}")
-
-                    if let prefix = viewModel.amountPrefix {
-                        Text(prefix)
-                    }
-
-                    Text(viewModel.formattedAmount(btc: btc))
-
-                    if let suffix = viewModel.amountSuffix {
-                        Text(suffix)
-                    }
-                }
-                .foregroundStyle(.label)
-                .minimumScaleFactor(0.6)
+                Text(item.counterpartyLine)
+                    .fontWeight(.medium)
+                    .foregroundStyle(Custom.labelTertiary)
             }
-            .font(.system(size: 15, weight: .semibold))
-            .lineLimit(1)
-            .contentShape(Rectangle())
+
+            Spacer(minLength: 8)
+
+            HStack(spacing: 2) {
+                // A true minus, so it holds the same width as the plus.
+                Text(item.isReceived ? "+" : "\u{2212}")
+
+                if let prefix = viewModel.amountPrefix {
+                    Text(prefix)
+                }
+
+                Text(viewModel.formattedAmount(btc: btc))
+
+                if let suffix = viewModel.amountSuffix {
+                    Text(suffix)
+                }
+            }
+            .foregroundStyle(.label)
+            .minimumScaleFactor(0.6)
         }
-        .buttonStyle(.plain)
+        .font(.system(size: 15, weight: .semibold))
+        .lineLimit(1)
         .accessibilityElement(children: .ignore)
         .accessibilityLabel("\(item.isReceived ? "Received" : "Sent") \(viewModel.formattedBTC(btc)), \(item.counterpartyLine), \(dateText)")
-        .accessibilityHint("Opens the transaction on mempool.space")
     }
 }
