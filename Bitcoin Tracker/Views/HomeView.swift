@@ -65,8 +65,34 @@ struct HomeView: View {
         .navigationSplitViewStyle(.balanced)
         // On the split view rather than the sidebar, which collapsed on iPhone
         // reappears on every Back and would refetch each time.
-        .task { await refresh() }
+        .task {
+            #if DEBUG
+            await applyScreenshotScene()
+            #endif
+            await refresh()
+        }
     }
+
+    #if DEBUG
+    private func applyScreenshotScene() async {
+        if ScreenshotScene.loadsSampleWallets {
+            SampleWallet.replaceAll(in: modelContext)
+            // Lets the query pick up the inserts before anything is selected.
+            try? await Task.sleep(for: .milliseconds(300))
+        }
+
+        switch ScreenshotScene.current {
+        case .detail:
+            if wallets.count > 2 { open(wallets[2]) }
+        case .addWallet:
+            showAddWallet = true
+        case .settings:
+            showSettings = true
+        case .home, nil:
+            break
+        }
+    }
+    #endif
 
     private var sidebar: some View {
         Group {

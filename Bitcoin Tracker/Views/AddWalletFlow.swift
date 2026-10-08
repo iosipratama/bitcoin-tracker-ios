@@ -30,6 +30,16 @@ struct AddWalletFlow: View {
     @State private var goalEnabled = false
     @State private var goalText = ""
 
+    init() {
+        #if DEBUG
+        if ScreenshotScene.current == .addWallet {
+            // Set as the initial value so it shows as pasted without the
+            // field's change handler taking it straight on to the next step.
+            _address = State(initialValue: SampleWallet.pasteExample)
+        }
+        #endif
+    }
+
     private var trimmedAddress: String {
         address.trimmingCharacters(in: .whitespacesAndNewlines)
     }

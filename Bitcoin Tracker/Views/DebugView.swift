@@ -168,27 +168,28 @@ struct DebugView: View {
     }
 
     private func loadSampleWallets() {
-        for wallet in (try? modelContext.fetch(FetchDescriptor<Wallet>())) ?? [] {
-            modelContext.delete(wallet)
-        }
-
-        // Staggered so Home lists them in this order, which sorts by creation.
-        let wallets = SampleWallet.all.enumerated().map { index, sample in
-            let wallet = Wallet(name: sample.name)
-            wallet.createdAt = .now.addingTimeInterval(Double(index - SampleWallet.all.count))
-            wallet.symbol = sample.symbol
-            wallet.accent = sample.accent
-            wallet.goalSatoshis = sample.goalSatoshis
-            wallet.add(BitcoinAddress(address: sample.address))
-            modelContext.insert(wallet)
-            return wallet
-        }
-        try? modelContext.save()
-
+        let wallets = SampleWallet.replaceAll(in: modelContext)
         Task { await viewModel.refreshBalances(wallets: wallets) }
     }
 }
-private struct SampleWallet {
+
+/// Opens the app on one screen for an App Store screenshot, since the
+/// simulator can be launched from the command line but not tapped from it.
+/// Launch with `-screenshotScene detail` (or home, addWallet, settings), and
+/// `-loadSampleWallets YES` to start from the sample wallets.
+enum ScreenshotScene: String {
+    case home, detail, addWallet, settings
+
+    static var current: ScreenshotScene? {
+        UserDefaults.standard.string(forKey: "screenshotScene").flatMap(ScreenshotScene.init(rawValue:))
+    }
+
+    static var loadsSampleWallets: Bool {
+        UserDefaults.standard.bool(forKey: "loadSampleWallets")
+    }
+}
+
+struct SampleWallet {
     var name: String
     var symbol: WalletSymbol
     var accent: WalletAccent
@@ -207,5 +208,29 @@ private struct SampleWallet {
         SampleWallet(name: "family savings", symbol: .parent, accent: .mint,
                      address: "bc1qca3522yshz3t2m6aj92c6dvnc74x2seuqpwgat", goalSatoshis: nil),
     ]
+
+    /// An address not among the samples, for the paste screen.
+    static let pasteExample = "bc1qxy2kgdygjrsqtzq2n0yrf2493p83kkfjhx0wlh"
+
+    @discardableResult
+    static func replaceAll(in context: ModelContext) -> [Wallet] {
+        for wallet in (try? context.fetch(FetchDescriptor<Wallet>())) ?? [] {
+            context.delete(wallet)
+        }
+
+        // Staggered so Home lists them in this order, which sorts by creation.
+        let wallets = all.enumerated().map { index, sample in
+            let wallet = Wallet(name: sample.name)
+            wallet.createdAt = .now.addingTimeInterval(Double(index - all.count))
+            wallet.symbol = sample.symbol
+            wallet.accent = sample.accent
+            wallet.goalSatoshis = sample.goalSatoshis
+            wallet.add(BitcoinAddress(address: sample.address))
+            context.insert(wallet)
+            return wallet
+        }
+        try? context.save()
+        return wallets
+    }
 }
 #endif
