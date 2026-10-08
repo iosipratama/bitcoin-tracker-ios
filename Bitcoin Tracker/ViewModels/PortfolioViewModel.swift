@@ -193,7 +193,6 @@ final class PortfolioViewModel {
     /// Whole currency units, used wherever a balance is displayed.
     func formattedFiatWhole(_ value: Double) -> String { formatter.formattedFiatWhole(value) }
 
-    func formattedActivity(_ satoshis: Int64) -> String { formatter.formattedActivity(satoshis) }
     func formattedGoalAmount(btc: Double) -> String { formatter.formattedGoalAmount(btc: btc) }
     func formattedGoalBTC(_ value: Double) -> String { formatter.formattedGoalBTC(value) }
     func formattedGoalPercent(_ progress: Double) -> String { formatter.formattedGoalPercent(progress) }

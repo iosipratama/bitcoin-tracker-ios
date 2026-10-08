@@ -28,7 +28,9 @@ final class ActivityStore {
     init() {
         let directory = URL.applicationSupportDirectory
         try? FileManager.default.createDirectory(at: directory, withIntermediateDirectories: true)
-        fileURL = directory.appending(path: "RecentActivity.json")
+        // Versioned so a list stored without counterparties is fetched again
+        // rather than shown with its "from" lines missing.
+        fileURL = directory.appending(path: "RecentActivity-2.json")
 
         if let data = try? Data(contentsOf: fileURL),
            let stored = try? JSONDecoder().decode([String: Entry].self, from: data) {
@@ -96,7 +98,8 @@ final class ActivityStore {
             return ActivityItem(
                 id: transaction.txid,
                 netSatoshis: net,
-                date: transaction.status.block_time.map(Date.init(timeIntervalSince1970:))
+                date: transaction.status.block_time.map(Date.init(timeIntervalSince1970:)),
+                counterparty: transaction.counterparty(for: owned, isReceived: net > 0)
             )
         }
 
@@ -126,9 +129,18 @@ nonisolated struct ActivityItem: Codable, Sendable, Identifiable, Hashable {
     var netSatoshis: Int64
     /// The block's timestamp. nil while the transaction is still pending.
     var date: Date?
+    /// Who sent it or where it went. Optional so lists stored before it existed
+    /// still decode.
+    var counterparty: String?
 
     var isReceived: Bool { netSatoshis > 0 }
     var isPending: Bool { date == nil }
+
+    /// What the second line says: who it came from or went to.
+    var counterpartyLine: String {
+        guard let counterparty else { return isReceived ? "Newly mined" : "Between your addresses" }
+        return "\(isReceived ? "from" : "to") \(BitcoinAddress.shortened(counterparty))"
+    }
 
     var explorerURL: URL? { URL(string: "https://mempool.space/tx/\(id)") }
 

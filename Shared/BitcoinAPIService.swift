@@ -85,6 +85,21 @@ nonisolated struct EsploraTransaction: Decodable, Sendable {
             .reduce(0) { $0 + $1.value }
         return received - spent
     }
+
+    /// The other side, as far as one address can stand for it: whoever funded
+    /// the first input of a receipt, or the largest output of a send that isn't
+    /// change. nil for newly mined coins and for moves between own addresses.
+    func counterparty(for addresses: Set<String>, isReceived: Bool) -> String? {
+        let isExternal = { (address: String?) in address.map { !addresses.contains($0) } ?? false }
+
+        if isReceived {
+            return vin.compactMap(\.prevout).first { isExternal($0.scriptpubkey_address) }?.scriptpubkey_address
+        }
+        return vout
+            .filter { isExternal($0.scriptpubkey_address) }
+            .max { $0.value < $1.value }?
+            .scriptpubkey_address
+    }
 }
 
 actor BitcoinAPIService {

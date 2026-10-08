@@ -43,11 +43,11 @@ final class BitcoinAddress {
         fetchError = nil
     }
 
-    var shortAddress: String {
+    var shortAddress: String { Self.shortened(address) }
+
+    static func shortened(_ address: String) -> String {
         guard address.count > 12 else { return address }
-        let prefix = address.prefix(6)
-        let suffix = address.suffix(6)
-        return "\(prefix)...\(suffix)"
+        return "\(address.prefix(6))...\(address.suffix(6))"
     }
 }
 

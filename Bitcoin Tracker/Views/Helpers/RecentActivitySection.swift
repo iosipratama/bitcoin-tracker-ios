@@ -14,7 +14,7 @@ struct RecentActivitySection: View {
 
         VStack(alignment: .leading, spacing: 10) {
             HStack(alignment: .firstTextBaseline) {
-                Text("Recent activity")
+                Text("Recent Activity")
                     .font(.system(size: 17, weight: .semibold))
                     .foregroundStyle(.secondaryLabel)
 
@@ -48,14 +48,14 @@ struct RecentActivitySection: View {
     }
 
     private func list(_ items: [ActivityItem]) -> some View {
-        VStack(spacing: 0) {
+        VStack(spacing: 16) {
             ForEach(items) { item in
                 ActivityRow(item: item, viewModel: viewModel)
             }
         }
-        .padding(.vertical, 6)
+        .padding(16)
         .background(
-            RoundedRectangle(cornerRadius: .cardRadius, style: .continuous)
+            RoundedRectangle(cornerRadius: .cardInsetRadius, style: .continuous)
                 .fill(.groupedBackground)
         )
     }
@@ -67,7 +67,7 @@ struct RecentActivitySection: View {
             .frame(maxWidth: .infinity)
             .padding(.vertical, 28)
             .background(
-                RoundedRectangle(cornerRadius: .cardRadius, style: .continuous)
+                RoundedRectangle(cornerRadius: .cardInsetRadius, style: .continuous)
                     .fill(.groupedBackground)
             )
     }
@@ -87,67 +87,69 @@ struct RecentActivitySection: View {
         .frame(maxWidth: .infinity)
         .padding(.vertical, 24)
         .background(
-            RoundedRectangle(cornerRadius: .cardRadius, style: .continuous)
+            RoundedRectangle(cornerRadius: .cardInsetRadius, style: .continuous)
                 .fill(.groupedBackground)
         )
     }
 
     private static let placeholders = (0..<3).map {
-        ActivityItem(id: "placeholder-\($0)", netSatoshis: 1_000_000, date: .now)
+        ActivityItem(id: "placeholder-\($0)", netSatoshis: 1_000_000, date: .now, counterparty: "bc1qplaceholderaddress")
     }
 }
 
+/// Dated rather than iconed: the date leads, the second line says which way
+/// the coins went and with whom, and the sign on the amount says the rest.
 private struct ActivityRow: View {
     let item: ActivityItem
     let viewModel: PortfolioViewModel
 
     @Environment(\.openURL) private var openURL
 
-    private var title: String { item.isReceived ? "Received" : "Sent" }
-
     private var dateText: String {
-        item.date?.formatted(date: .abbreviated, time: .omitted) ?? "Pending"
+        item.date?.formatted(.dateTime.day().month(.abbreviated).year()) ?? "Pending"
     }
+
+    private var btc: Double { Double(item.netSatoshis.magnitude) / .satoshisPerBTC }
 
     var body: some View {
         Button {
             if let url = item.explorerURL { openURL(url) }
         } label: {
-            HStack(spacing: 12) {
-                Circle()
-                    .fill(.cardInsetBackground)
-                    .frame(width: 36, height: 36)
-                    .overlay {
-                        Image(systemName: item.isReceived ? "arrow.down" : "arrow.up")
-                            .font(.system(size: 14, weight: .bold))
-                            .foregroundStyle(item.isReceived ? AnyShapeStyle(.brand) : AnyShapeStyle(.secondaryLabel))
-                    }
-
-                VStack(alignment: .leading, spacing: 2) {
-                    Text(title)
-                        .font(.system(size: 15, weight: .semibold))
-                        .foregroundStyle(.label)
-
+            HStack(alignment: .top, spacing: 12) {
+                VStack(alignment: .leading, spacing: 4) {
                     Text(dateText)
-                        .font(.system(size: 13))
-                        .foregroundStyle(item.isPending ? AnyShapeStyle(.brand) : AnyShapeStyle(.tertiaryLabel))
+                        .foregroundStyle(item.isPending ? AnyShapeStyle(.brand) : AnyShapeStyle(.label))
+
+                    Text(item.counterpartyLine)
+                        .foregroundStyle(Custom.labelTertiary)
                 }
 
                 Spacer(minLength: 8)
 
-                Text(viewModel.formattedActivity(item.netSatoshis))
-                    .font(.system(size: 15, weight: .semibold))
-                    .foregroundStyle(item.isReceived ? AnyShapeStyle(.label) : AnyShapeStyle(.secondaryLabel))
-                    .lineLimit(1)
-                    .minimumScaleFactor(0.6)
+                HStack(spacing: 2) {
+                    // A true minus, so it holds the same width as the plus.
+                    Text(item.isReceived ? "+" : "\u{2212}")
+
+                    if let prefix = viewModel.amountPrefix {
+                        Text(prefix)
+                    }
+
+                    Text(viewModel.formattedAmount(btc: btc))
+
+                    if let suffix = viewModel.amountSuffix {
+                        Text(suffix)
+                    }
+                }
+                .foregroundStyle(.label)
+                .minimumScaleFactor(0.6)
             }
-            .padding(.horizontal, 16)
-            .padding(.vertical, 10)
+            .font(.system(size: 15, weight: .semibold))
+            .lineLimit(1)
             .contentShape(Rectangle())
         }
         .buttonStyle(.plain)
         .accessibilityElement(children: .ignore)
-        .accessibilityLabel("\(title) \(viewModel.formattedActivity(item.netSatoshis)), \(dateText)")
+        .accessibilityLabel("\(item.isReceived ? "Received" : "Sent") \(viewModel.formattedBTC(btc)), \(item.counterpartyLine), \(dateText)")
         .accessibilityHint("Opens the transaction on mempool.space")
     }
 }

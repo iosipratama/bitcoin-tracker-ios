@@ -68,17 +68,6 @@ nonisolated struct BalanceFormatter: Sendable {
         return hidesBalances ? masked(figure, digits: Self.bitcoinMask) : figure
     }
 
-    /// A transaction's effect on a wallet, in whichever unit the balances use.
-    /// A true minus sign, so "−" and "+" share a width in the rounded face.
-    func formattedActivity(_ satoshis: Int64) -> String {
-        let sign = satoshis < 0 ? "\u{2212}" : "+"
-        let magnitude = satoshis.magnitude
-        let figure = showSatoshi
-            ? "\(Int64(magnitude).satsDigits) sats"
-            : (Double(magnitude) / .satoshisPerBTC).btcDisplay
-        return hidesBalances ? masked(sign + figure, digits: Self.bitcoinMask) : sign + figure
-    }
-
     /// Delegates fraction digits to the currency itself. Above four figures the
     /// decimals are dropped entirely.
     func formattedFiat(_ value: Double) -> String {
