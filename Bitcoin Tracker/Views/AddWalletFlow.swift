@@ -1,11 +1,13 @@
 import SwiftUI
 import SwiftData
+import UniformTypeIdentifiers
 
 struct AddWalletFlow: View {
     @Query private var allWallets: [Wallet]
     @Environment(\.modelContext) private var modelContext
     @Environment(\.dismiss) private var dismiss
     @Environment(StoreManager.self) private var store
+    @Environment(\.scenePhase) private var scenePhase
 
     private enum Step {
         case paste, customize
@@ -20,6 +22,7 @@ struct AddWalletFlow: View {
     @State private var errorMessage: String?
     @State private var rejectedAddress = ""
     @FocusState private var isAddressFocused: Bool
+    @State private var pasteButtonGeneration = 0
 
     @State private var name = ""
     @State private var accent: WalletAccent = .blue
@@ -110,7 +113,7 @@ struct AddWalletFlow: View {
                 // it is either checking the address or has rejected it.
                 guard !isChecking, new != rejectedAddress else { return }
                 let submitted = new.contains(where: \.isNewline)
-                let pasted = old.isEmpty && BitcoinAddress.isValidFormat(new)
+                let pasted = old.isEmpty && BitcoinAddress.isValidFormat(BitcoinAddress.extracted(from: new))
                 guard submitted || pasted else { return }
                 Task { await accept(new) }
             }
@@ -129,13 +132,26 @@ struct AddWalletFlow: View {
             // PasteButton rather than a styled button over UIPasteboard: the
             // system treats it as explicit consent, so it never raises the
             // "Allow Paste?" alert that a programmatic read triggers every time.
-            PasteButton(payloadType: String.self) { strings in
-                guard let pasted = strings.first else { return }
-                Task { await accept(pasted) }
+            //
+            // Plain text, generic text and URLs: wallet apps copy a `bitcoin:`
+            // link as a URL, and some apps put no plain-text flavour on the
+            // clipboard at all. A String-only button stays greyed out for both.
+            PasteButton(supportedContentTypes: [.utf8PlainText, .plainText, .text, .url]) { providers in
+                Task { @MainActor in
+                    guard let pasted = await Self.text(from: providers) else { return }
+                    await accept(pasted)
+                }
             }
             .buttonBorderShape(.capsule)
             .labelStyle(.titleAndIcon)
             .tint(.brand)
+            // The button only learns what's on the clipboard when it appears,
+            // so one that sat behind another app while something was copied
+            // there would stay greyed out. Coming back rebuilds it.
+            .id(pasteButtonGeneration)
+            .onChange(of: scenePhase) { _, phase in
+                if phase == .active { pasteButtonGeneration += 1 }
+            }
         }
     }
 
@@ -172,7 +188,7 @@ struct AddWalletFlow: View {
     private func accept(_ pasted: String) async {
         // An address never contains whitespace, so any there came from the
         // clipboard or the field's Return and can go.
-        let candidate = pasted.filter { !$0.isWhitespace }
+        let candidate = BitcoinAddress.extracted(from: pasted.filter { !$0.isWhitespace })
         address = candidate
         isAddressFocused = false
         errorMessage = nil
@@ -205,6 +221,14 @@ struct AddWalletFlow: View {
         }
 
         advanceToCustomize()
+    }
+
+    private static func text(from providers: [NSItemProvider]) async -> String? {
+        for provider in providers {
+            if let string = try? await provider.loadTransferable(String.self) { return string }
+            if let url = try? await provider.loadTransferable(URL.self) { return url.absoluteString }
+        }
+        return nil
     }
 
     /// Kept with the address it was about, so editing the field clears it
@@ -310,5 +334,13 @@ struct EditWalletView: View {
         // Switching the goal off clears the target rather than parking it.
         wallet.goalSatoshis = goalEnabled ? Wallet.goalSatoshis(fromBTCText: goalText) : nil
         dismiss()
+    }
+}
+
+private extension NSItemProvider {
+    func loadTransferable<T: Transferable & Sendable>(_ type: T.Type) async throws -> T {
+        try await withCheckedThrowingContinuation { continuation in
+            _ = loadTransferable(type: type) { continuation.resume(with: $0) }
+        }
     }
 }

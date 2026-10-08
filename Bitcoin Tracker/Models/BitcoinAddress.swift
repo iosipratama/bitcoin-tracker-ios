@@ -56,6 +56,15 @@ final class BitcoinAddress {
 extension BitcoinAddress {
     /// Structural checks only — length and character set. A malformed address that
     /// passes here is still rejected by the explorer when its balance is fetched.
+    /// The address inside a `bitcoin:` payment link (BIP 21), which is what
+    /// many wallets copy. Anything that isn't one comes back untouched.
+    static func extracted(from raw: String) -> String {
+        let scheme = "bitcoin:"
+        guard raw.lowercased().hasPrefix(scheme) else { return raw }
+        let rest = raw.dropFirst(scheme.count)
+        return String(rest.prefix { $0 != "?" })
+    }
+
     static func isValidFormat(_ raw: String) -> Bool {
         let trimmed = raw.trimmingCharacters(in: .whitespacesAndNewlines)
         return isValidBech32(trimmed) || isValidBase58(trimmed)
