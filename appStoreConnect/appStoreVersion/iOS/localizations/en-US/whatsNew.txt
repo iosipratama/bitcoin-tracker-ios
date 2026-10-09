@@ -1,5 +1,7 @@
-Face ID lock. Turn it on in Settings and Sato asks for Face ID every time you open it.
+Sato on iPad. Your wallets on the left, the one you're looking at on the right.
 
-Hidden in the app switcher. Your balances blur when you swipe between apps.
+iCloud sync. Your wallets sync through your own private iCloud, so they appear on your iPhone and iPad.
 
-Cleaner goals. Goal amounts drop the trailing zeros, so 0.25 BTC shows as 0.25, not 0.25000000.
+Recent activity. Each wallet shows its last ten transactions, newest first.
+
+Easier pasting. Addresses copied from any app paste straight in, including bitcoin: payment links.
