@@ -54,7 +54,7 @@ One non-consumable, "Sato Plus". `Wallet.freeLimit` is 1, so the paywall appears
 
 ## App Store Connect
 
-The listing lives in `appStoreConnect/` and syncs through Bitrig. Edit those files, never the App Store Connect website — web edits surface as conflicts. Screenshot images under `assets/` are gitignored; only the manifests are committed. Sato Plus is manually priced in 26 territories by purchasing power, so the amounts don't track exchange rates and want a review once a year.
+The listing lives in `appStoreConnect/` and syncs through Bitrig. Edit those files, never the App Store Connect website — web edits surface as conflicts. Screenshot images under `assets/` are gitignored; only the manifests are committed. Sato Plus is priced in four purchasing-power tiers, set as Apple's equalized price for one US price per tier: high $12.99 (Switzerland, Norway, Denmark, Iceland, Luxembourg), normal $9.99 (the USA base; every unlisted storefront follows it), lower tier 1 $6.99 and lower tier 2 $3.99 (the manualPrices in the product's pricing.json). The amounts don't track exchange rates and want a review once a year.
 
 
 ## Key conventions

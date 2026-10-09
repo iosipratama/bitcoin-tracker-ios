@@ -1,5 +1,5 @@
-Face ID lock. Turn it on in Settings and Sato asks for Face ID every time you open it.
+Sato on iPad. Track your bitcoin portfolio on your iPad too.
 
-Hidden in the app switcher. Your balances blur when you swipe between apps.
+iCloud sync. Your wallets sync through your own iCloud account, so they stay up to date on your iPhone and iPad.
 
-Cleaner goals. Goal amounts drop the trailing zeros, so 0.25 BTC shows as 0.25, not 0.25000000.
+Recent activity. See your latest transactions at a glance.
