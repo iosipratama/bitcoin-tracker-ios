@@ -71,6 +71,9 @@ struct HomeView: View {
         // On the split view rather than the sidebar, which collapsed on iPhone
         // reappears on every Back and would refetch each time.
         .task {
+            #if DEBUG && targetEnvironment(simulator)
+            seedSampleWalletsOnce()
+            #endif
             #if DEBUG
             if ScreenshotScene.current != nil {
                 await applyScreenshotScene()
@@ -80,6 +83,26 @@ struct HomeView: View {
             await refresh()
         }
     }
+
+    #if DEBUG && targetEnvironment(simulator)
+    /// A fresh simulator opens on the screenshot set, in dark, so App Store
+    /// captures need no setup. Once per simulator, and never over real wallets.
+    private func seedSampleWalletsOnce() {
+        let key = "debugDidSeedSampleWallets"
+        guard ScreenshotScene.current == nil, !UserDefaults.standard.bool(forKey: key) else { return }
+        UserDefaults.standard.set(true, forKey: key)
+        // Asks the store rather than the query, which can still be empty on a
+        // cold launch while real wallets are on disk.
+        guard (try? modelContext.fetchCount(FetchDescriptor<Wallet>())) == 0 else { return }
+
+        UserDefaults.standard.set(true, forKey: ScreenshotScene.demoBalancesKey)
+        viewModel.theme = .dark
+        let seeded = SampleWallet.replaceAll(in: modelContext, demo: true)
+        for (wallet, sample) in zip(seeded, SampleWallet.all) {
+            activity.seed(wallet, items: SampleWallet.demoActivity(for: sample))
+        }
+    }
+    #endif
 
     #if DEBUG
     private func applyScreenshotScene() async {
