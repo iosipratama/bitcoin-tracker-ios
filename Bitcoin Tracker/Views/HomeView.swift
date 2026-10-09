@@ -17,6 +17,7 @@ struct HomeView: View {
     @State private var selectedWallet: Wallet? = nil
     @State private var showPaywall = false
     @State private var compactColumn: NavigationSplitViewColumn = .sidebar
+    @State private var columnVisibility: NavigationSplitViewVisibility = .all
 
     /// Seeded on first appearance so the query resolving on a cold launch
     /// doesn't read as a wallet having just been created.
@@ -56,9 +57,9 @@ struct HomeView: View {
     var body: some View {
         // Collapses to a single stack on iPhone and in a narrow iPad window,
         // so there is one navigation model rather than one per device.
-        NavigationSplitView(columnVisibility: .constant(.all), preferredCompactColumn: $compactColumn) {
+        NavigationSplitView(columnVisibility: $columnVisibility, preferredCompactColumn: $compactColumn) {
             sidebar
-                .navigationSplitViewColumnWidth(380)
+                .navigationSplitViewColumnWidth(min: 360, ideal: 400, max: 440)
                 .toolbar(removing: .sidebarToggle)
         } detail: {
             detail
