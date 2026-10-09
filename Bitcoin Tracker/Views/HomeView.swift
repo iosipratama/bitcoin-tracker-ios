@@ -59,8 +59,11 @@ struct HomeView: View {
         // so there is one navigation model rather than one per device.
         NavigationSplitView(columnVisibility: $columnVisibility, preferredCompactColumn: $compactColumn) {
             sidebar
+                // Wide enough that a card keeps its iPhone proportions and a
+                // long wallet name stays on one line beside its goal ring.
+                // Removing the sidebar toggle makes iPadOS ignore this width
+                // and fall back to 320, so the toggle stays.
                 .navigationSplitViewColumnWidth(min: 360, ideal: 400, max: 440)
-                .toolbar(removing: .sidebarToggle)
         } detail: {
             detail
         }
