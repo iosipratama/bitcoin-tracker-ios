@@ -78,7 +78,7 @@
       "territory": "BWA"
     },
     {
-      "customerPrice": "10.0",
+      "customerPrice": "10",
       "territory": "CHE"
     },
     {
@@ -86,7 +86,7 @@
       "territory": "CHL"
     },
     {
-      "customerPrice": "48.0",
+      "customerPrice": "48",
       "territory": "CHN"
     },
     {
@@ -106,7 +106,7 @@
       "territory": "COG"
     },
     {
-      "customerPrice": "19900.0",
+      "customerPrice": "19900",
       "territory": "COL"
     },
     {
@@ -122,7 +122,7 @@
       "territory": "CYP"
     },
     {
-      "customerPrice": "199.0",
+      "customerPrice": "199",
       "territory": "CZE"
     },
     {
@@ -130,7 +130,7 @@
       "territory": "DMA"
     },
     {
-      "customerPrice": "99.0",
+      "customerPrice": "99",
       "territory": "DNK"
     },
     {
@@ -218,7 +218,7 @@
       "territory": "IDN"
     },
     {
-      "customerPrice": "399.0",
+      "customerPrice": "399",
       "territory": "IND"
     },
     {
@@ -238,7 +238,7 @@
       "territory": "JOR"
     },
     {
-      "customerPrice": "3990.0",
+      "customerPrice": "3990",
       "territory": "KAZ"
     },
     {
@@ -310,7 +310,7 @@
       "territory": "MDV"
     },
     {
-      "customerPrice": "149.0",
+      "customerPrice": "149",
       "territory": "MEX"
     },
     {
@@ -370,7 +370,7 @@
       "territory": "NER"
     },
     {
-      "customerPrice": "6900.0",
+      "customerPrice": "6900",
       "territory": "NGA"
     },
     {
@@ -378,7 +378,7 @@
       "territory": "NIC"
     },
     {
-      "customerPrice": "179.0",
+      "customerPrice": "179",
       "territory": "NOR"
     },
     {
@@ -390,7 +390,7 @@
       "territory": "NRU"
     },
     {
-      "customerPrice": "1100.0",
+      "customerPrice": "1100",
       "territory": "PAK"
     },
     {
@@ -402,7 +402,7 @@
       "territory": "PER"
     },
     {
-      "customerPrice": "249.0",
+      "customerPrice": "249",
       "territory": "PHL"
     },
     {
@@ -430,7 +430,7 @@
       "territory": "ROU"
     },
     {
-      "customerPrice": "599.0",
+      "customerPrice": "599",
       "territory": "RUS"
     },
     {
@@ -486,7 +486,7 @@
       "territory": "TCD"
     },
     {
-      "customerPrice": "249.0",
+      "customerPrice": "249",
       "territory": "THA"
     },
     {
@@ -514,7 +514,7 @@
       "territory": "TUR"
     },
     {
-      "customerPrice": "11900.0",
+      "customerPrice": "11900",
       "territory": "TZA"
     },
     {
