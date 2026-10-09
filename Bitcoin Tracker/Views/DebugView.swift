@@ -14,6 +14,8 @@ struct DebugView: View {
     @State private var showPaywall = false
     @State private var confirmsSampleWallets = false
     @Environment(\.modelContext) private var modelContext
+    @Environment(ActivityStore.self) private var activity
+    @AppStorage(ScreenshotScene.demoBalancesKey) private var usesDemoBalances = false
     private let sync = CloudSyncMonitor.shared
     @State private var clipboardTypes = Self.currentClipboardTypes()
 
@@ -91,7 +93,7 @@ struct DebugView: View {
 
                 SettingsGroup(
                     title: "Screenshots",
-                    footer: "Replaces every wallet with four real addresses, named and coloured for App Store screenshots. Balances are live, so they move."
+                    footer: "Replaces every wallet with four sample wallets and turns on demo balances: fixed figures and history instead of live ones, so screenshots match the iPhone set. Turn demo balances off to go back to live data."
                 ) {
                     Button {
                         confirmsSampleWallets = true
@@ -101,6 +103,12 @@ struct DebugView: View {
                         }
                     }
                     .buttonStyle(.plain)
+
+                    SettingsRow(systemImage: "lock.rectangle", title: "Demo balances") {
+                        Toggle("Demo balances", isOn: $usesDemoBalances)
+                            .labelsHidden()
+                            .tint(.brand)
+                    }
                 }
 
                 SettingsGroup(title: "Main view") {
@@ -168,8 +176,11 @@ struct DebugView: View {
     }
 
     private func loadSampleWallets() {
-        let wallets = SampleWallet.replaceAll(in: modelContext)
-        Task { await viewModel.refreshBalances(wallets: wallets) }
+        usesDemoBalances = true
+        let wallets = SampleWallet.replaceAll(in: modelContext, demo: true)
+        for (wallet, sample) in zip(wallets, SampleWallet.all) {
+            activity.seed(wallet, items: SampleWallet.demoActivity(for: sample))
+        }
     }
 }
 
@@ -186,6 +197,15 @@ enum ScreenshotScene: String {
 
     static var loadsSampleWallets: Bool {
         UserDefaults.standard.bool(forKey: "loadSampleWallets")
+    }
+
+    static let demoBalancesKey = "debugDemoBalances"
+
+    /// Balances and history stay as the samples set them: no explorer
+    /// fetches, only the price, so a screenshot doesn't depend on what four
+    /// busy addresses did this minute.
+    static var freezesBalances: Bool {
+        current != nil || UserDefaults.standard.bool(forKey: demoBalancesKey)
     }
 }
 

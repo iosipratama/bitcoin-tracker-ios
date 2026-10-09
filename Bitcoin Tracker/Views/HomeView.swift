@@ -219,6 +219,12 @@ struct HomeView: View {
     /// the Home Screen reads, and there is no point handing it the same figures
     /// it already has.
     private func refresh() async {
+        #if DEBUG
+        if ScreenshotScene.freezesBalances {
+            await viewModel.refreshPrices()
+            return
+        }
+        #endif
         await viewModel.refreshBalances(wallets: wallets)
         WidgetBridge.publish(context: modelContext, formatter: viewModel.formatter)
     }

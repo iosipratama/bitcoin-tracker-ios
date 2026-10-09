@@ -56,6 +56,10 @@ final class ActivityStore {
 
         guard !addresses.isEmpty, !loadingKeys.contains(key) else { return }
 
+        #if DEBUG
+        if ScreenshotScene.freezesBalances, entries[key] != nil { return }
+        #endif
+
         if !force, let entry = entries[key], entry.balanceSatoshis == balance,
            entry.updated.addingTimeInterval(Self.freshness.seconds) > .now {
             return
@@ -85,6 +89,9 @@ final class ActivityStore {
             updated: .now.addingTimeInterval(3600),
             balanceSatoshis: wallet.totalSatoshis
         )
+        // Kept across launches for the Debug screen's demo balances; screenshot
+        // mode's store is in memory, so there it simply isn't read back.
+        if ScreenshotScene.current == nil { save() }
     }
     #endif
 
