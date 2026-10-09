@@ -1,7 +1,5 @@
-Sato on iPad. Your wallets on the left, the one you're looking at on the right.
+Sato on iPad. Track your bitcoin portfolio on your iPad too.
 
-iCloud sync. Your wallets sync through your own private iCloud, so they appear on your iPhone and iPad.
+iCloud sync. Your wallets sync through your own iCloud account, so they stay up to date on your iPhone and iPad.
 
-Recent activity. Each wallet shows its last ten transactions, newest first.
-
-Easier pasting. Addresses copied from any app paste straight in, including bitcoin: payment links.
+Recent activity. See your latest transactions at a glance.
