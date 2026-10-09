@@ -345,7 +345,7 @@ struct SettingsView: View {
     }
 
     private var moreFromMekaryaSection: some View {
-        SettingsGroup(title: "more from mekarya") {
+        SettingsGroup(title: "More from mekarya") {
             Button {
                 openURL(SupportLinks.cryptoContacts)
             } label: {
